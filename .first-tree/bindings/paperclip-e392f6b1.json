@@ -1,0 +1,12 @@
+{
+  "bindingMode": "standalone-source",
+  "entrypoint": "/",
+  "rootKind": "git-repo",
+  "scope": "repo",
+  "sourceId": "paperclip-e392f6b1",
+  "sourceName": "paperclip",
+  "sourceRootPath": "../paperclip",
+  "treeMode": "dedicated",
+  "treeRepoName": "paperclip-tree",
+  "schemaVersion": 1
+}
