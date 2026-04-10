@@ -1,0 +1,3 @@
+[submodule "paperclip"]
+	path = .paperclip
+	url = https://github.com/bingran-you/paperclip.git
