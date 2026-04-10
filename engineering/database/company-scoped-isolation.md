@@ -1,6 +1,6 @@
 ---
 title: "Company-Scoped Isolation"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Company-Scoped Isolation

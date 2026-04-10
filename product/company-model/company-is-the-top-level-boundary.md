@@ -1,6 +1,6 @@
 ---
 title: "Company Is The Top-Level Organizational Boundary"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Company Is The Top-Level Organizational Boundary

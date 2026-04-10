@@ -1,6 +1,6 @@
 ---
 title: "Single SDK Dependency And Zod Re-Exports"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Single SDK Dependency And Zod Re-Exports

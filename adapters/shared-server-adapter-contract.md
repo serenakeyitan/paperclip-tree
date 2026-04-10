@@ -1,6 +1,6 @@
 ---
 title: "Shared Server Adapter Contract"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Shared Server Adapter Contract

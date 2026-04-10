@@ -1,6 +1,6 @@
 ---
 title: "Worker Isolation And Capability Gates"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Worker Isolation And Capability Gates

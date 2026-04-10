@@ -1,6 +1,6 @@
 ---
 title: "Company Model"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["product/governance/NODE.md", "product/agent-model/NODE.md", "engineering/NODE.md"]
 ---
 

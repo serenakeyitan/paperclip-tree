@@ -1,6 +1,6 @@
 ---
 title: "Tasks Are The Communication Channel"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Tasks Are The Communication Channel

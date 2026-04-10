@@ -1,6 +1,6 @@
 ---
 title: "Authenticated Docker And Local Trusted Dev"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Authenticated Docker And Local Trusted Dev

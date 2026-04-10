@@ -1,6 +1,6 @@
 ---
 title: "Infrastructure"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["engineering/NODE.md", "adapters/NODE.md"]
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Plugin SDK"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["plugins/runtime", "plugins/examples/NODE.md", "engineering/shared"]
 ---
 

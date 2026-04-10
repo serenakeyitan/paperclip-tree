@@ -1,6 +1,6 @@
 ---
 title: "API Layer And React Query Over Global State"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # API Layer And React Query Over Global State

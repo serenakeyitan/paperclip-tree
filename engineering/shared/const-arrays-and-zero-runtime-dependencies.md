@@ -1,6 +1,6 @@
 ---
 title: "Const Arrays And Zero Runtime Dependencies"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Const Arrays And Zero Runtime Dependencies

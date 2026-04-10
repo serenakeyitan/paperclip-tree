@@ -1,6 +1,6 @@
 ---
 title: "Adapter-Defined Agent Internals"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Adapter-Defined Agent Internals

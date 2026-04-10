@@ -1,61 +1,62 @@
 # Auto-generated from Context Tree. Do not edit manually.
 
-/*                                                 @serenakeyitan
-/adapters/                                         @cryppadotta @serenakeyitan
-/adapters/shared-server-adapter-contract.md        @cryppadotta @serenakeyitan
-/adapters/claude-local/                            @cryppadotta @serenakeyitan
-/adapters/claude-local/stream-json-and-headless-permissions.md @cryppadotta @serenakeyitan
-/adapters/codex-local/                             @cryppadotta @serenakeyitan
-/adapters/codex-local/rpc-quota-and-fresh-skill-injection.md @cryppadotta @serenakeyitan
-/adapters/cursor-local/                            @cryppadotta @serenakeyitan
-/adapters/cursor-local/conservative-context-and-session-normalization.md @cryppadotta @serenakeyitan
-/adapters/gemini-local/                            @cryppadotta @serenakeyitan
-/adapters/gemini-local/auth-expiry-and-turn-limit-awareness.md @cryppadotta @serenakeyitan
-/adapters/openclaw-gateway/                        @cryppadotta @serenakeyitan
-/adapters/openclaw-gateway/websocket-gateway-and-device-pairing.md @cryppadotta @serenakeyitan
-/adapters/opencode-local/                          @cryppadotta @serenakeyitan
-/adapters/opencode-local/dynamic-model-discovery-from-runtime-config.md @cryppadotta @serenakeyitan
-/adapters/pi-local/                                @cryppadotta @serenakeyitan
-/adapters/pi-local/minimal-session-state-and-cached-model-discovery.md @cryppadotta @serenakeyitan
-/engineering/                                      @cryppadotta @serenakeyitan
-/engineering/backend/                              @cryppadotta @serenakeyitan
-/engineering/backend/shared-api-and-actor-scoped-authorization.md @cryppadotta @serenakeyitan
-/engineering/cli/                                  @cryppadotta @serenakeyitan
-/engineering/cli/cli-mirrors-api-and-instance-ops.md @cryppadotta @serenakeyitan
-/engineering/database/                             @cryppadotta @serenakeyitan
-/engineering/database/company-scoped-isolation.md  @cryppadotta @serenakeyitan
-/engineering/frontend/                             @cryppadotta @serenakeyitan
-/engineering/frontend/api-layer-and-react-query-over-global-state.md @cryppadotta @serenakeyitan
-/engineering/shared/                               @cryppadotta @serenakeyitan
-/engineering/shared/const-arrays-and-zero-runtime-dependencies.md @cryppadotta @serenakeyitan
-/infrastructure/                                   @cryppadotta @serenakeyitan
-/infrastructure/ci-cd/                             @cryppadotta @serenakeyitan
-/infrastructure/ci-cd/ci-owns-the-lockfile.md      @cryppadotta @serenakeyitan
-/infrastructure/deployment/                        @cryppadotta @serenakeyitan
-/infrastructure/deployment/authenticated-docker-and-local-trusted-dev.md @cryppadotta @serenakeyitan
-/infrastructure/testing/                           @cryppadotta @serenakeyitan
-/infrastructure/testing/no-llm-calls-in-default-ci.md @cryppadotta @serenakeyitan
-/members/                                          @serenakeyitan
+/*                                                 @bingran-you @serenakeyitan
+/adapters/                                         @bingran-you @cryppadotta @serenakeyitan
+/adapters/shared-server-adapter-contract.md        @bingran-you @cryppadotta @serenakeyitan
+/adapters/claude-local/                            @bingran-you @cryppadotta @serenakeyitan
+/adapters/claude-local/stream-json-and-headless-permissions.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/codex-local/                             @bingran-you @cryppadotta @serenakeyitan
+/adapters/codex-local/rpc-quota-and-fresh-skill-injection.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/cursor-local/                            @bingran-you @cryppadotta @serenakeyitan
+/adapters/cursor-local/conservative-context-and-session-normalization.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/gemini-local/                            @bingran-you @cryppadotta @serenakeyitan
+/adapters/gemini-local/auth-expiry-and-turn-limit-awareness.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/openclaw-gateway/                        @bingran-you @cryppadotta @serenakeyitan
+/adapters/openclaw-gateway/websocket-gateway-and-device-pairing.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/opencode-local/                          @bingran-you @cryppadotta @serenakeyitan
+/adapters/opencode-local/dynamic-model-discovery-from-runtime-config.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/pi-local/                                @bingran-you @cryppadotta @serenakeyitan
+/adapters/pi-local/minimal-session-state-and-cached-model-discovery.md @bingran-you @cryppadotta @serenakeyitan
+/engineering/                                      @bingran-you @cryppadotta @serenakeyitan
+/engineering/backend/                              @bingran-you @cryppadotta @serenakeyitan
+/engineering/backend/shared-api-and-actor-scoped-authorization.md @bingran-you @cryppadotta @serenakeyitan
+/engineering/cli/                                  @bingran-you @cryppadotta @serenakeyitan
+/engineering/cli/cli-mirrors-api-and-instance-ops.md @bingran-you @cryppadotta @serenakeyitan
+/engineering/database/                             @bingran-you @cryppadotta @serenakeyitan
+/engineering/database/company-scoped-isolation.md  @bingran-you @cryppadotta @serenakeyitan
+/engineering/frontend/                             @bingran-you @cryppadotta @serenakeyitan
+/engineering/frontend/api-layer-and-react-query-over-global-state.md @bingran-you @cryppadotta @serenakeyitan
+/engineering/shared/                               @bingran-you @cryppadotta @serenakeyitan
+/engineering/shared/const-arrays-and-zero-runtime-dependencies.md @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/                                   @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/ci-cd/                             @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/ci-cd/ci-owns-the-lockfile.md      @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/deployment/                        @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/deployment/authenticated-docker-and-local-trusted-dev.md @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/testing/                           @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/testing/no-llm-calls-in-default-ci.md @bingran-you @cryppadotta @serenakeyitan
+/members/                                          @bingran-you @serenakeyitan
+/members/bingran-you/                              @bingran-you
 /members/devinfoley/                               @devinfoley
 /members/dotta/                                    @cryppadotta
 /members/henkdz/                                   @HenkDz
 /members/mvanhorn/                                 @mvanhorn
 /members/serenakeyitan/                            @serenakeyitan
 /members/zvictor/                                  @zvictor
-/plugins/                                          @cryppadotta @serenakeyitan
-/plugins/examples/                                 @cryppadotta @serenakeyitan
-/plugins/examples/examples-live-in-tree-as-sdk-contract-tests.md @cryppadotta @serenakeyitan
-/plugins/runtime/                                  @cryppadotta @serenakeyitan
-/plugins/runtime/worker-isolation-and-capability-gates.md @cryppadotta @serenakeyitan
-/plugins/sdk/                                      @cryppadotta @serenakeyitan
-/plugins/sdk/single-sdk-dependency-and-zod-reexports.md @cryppadotta @serenakeyitan
-/product/                                          @cryppadotta @serenakeyitan
-/product/agent-model/                              @cryppadotta @serenakeyitan
-/product/agent-model/adapter-defined-agent-internals.md @cryppadotta @serenakeyitan
-/product/company-model/                            @cryppadotta @serenakeyitan
-/product/company-model/company-is-the-top-level-boundary.md @cryppadotta @serenakeyitan
-/product/governance/                               @cryppadotta @serenakeyitan
-/product/governance/server-enforced-approvals-and-budget-stops.md @cryppadotta @serenakeyitan
-/product/task-system/                              @cryppadotta @serenakeyitan
-/product/task-system/tasks-are-the-communication-channel.md @cryppadotta @serenakeyitan
-/README.md                                         @serenakeyitan
+/plugins/                                          @bingran-you @cryppadotta @serenakeyitan
+/plugins/examples/                                 @bingran-you @cryppadotta @serenakeyitan
+/plugins/examples/examples-live-in-tree-as-sdk-contract-tests.md @bingran-you @cryppadotta @serenakeyitan
+/plugins/runtime/                                  @bingran-you @cryppadotta @serenakeyitan
+/plugins/runtime/worker-isolation-and-capability-gates.md @bingran-you @cryppadotta @serenakeyitan
+/plugins/sdk/                                      @bingran-you @cryppadotta @serenakeyitan
+/plugins/sdk/single-sdk-dependency-and-zod-reexports.md @bingran-you @cryppadotta @serenakeyitan
+/product/                                          @bingran-you @cryppadotta @serenakeyitan
+/product/agent-model/                              @bingran-you @cryppadotta @serenakeyitan
+/product/agent-model/adapter-defined-agent-internals.md @bingran-you @cryppadotta @serenakeyitan
+/product/company-model/                            @bingran-you @cryppadotta @serenakeyitan
+/product/company-model/company-is-the-top-level-boundary.md @bingran-you @cryppadotta @serenakeyitan
+/product/governance/                               @bingran-you @cryppadotta @serenakeyitan
+/product/governance/server-enforced-approvals-and-budget-stops.md @bingran-you @cryppadotta @serenakeyitan
+/product/task-system/                              @bingran-you @cryppadotta @serenakeyitan
+/product/task-system/tasks-are-the-communication-channel.md @bingran-you @cryppadotta @serenakeyitan
+/README.md                                         @bingran-you @serenakeyitan

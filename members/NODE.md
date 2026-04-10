@@ -1,6 +1,6 @@
 ---
 title: Members
-owners: [serenakeyitan]
+owners: [bingran-you, serenakeyitan]
 ---
 
 # Members

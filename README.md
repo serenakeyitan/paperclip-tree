@@ -1,6 +1,6 @@
 ---
 title: "Paperclip Context Tree"
-owners: [serenakeyitan]
+owners: [bingran-you, serenakeyitan]
 ---
 
 # Paperclip Context Tree

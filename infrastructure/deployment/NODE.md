@@ -1,6 +1,6 @@
 ---
 title: "Deployment"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["engineering/NODE.md", "infrastructure/ci-cd/NODE.md"]
 ---
 

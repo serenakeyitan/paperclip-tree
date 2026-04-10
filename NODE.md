@@ -1,6 +1,6 @@
 ---
 title: "Paperclip"
-owners: [serenakeyitan]
+owners: [bingran-you, serenakeyitan]
 ---
 
 # Paperclip

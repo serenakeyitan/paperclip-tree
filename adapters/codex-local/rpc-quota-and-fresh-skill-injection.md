@@ -1,6 +1,6 @@
 ---
 title: "RPC Quota And Fresh Skill Injection"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # RPC Quota And Fresh Skill Injection

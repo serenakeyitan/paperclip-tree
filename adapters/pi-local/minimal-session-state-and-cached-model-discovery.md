@@ -1,6 +1,6 @@
 ---
 title: "Minimal Session State And Cached Model Discovery"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Minimal Session State And Cached Model Discovery

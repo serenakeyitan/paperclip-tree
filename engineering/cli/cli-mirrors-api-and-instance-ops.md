@@ -1,6 +1,6 @@
 ---
 title: "CLI Mirrors The API And Owns Local Instance Operations"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # CLI Mirrors The API And Owns Local Instance Operations

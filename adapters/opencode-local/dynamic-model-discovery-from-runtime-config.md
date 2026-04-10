@@ -1,6 +1,6 @@
 ---
 title: "Dynamic Model Discovery From Runtime Config"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Dynamic Model Discovery From Runtime Config

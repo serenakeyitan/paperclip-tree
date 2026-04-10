@@ -1,6 +1,6 @@
 ---
 title: "CI/CD"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["infrastructure/deployment/NODE.md", "infrastructure/testing/NODE.md"]
 ---
 

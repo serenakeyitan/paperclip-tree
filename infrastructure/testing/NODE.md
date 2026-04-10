@@ -1,6 +1,6 @@
 ---
 title: "Testing"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["infrastructure/ci-cd/NODE.md", "engineering/NODE.md"]
 ---
 
