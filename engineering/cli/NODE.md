@@ -1,7 +1,7 @@
 ---
 title: "CLI"
 owners: [cryppadotta, serenakeyitan]
-soft_links: ["engineering/backend", "engineering/shared", "engineering/database"]
+soft_links: ["engineering/backend", "engineering/shared", "engineering/database", "adapters/NODE.md"]
 ---
 
 # CLI

@@ -1,7 +1,7 @@
 ---
 title: "Adapters"
 owners: [cryppadotta, serenakeyitan]
-soft_links: ["engineering/backend", "engineering/cli", "engineering/frontend"]
+soft_links: ["engineering/NODE.md", "engineering/backend", "engineering/cli", "engineering/frontend", "infrastructure/NODE.md", "product/NODE.md", "product/agent-model/NODE.md"]
 ---
 
 # Adapters

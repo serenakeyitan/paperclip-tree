@@ -1,7 +1,7 @@
 ---
 title: "Database"
 owners: [cryppadotta, serenakeyitan]
-soft_links: ["engineering/backend", "engineering/shared"]
+soft_links: ["engineering/backend", "engineering/shared", "engineering/cli/NODE.md", "plugins/runtime/NODE.md"]
 ---
 
 # Database

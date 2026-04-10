@@ -1,7 +1,7 @@
 ---
 title: "Agent Model"
 owners: [cryppadotta, serenakeyitan]
-soft_links: ["product/governance/NODE.md", "product/task-system/NODE.md", "adapters/NODE.md", "engineering/NODE.md"]
+soft_links: ["product/governance/NODE.md", "product/task-system/NODE.md", "product/company-model/NODE.md", "adapters/NODE.md", "engineering/NODE.md"]
 ---
 
 # Agent Model

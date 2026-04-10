@@ -1,7 +1,7 @@
 ---
 title: "Backend Server"
 owners: [cryppadotta, serenakeyitan]
-soft_links: ["engineering/database", "engineering/shared", "engineering/frontend", "adapters", "plugins"]
+soft_links: ["engineering/database", "engineering/shared", "engineering/frontend", "engineering/cli/NODE.md", "adapters", "adapters/claude-local/NODE.md", "adapters/codex-local/NODE.md", "adapters/cursor-local/NODE.md", "adapters/gemini-local/NODE.md", "adapters/openclaw-gateway/NODE.md", "adapters/opencode-local/NODE.md", "adapters/pi-local/NODE.md", "plugins", "plugins/runtime/NODE.md"]
 ---
 
 # Backend Server
