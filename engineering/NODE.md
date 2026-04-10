@@ -1,6 +1,6 @@
 ---
 title: "Engineering"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["adapters", "plugins", "infrastructure", "infrastructure/deployment/NODE.md", "infrastructure/testing/NODE.md", "product/NODE.md", "product/agent-model/NODE.md", "product/company-model/NODE.md", "product/governance/NODE.md", "product/task-system/NODE.md"]
 ---
 

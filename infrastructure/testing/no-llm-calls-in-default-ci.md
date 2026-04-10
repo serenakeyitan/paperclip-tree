@@ -1,6 +1,6 @@
 ---
 title: "No LLM Calls In Default CI"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # No LLM Calls In Default CI

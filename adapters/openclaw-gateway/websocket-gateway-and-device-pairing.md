@@ -1,6 +1,6 @@
 ---
 title: "WebSocket Gateway And Device Pairing"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # WebSocket Gateway And Device Pairing

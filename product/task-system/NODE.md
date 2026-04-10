@@ -1,6 +1,6 @@
 ---
 title: "Task System"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["product/agent-model/NODE.md", "product/governance/NODE.md", "engineering/NODE.md"]
 ---
 

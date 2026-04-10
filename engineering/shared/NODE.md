@@ -1,6 +1,6 @@
 ---
 title: "Shared Package"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["engineering/backend", "engineering/frontend", "engineering/cli", "engineering/database", "plugins/sdk/NODE.md"]
 ---
 

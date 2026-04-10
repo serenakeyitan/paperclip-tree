@@ -1,6 +1,6 @@
 ---
 title: "Stream JSON And Headless Permissions"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Stream JSON And Headless Permissions

@@ -1,6 +1,6 @@
 ---
 title: "Plugin Runtime"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["plugins/sdk", "engineering/backend", "engineering/database"]
 ---
 

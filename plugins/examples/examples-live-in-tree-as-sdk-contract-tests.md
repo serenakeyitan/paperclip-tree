@@ -1,6 +1,6 @@
 ---
 title: "Examples Live In-Tree As SDK Contract Tests"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Examples Live In-Tree As SDK Contract Tests

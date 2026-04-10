@@ -1,6 +1,6 @@
 ---
 title: "Plugins"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["engineering/NODE.md", "engineering/backend", "product/NODE.md"]
 ---
 

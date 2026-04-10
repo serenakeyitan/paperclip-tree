@@ -1,6 +1,6 @@
 ---
 title: "Shared API And Actor-Scoped Authorization"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Shared API And Actor-Scoped Authorization

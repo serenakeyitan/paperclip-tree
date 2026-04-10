@@ -1,6 +1,6 @@
 ---
 title: "Codex Local Adapter"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["adapters", "engineering/backend"]
 ---
 

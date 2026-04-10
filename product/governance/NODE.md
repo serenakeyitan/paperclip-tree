@@ -1,6 +1,6 @@
 ---
 title: "Governance"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["product/agent-model/NODE.md", "product/company-model/NODE.md", "product/task-system/NODE.md", "engineering/NODE.md"]
 ---
 

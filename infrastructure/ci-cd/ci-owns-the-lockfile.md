@@ -1,6 +1,6 @@
 ---
 title: "CI Owns The Lockfile"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # CI Owns The Lockfile

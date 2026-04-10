@@ -1,6 +1,6 @@
 ---
 title: "Frontend UI"
-owners: [cryppadotta, serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 soft_links: ["engineering/backend", "engineering/shared", "adapters"]
 ---
 
