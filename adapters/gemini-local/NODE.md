@@ -30,6 +30,10 @@ Adapter for **Gemini CLI** (Google's AI coding agent). Spawns `gemini` as a loca
 - **Auth-required detection** is explicit because Gemini CLI can fail silently or with non-obvious errors when Google Cloud auth expires.
 - **Turn-limit result detection** enables the server to distinguish "Gemini hit its turn cap" from other error exits, similar to Claude's max-turns handling.
 
+## Decision Records
+
+- [auth-expiry-and-turn-limit-awareness.md](auth-expiry-and-turn-limit-awareness.md) — Why Gemini auth-expiry and turn-limit cases are detected explicitly at the adapter edge.
+
 ---
 
 ## Boundaries

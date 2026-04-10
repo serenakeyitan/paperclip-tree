@@ -32,6 +32,10 @@ Adapter for **OpenCode** (an open-source AI coding CLI). Spawns `opencode` as a 
 - **Runtime config module** (`runtime-config.ts`) isolates OpenCode config file parsing. This is tested independently (`runtime-config.test.ts`) since config format changes across OpenCode versions.
 - **Test cache reset** (`resetOpenCodeModelsCacheForTests`) exposes cache invalidation for test isolation, indicating the model list is cached in-process for performance.
 
+## Decision Records
+
+- [dynamic-model-discovery-from-runtime-config.md](dynamic-model-discovery-from-runtime-config.md) — Why OpenCode model choices are discovered from local runtime config instead of being hardcoded in Paperclip.
+
 ---
 
 ## Boundaries

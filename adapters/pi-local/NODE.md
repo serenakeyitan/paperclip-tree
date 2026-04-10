@@ -32,6 +32,10 @@ Adapter for **Pi** (an AI coding CLI). Spawns `pi` as a local child process.
 - **Cached model discovery** (`discoverPiModelsCached`) is a separate export from the uncached version, giving callers explicit control over freshness vs. performance.
 - **Architecture mirrors opencode-local** -- Both share the dynamic model discovery + validation pattern and have similar test structures, suggesting they may have been developed together or from a common template.
 
+## Decision Records
+
+- [minimal-session-state-and-cached-model-discovery.md](minimal-session-state-and-cached-model-discovery.md) — Why Pi keeps a smaller session contract and explicit cached model discovery paths.
+
 ---
 
 ## Boundaries

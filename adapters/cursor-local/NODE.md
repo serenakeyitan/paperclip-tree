@@ -29,6 +29,10 @@ Adapter for **Cursor** (the AI-powered code editor's agent mode). Spawns the Cur
 - **Context management marked "unknown"** because Cursor's internal context window behavior is not publicly documented. Conservative compaction thresholds are applied as a safety net.
 - **Three session ID field variants** (`sessionId`, `session_id`, `sessionID`) supported in the codec to handle Cursor's inconsistent field naming across versions.
 
+## Decision Records
+
+- [conservative-context-and-session-normalization.md](conservative-context-and-session-normalization.md) — Why Cursor uses conservative compaction plus adapter-level session field normalization.
+
 ---
 
 ## Boundaries
