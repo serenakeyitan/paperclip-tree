@@ -5,6 +5,13 @@ There is no user to prompt. If the runbook requires interactive input,
 exit with an error log. The user must run `/gardener-manual` locally
 to resolve.
 
+**RUN_MODE=schedule** — set this in the environment so Step 5b records
+the correct mode in `~/.gardener/runs.jsonl`. (Note: cloud-side this
+file is ephemeral; the user will see schedule runs in the dashboard
+only when they `git pull` the run logs from a synced location, or by
+viewing the run summary stored as a comment on a known PR. For now,
+schedule runs are observable via stdout in the trigger output panel.)
+
 The schedule's source repo is the **config repo** — it holds the
 gardener commands and `.claude/gardener-config.yaml`. The `target_repo`
 to review is inside that config file and is accessed only via `gh api`;

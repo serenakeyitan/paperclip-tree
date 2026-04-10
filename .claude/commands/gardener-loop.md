@@ -5,6 +5,9 @@ user. If the runbook requires interactive input (e.g. missing config,
 ambiguous context tree URL), exit with an error log and wait for the
 user to run `/gardener-manual` interactively.
 
+**RUN_MODE=loop** — set this in the environment so Step 5b records the
+correct mode in `~/.gardener/runs.jsonl`.
+
 You MUST read `.claude/commands/gardener-manual.md` in this repo and
 execute it as a strict runbook. Follow every step sequentially. For
 each step:

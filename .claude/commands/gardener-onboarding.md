@@ -4,29 +4,71 @@ repo-gardener is a **context-aware review bot** — it comments on PRs
 and issues with product/context fit analysis, reading from your
 project's context tree. It does NOT push code or open PRs.
 
-## 0. Verify repo
+## 0. Pick install mode
 
-Check if you are inside a git repository (`git rev-parse --show-toplevel`).
+Before anything else, ask the user:
 
-- If NOT inside a repo → ask the user: "Which local directory should I
-  use as the working repo? Please cd there first, then re-run
-  `/gardener-onboarding`."
-  STOP.
+"What's your goal with repo-gardener?
 
-## 1. Install gardener commands
+1. **Review my own repo** (Maintainer mode)
+   You maintain a repo and want gardener to review its own PRs and
+   issues against a context tree.
+   → Install goes into your own repo.
+   → You should run onboarding from **inside your project directory**.
 
-Fetch from a pinned release tag for integrity.
+2. **Review someone else's OSS repo** (External reviewer mode)
+   You want gardener to comment on an upstream OSS project you don't
+   maintain. Config lives in a repo you DO own (usually your context
+   tree); gardener reviews the target via GitHub API.
+   → Install goes into your config repo (the tree repo).
+   → You should run onboarding from **inside your tree repo**, not
+   inside the target repo.
+
+Which?"
+
+Wait for the answer. Remember the choice as `INSTALL_MODE=maintainer`
+or `INSTALL_MODE=external`.
+
+## 1. Verify you're in the right directory
+
+Run `git rev-parse --show-toplevel` and `gh repo view --json nameWithOwner`
+to detect the current repo.
+
+**If not inside a git repo**:
+- Maintainer mode → ask: "Please `cd` into the project you want to
+  review, then re-run `/gardener-onboarding`." STOP.
+- External mode → ask: "Please `cd` into the repo that will host the
+  gardener config (usually your context tree), then re-run
+  `/gardener-onboarding`." STOP.
+
+**If inside a git repo**, confirm with the user:
+- Maintainer mode: "Detected current repo: `<owner/name>`. Is this the
+  repo you want gardener to review? (y/n)"
+  - `n` → "Please `cd` into the correct repo, then re-run." STOP.
+- External mode: "Detected current repo: `<owner/name>`. Is this the
+  repo where gardener config should live (typically your context tree
+  repo, not the target repo)? (y/n)"
+  - `n` → "Please `cd` into your config/tree repo, then re-run." STOP.
+
+## 2. Install gardener commands
+
+Resolve the **latest release tag** at install time so users always
+get the newest version without editing this file.
 
 ```bash
-GARDENER_VERSION="v2.1.0"
+GARDENER_VERSION=$(gh api /repos/agent-team-foundation/repo-gardener/releases/latest --jq .tag_name)
+if [ -z "$GARDENER_VERSION" ]; then
+  echo "❌ Could not resolve latest release. Check network or GitHub status."
+  exit 1
+fi
+echo "Installing repo-gardener $GARDENER_VERSION"
+
 BASE="https://raw.githubusercontent.com/agent-team-foundation/repo-gardener/${GARDENER_VERSION}"
 mkdir -p .claude/commands
-curl -fsSL -o .claude/commands/gardener-manual.md "${BASE}/.claude/commands/gardener-manual.md"
-curl -fsSL -o .claude/commands/gardener-schedule.md "${BASE}/.claude/commands/gardener-schedule.md"
-curl -fsSL -o .claude/commands/gardener-start.md "${BASE}/.claude/commands/gardener-start.md"
-curl -fsSL -o .claude/commands/gardener-loop.md "${BASE}/.claude/commands/gardener-loop.md"
-curl -fsSL -o .claude/commands/gardener-stop.md "${BASE}/.claude/commands/gardener-stop.md"
-curl -fsSL -o .claude/commands/gardener-onboarding.md "${BASE}/.claude/commands/gardener-onboarding.md"
+for cmd in gardener-manual gardener-schedule gardener-start gardener-loop \
+           gardener-stop gardener-onboarding gardener-watch gardener-upgrade; do
+  curl -fsSL -o ".claude/commands/${cmd}.md" "${BASE}/.claude/commands/${cmd}.md"
+done
 ```
 
 Verify downloads are not empty:
@@ -40,51 +82,26 @@ for f in .claude/commands/gardener-*.md; do
 done
 ```
 
-## 2. Choose install mode and target repo
+## 3. Set target_repo (and config_repo if external)
 
-Ask the user:
+The install mode was already chosen in Step 0.
 
-"Which install mode?
-
-1. **Maintainer mode** — I maintain this repo (`<current owner/name>`)
-   and want gardener to review its own PRs and issues. Install commits
-   will land in this repo.
-2. **External reviewer mode** — I want gardener to review a repo I
-   **don't** maintain (e.g. an OSS project). I'll store the config in
-   my own repo (usually my context tree) and gardener will comment on
-   the target repo via GitHub API. No commits on the target repo.
-
-Which?"
-
-### Maintainer mode
-
+**Maintainer mode** (`INSTALL_MODE=maintainer`):
 - `target_repo=<current owner/name from gh repo view>`
 - `config_repo` is unset (defaults to `target_repo`)
-- Config + commands will be committed to the current repo
+- Both live in the current repo (where you ran onboarding)
 
-### External reviewer mode
-
-- Ask for the **target repo**: "Which repo should gardener review?
-  Paste `owner/name`." Validate with `gh repo view <owner>/<name>`.
+**External reviewer mode** (`INSTALL_MODE=external`):
+- Current repo = `config_repo` (already verified in Step 1)
+- `config_repo=<current owner/name from gh repo view>`
+- Ask: "Which repo should gardener review? Paste `owner/name`."
+  Validate with `gh repo view <owner>/<name> --json nameWithOwner`.
 - `target_repo=<answer>`
-- Ask for the **config repo**: "Where should I store the gardener
-  config and commands? This must be a repo you own (so you can push
-  to its default branch). Usually this is your context tree repo.
-  Paste `owner/name`." Validate with `gh repo view`.
-- `config_repo=<answer>`
-- The install will commit to `config_repo`, NOT `target_repo`.
-- **You must have the config repo cloned locally** for this step to
-  work. If not cloned yet, tell the user:
-  "Please clone `<config_repo>` locally first, then re-run
-  `/gardener-onboarding` from inside that clone."
-  STOP.
-- After the user has cloned it, they should be inside the `config_repo`
-  checkout. Verify with `gh repo view --json nameWithOwner` that the
-  current directory matches `config_repo`.
+- If `target_repo == config_repo`, something's wrong → ask again.
 
-(Config file is written at the end of Step 3, after the tree URL is resolved.)
+(Config file is written at the end of Step 4, after the tree URL is resolved.)
 
-## 3. Find the context tree
+## 4. Find the context tree
 
 Try these sources in order, picking the first match:
 
@@ -110,30 +127,39 @@ auto-detected — to avoid false positives. Show the detected URL and ask
 
 **If no URL is found or the user says "different"**, ask:
 
-"🌳 No context tree found automatically. Gardener needs a tree URL to
-do context-aware reviews. Choose one:
+"🌳 No context tree found. Gardener requires a context tree to
+function — it reviews PRs/issues against a tree repo that holds your
+project's design decisions, conventions, and constraints in markdown.
+Without a tree there is nothing to review against.
 
-1. **Enter a URL** — paste a `github.com/<org>/<repo>` URL
-2. **Set up a new First-Tree** — https://github.com/agent-team-foundation/first-tree
-   (run `first-tree init`, then re-run `/gardener-onboarding`)
-3. **Skip** — install gardener without a tree; reviews will be limited
-   until you add one via `.claude/gardener-config.yaml`"
+Choose one:
 
-- Option 1 → validate the URL with `gh repo view <owner>/<name>`,
-  set `tree_repo=<url>`
-- Option 2 → STOP
-- Option 3 → set `tree_repo=""` (gardener will mark all verdicts as
-  `INSUFFICIENT_CONTEXT` until the tree is set)
+1. **I already have a tree repo** — paste the URL (`github.com/<org>/<repo>`)
+2. **Build a tree first** — First-Tree is a companion CLI that sets
+   up your context tree interactively:
+   https://github.com/agent-team-foundation/first-tree
+   Run `first-tree init` to create the tree, push it to GitHub, then
+   re-run `/gardener-onboarding` and come back to this step with the
+   tree URL."
+
+- Option 1 → validate with `gh repo view <owner>/<name>`,
+  set `tree_repo=<url>`, continue onboarding
+- Option 2 → STOP. Output:
+  "🌳 Onboarding paused. Run `first-tree init` to build your tree,
+   push it to GitHub, then re-run `/gardener-onboarding` from this
+   same directory and paste the tree URL when prompted."
 
 Write the config. In **maintainer mode**, omit `config_repo` (it
 defaults to `target_repo`). In **external reviewer mode**, set
-`config_repo` explicitly:
+`config_repo` explicitly. Always include `installed_version` so
+`/gardener-upgrade` can detect when an update is available.
 
 ```bash
 # Maintainer mode:
 cat > .claude/gardener-config.yaml <<EOF
 target_repo: <owner>/<name>
-tree_repo: <tree-url-or-empty>
+tree_repo: <tree-url>
+installed_version: ${GARDENER_VERSION}
 EOF
 
 # External reviewer mode:
@@ -141,17 +167,18 @@ cat > .claude/gardener-config.yaml <<EOF
 target_repo: <target-owner>/<target-name>
 tree_repo: <tree-url>
 config_repo: <config-owner>/<config-name>
+installed_version: ${GARDENER_VERSION}
 EOF
 ```
 
-## 4. Add the tree cache directory to .gitignore
+## 5. Add the tree cache directory to .gitignore
 
 ```bash
 grep -q '.gardener-tree-cache' .gitignore 2>/dev/null || \
   echo '.gardener-tree-cache/' >> .gitignore
 ```
 
-## 5. Commit and push
+## 6. Commit and push
 
 The cloud schedule clones the **default branch** of `config_repo`. In
 maintainer mode `config_repo == target_repo`; in external reviewer
@@ -168,7 +195,7 @@ default_branch=$(gh repo view --json defaultBranchRef --jq .defaultBranchRef.nam
 
 git add .claude/commands/gardener-*.md .claude/gardener-config.yaml .gitignore
 git diff --cached --quiet && echo "No changes to commit" || \
-  git commit -m "chore: install repo-gardener v2.0.2"
+  git commit -m "chore: install repo-gardener ${GARDENER_VERSION}"
 ```
 
 If `current_branch` == `default_branch` → `git push`.
@@ -193,25 +220,27 @@ Which?"
 - Option 3 → `git push -u origin $current_branch`, warn that
   `/gardener-start` will skip the schedule until merged
 
-## 6. Test run (optional)
+## 7. Test run (optional)
 
 Ask the user:
 "⚠️ The test run will scan open PRs and issues on `<target_repo>` and
 may post real comments. Proceed?"
 
 - Yes → execute `.claude/commands/gardener-manual.md` once.
-- No → skip to Step 7.
+- No → skip to Step 8.
 
-## 7. Confirm
+## 8. Confirm
 
 Output:
-"🌱 repo-gardener v2.0.0 installed.
+"🌱 repo-gardener ${GARDENER_VERSION} installed.
 - Target repo: `<target_repo>`
 - Commands and config committed and pushed to remote.
 
 **Important**: restart Claude Code (or start a new session) so the new
 slash commands are picked up. After restarting:
 
-- Run `/gardener-start` to start automation (loop + schedule).
-- Run `/gardener-manual` for a one-off review.
-- Run `/gardener-stop` to pause everything."
+- `/gardener-start` — start automation (loop + schedule)
+- `/gardener-manual` — one-off review
+- `/gardener-watch` — open a terminal popup that tails run logs live (clickable URLs)
+- `/gardener-upgrade` — auto-update to the latest release
+- `/gardener-stop` — pause everything"

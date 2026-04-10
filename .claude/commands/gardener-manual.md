@@ -18,21 +18,29 @@ bots (Greptile, CodeRabbit, DeepSource); your lane is product/context fit.
 
 Check the calling context:
 - If invoked via `/gardener-loop` or `/gardener-schedule` → `UNATTENDED=true`
-- If invoked directly via `/gardener-manual` → `UNATTENDED=false`
+  and `RUN_MODE` is set by the wrapper (`loop` or `schedule`)
+- If invoked directly via `/gardener-manual` → `UNATTENDED=false` and
+  `RUN_MODE` defaults to `manual`
 
-`gardener-loop.md` and `gardener-schedule.md` set this explicitly.
-Default to `UNATTENDED=false` if unclear.
+```bash
+: "${RUN_MODE:=manual}"
+: "${UNATTENDED:=false}"
+```
+
+`gardener-loop.md` and `gardener-schedule.md` set both variables
+explicitly. The defaults above only apply when invoked directly.
 
 ## Step 0: Load config
 
 repo-gardener stores everything in `.claude/gardener-config.yaml`:
 
 ```yaml
-target_repo: <owner>/<name>    # repo whose PRs/issues gardener reviews
-tree_repo: <url-or-empty>      # context tree repo URL (can be empty)
-config_repo: <owner>/<name>    # optional — where this config file lives
-                                # if unset, defaults to target_repo
-paths_ignored:                  # optional
+target_repo: <owner>/<name>     # repo whose PRs/issues gardener reviews
+tree_repo: <url>                # context tree repo URL (required)
+config_repo: <owner>/<name>     # optional — where this config file lives
+                                 # if unset, defaults to target_repo
+installed_version: <vX.Y.Z>     # written by onboarding/upgrade; used by /gardener-upgrade
+paths_ignored:                   # optional
   - "vendor/**"
 ```
 
@@ -85,19 +93,25 @@ true_issue_count=$(gh issue list --repo $target_repo --state open --json number 
 
 True counts are already captured in Step 0 (`$true_pr_count`, `$true_issue_count`).
 
-Fetch details (note `additions`, `deletions` included for Step 4c LOC check):
+Fetch details into shell variables, then capture the post-filter counts
+(needed by Step 5b's run record):
+
 ```bash
-gh pr list --repo $target_repo --state open --limit 30 \
-  --json number,title,headRefName,author,body,additions,deletions,labels
-gh issue list --repo $target_repo --state open --limit 30 \
-  --json number,title,author,body,labels
+prs_json=$(gh pr list --repo $target_repo --state open --limit 30 \
+  --json number,title,headRefName,author,body,additions,deletions,labels)
+issues_json=$(gh issue list --repo $target_repo --state open --limit 30 \
+  --json number,title,author,body,labels)
+
+num_prs=$(echo "$prs_json" | jq length)
+num_issues=$(echo "$issues_json" | jq length)
 ```
 
 Fetch comments per-item in Step 2, not in bulk.
 
 If `paths_ignored` is set in config, run
 `gh pr diff <n> --repo $target_repo --name-only` and skip PRs where
-every file matches an ignored glob.
+every file matches an ignored glob. **Decrement `num_prs` for each
+filtered PR** so Step 5b's logged count reflects actually-considered items.
 
 If nothing remains → log "🌱 Nothing to tend." and exit.
 
@@ -118,7 +132,7 @@ pagination+jq footgun where `--paginate` with a per-page filter produces
 N arrays instead of one):
 
 ```bash
-gh api "/repos/$target_repo/issues/$number/comments" --paginate | jq -s '
+gh api "/repos/$target_repo/issues/$number/comments" --paginate | jq -s --arg u "$gardener_user" '
   [.[] | .[] | {
     id: .id,
     body: .body,
@@ -129,10 +143,18 @@ gh api "/repos/$target_repo/issues/$number/comments" --paginate | jq -s '
     has_paused: (.body | contains("<!-- gardener:paused")),
     has_ignored: (.body | contains("<!-- gardener:ignored")),
     last_consumed_rereview: (.body | capture("gardener:last_consumed_rereview=(?<id>[0-9]+)")?.id),
-    is_command: (.body | test("@gardener (re-review|pause|resume|ignore)"))
+    is_command: (
+      (.user.login != $u) and
+      (.body | test("@gardener (re-review|pause|resume|ignore)"))
+    )
   }]
 '
 ```
+
+**Critical**: `is_command` MUST exclude comments authored by gardener
+itself (`$gardener_user`). Otherwise the `@gardener re-review · @gardener
+pause · @gardener ignore` text in gardener's own comment footer matches
+the regex on every run, creating a false-positive re-review loop.
 
 ### State resolution rules (evaluated in order)
 
@@ -173,31 +195,64 @@ gh api "/repos/$target_repo/issues/$number/comments" --paginate | jq -s '
 
 5. **`gardener:state` comment exists**:
    - Parse `reviewed=<sha>` from the marker.
-   - For PRs: compare against current HEAD SHA
+   - **For PRs**: compare against current HEAD SHA
      (`gh pr view <n> --json headRefOid`). If equal → skip. If differs
-     → re-review; **remember the comment ID** so Step 4e can PATCH it
-     in place.
-   - For issues: the marker is `reviewed=issue@<ISO-timestamp>`.
-     Compare against the issue's current `updated_at`. If equal → skip.
-     If differs → re-review (PATCH existing comment).
+     → re-review; remember the comment ID so Step 4e can PATCH it.
+   - **For issues**: the marker is `reviewed=issue@<ISO-timestamp>`.
+     Issues have no stable identifier like a commit SHA — `updated_at`
+     bumps every time anyone (including gardener) edits any comment on
+     the issue. So **a naive `updated_at` comparison creates an infinite
+     loop**: gardener reads the marker, posts a comment, the post bumps
+     `updated_at`, the next run sees it as "changed", re-reviews,
+     bumps `updated_at` again, forever.
+     The loop-safe rule:
+     1. Compare current `updated_at` to the marker's stored timestamp.
+        If equal → skip.
+     2. If different, fetch all events on the issue with
+        `created_at > <marker timestamp>` (issue comments + issue
+        metadata changes via `gh api /repos/$target_repo/issues/<n>/timeline`).
+     3. Filter out events authored by `$gardener_user` (gardener's own
+        edits don't count as new activity).
+     4. If the filtered list is **empty** → silently update the marker
+        to the current `updated_at` (PATCH the existing gardener
+        comment, only changing the timestamp inside the marker), then
+        skip. This breaks the loop.
+     5. If the filtered list is **non-empty** → real human/agent
+        activity, re-review.
 
-6. **No gardener comment at all** → first review; no existing comment ID.
+5b. **`gardener:reviewed` label is present on the item** (silent-aligned
+    via label, no state comment exists). The label was already fetched
+    in Step 1 (`gh pr list --json ...,labels` and `gh issue list --json
+    ...,labels`).
+    - **For PRs**: fetch current HEAD SHA. The label has no embedded
+      SHA, so we don't know which commit was reviewed. Best we can do:
+      check if anyone has pushed since the label was applied. Query
+      label events via timeline:
+      `gh api /repos/$target_repo/issues/<n>/timeline --jq '[.[] | select(.event=="labeled" and .label.name=="gardener:reviewed")] | last'`
+      Compare its `created_at` to the most recent commit on the PR:
+      `gh pr view <n> --json commits --jq '.commits | last | .committedDate'`.
+      - Label newer than last commit → skip (silent-aligned still
+        valid).
+      - Last commit newer than label → re-review (the label is stale).
+        Remove the stale label after re-reviewing.
+    - **For issues**: same approach with timeline events. Compare label
+      `created_at` to the most recent non-gardener event since then.
+      - Last activity ≤ label time → skip.
+      - Newer activity → re-review and remove the stale label.
 
-**Issues use timestamps, not SHAs.** For issues the state marker is
-`reviewed=issue@<ISO-timestamp>` (the issue's `updated_at` at review
-time), not a commit SHA.
+6. **No gardener comment at all AND no `gardener:reviewed` label** →
+   first review; no existing comment ID.
 
 ## Step 3: Pull context tree (only if queue has items)
 
 Read `tree_repo` from `.claude/gardener-config.yaml`.
 
-**If `tree_repo` is empty or missing**:
-- Log: "⚠️ No tree_repo configured. All reviews will be marked
-  INSUFFICIENT_CONTEXT. Run /gardener-onboarding to set one."
-- Skip to Step 4 with no tree. All verdicts will be
-  `INSUFFICIENT_CONTEXT` until a tree is configured.
+**If `tree_repo` is empty or missing** → exit with log:
+"❌ `tree_repo` is not set in `.claude/gardener-config.yaml`. Gardener
+requires a context tree to function. Run `/gardener-onboarding` to set
+one, or manually add `tree_repo: <url>` to the config."
 
-**If `tree_repo` is set**, clone it:
+Clone the tree:
 
 ```bash
 rm -rf .gardener-tree-cache
@@ -205,8 +260,9 @@ git clone --depth 1 "$tree_repo" .gardener-tree-cache
 tree_sha=$(cd .gardener-tree-cache && git rev-parse HEAD)
 ```
 
-If clone fails (404, auth), log the error and proceed with no tree
-(same as empty `tree_repo` case).
+**If clone fails** (404, auth, network) → exit with log:
+"❌ Failed to clone `$tree_repo`. Check the URL is valid and the repo
+is accessible. Edit `.claude/gardener-config.yaml` if needed."
 
 ## Step 4: Review each item
 
@@ -286,39 +342,33 @@ Assign severity: `low` / `medium` / `high` / `critical`.
 
 **If verdict is `ALIGNED` AND severity is `low`**:
 
-**Exit conditions** (fall through to minimal comment path instead of label):
+**Always fall through to minimal comment** in these cases:
 
-1. **Large PR** (`additions + deletions > 500`) → skip label, post
-   minimal comment (large PRs deserve visible acknowledgment).
-2. **Unconsumed `@gardener re-review` command exists** → skip label,
-   post minimal comment. This is critical: without a comment, there's
-   nowhere to persist `last_consumed_rereview=<id>`, so the re-review
-   command would re-fire forever. The label path cannot track command
-   consumption.
+1. **Large PR** (`additions + deletions > 500`) → post minimal comment
+   so large PRs get visible acknowledgment.
+2. **Unconsumed `@gardener re-review` command exists** → post minimal
+   comment so `last_consumed_rereview=<id>` can be persisted (the
+   label path can't track command consumption).
+3. **No `triage`/`write` permission on target_repo** (e.g. external
+   reviewer mode) → post minimal comment. We can't apply labels we
+   don't have permission for.
 
-For both cases above, go to Step 4d/4e with the minimal aligned format
-below. Otherwise, try the label path:
-
-Labels require `triage` permission or higher — this works on your own
-repos but may fail on external repos.
+Otherwise, try the **label path**:
 
 ```bash
-# Try to ensure the label exists:
+# Ensure the label exists (no-op if it does):
 gh label create "gardener:reviewed" --repo $target_repo \
   --color "2ea44f" --description "Reviewed by repo-gardener" 2>/dev/null
 
-# Try to apply it:
+# Apply it:
 gh issue edit <n> --repo $target_repo --add-label "gardener:reviewed" 2>/dev/null
 label_status=$?
 ```
 
-**Two outcomes:**
-
-1. **Label applied successfully** (`$label_status` = 0) → done, no comment.
-   Move to Step 4f.
-
-2. **Label application failed** (permission error) → fall back to
-   posting a **minimal** comment via Step 4d/4e.
+- `label_status == 0` → label applied, silent-aligned, no comment.
+  Move to Step 4f. Step 2 must short-circuit on this label next run
+  (see Step 2 rule 5b).
+- `label_status != 0` → fall through to minimal comment (Step 4d/4e).
 
 **Minimal aligned comment format** (used for case 2 above AND for large
 PRs):
@@ -332,6 +382,8 @@ PRs):
 Aligned with context tree. No concerns.
 
 <sub>Commands: `@gardener re-review` · `@gardener pause` · `@gardener ignore`</sub>
+
+<sub>🌱 Posted by [repo-gardener](https://github.com/agent-team-foundation/repo-gardener) — open-source context-aware review bot. Reviews against [<tree-owner>/<tree-name>](<tree-repo-url>).</sub>
 ```
 
 ### 4d: Post or update review comment
@@ -377,6 +429,8 @@ For all non-silent verdicts, use this exact format:
 ---
 
 <sub>Reviewed commit: <code><short-sha></code> · Tree snapshot: <code><tree-sha></code> · Commands: <code>@gardener re-review</code> · <code>@gardener pause</code> · <code>@gardener ignore</code></sub>
+
+<sub>🌱 Posted by [repo-gardener](https://github.com/agent-team-foundation/repo-gardener) — an open-source context-aware review bot. Reviews this repo against [<tree-owner>/<tree-name>](<tree-repo-url>), a user-maintained context tree. Not affiliated with this project's maintainers.</sub>
 ````
 
 **Rendering notes:**
@@ -384,16 +438,17 @@ For all non-silent verdicts, use this exact format:
 - The second line is the human-visible verdict.
 - Callout type: `NOTE` for ALIGNED/NEW_TERRITORY/INSUFFICIENT_CONTEXT,
   `CAUTION` for NEEDS_REVIEW, `WARNING` for CONFLICT.
-- Fit cell values:
-  - `✅ Aligned`
-  - `🆕 New`
-  - `❓ Partial`
-  - `⚠️ Conflict`
-  - `❔ Insufficient`
-- Do NOT use `<h3>` inside `<summary>` — GitHub breaks the rendering.
-  Use `<strong>` instead.
-- "Item intent" literal (not `<PR|Issue>`) — the pipe would break the
-  table.
+- Fit cell values: `✅ Aligned`, `🆕 New`, `❓ Partial`, `⚠️ Conflict`,
+  `❔ Insufficient`
+- Use `<strong>` inside `<summary>`, never `<h3>` (GitHub breaks).
+- Table header cell is literal "Item intent" — the pipe in
+  `<PR|Issue>` would break the table.
+- **Footer attribution**: substitute `<tree-owner>/<tree-name>` with
+  the slug from `$tree_repo` (e.g. for
+  `https://github.com/serenakeyitan/paperclip-tree` → write
+  `serenakeyitan/paperclip-tree`). Substitute `<tree-repo-url>` with
+  the full URL. This makes gardener comments self-explanatory to
+  curious readers without bloating the main body.
 
 ### 4e: Post new or PATCH existing comment
 
@@ -446,25 +501,122 @@ if [ -n "$reaction_id" ]; then
 fi
 ```
 
-## Step 5: Log results to stdout
+## Step 5: Log results
 
-Do NOT post a run summary as a comment on any PR/issue — that spams
-whichever item happened to be last. Log to stdout only:
+### 5a: Stdout summary
+
+Print a human-readable summary to stdout (do NOT post it as a comment
+on any PR/issue):
 
 ```
 🌱 repo-gardener run <ISO-timestamp>
 - Target: <target_repo>
-- Scanned: <N> PRs, <M> issues (<X> skipped — paused, ignored, path-filtered)
-- Truncation: showing first 30, true total <true-pr-count> PRs / <true-issue-count> issues
-- Reviewed this run: <count>
-  - ALIGNED: <n> (<n-silent> silent, <n-posted> posted)
-  - NEW_TERRITORY: <n>
-  - NEEDS_REVIEW: <n>
-  - CONFLICT: <n>
-  - INSUFFICIENT_CONTEXT: <n>
+- Scanned: <N> PRs, <M> issues (<X> skipped)
+- Truncation: <30 of true-total>
+- Reviewed: <count>
+  ALIGNED <n>  NEW_TERRITORY <n>  NEEDS_REVIEW <n>  CONFLICT <n>  INSUFFICIENT <n>
 - Tree snapshot: <tree-sha>
-- Commands handled: <n>
 ```
+
+### 5b: Append structured run record to ~/.gardener/runs.jsonl
+
+For the `gardener-watch` terminal popup. **Use `jq -n` to construct
+the JSON** — never string-interpolate into a heredoc, because PR/issue
+titles can contain quotes, backticks, and newlines that would break
+the JSON.
+
+**Throughout Step 4**, maintain these counter variables and the
+`reviewed_items` array:
+
+```bash
+n_aligned=0; n_new=0; n_needs=0; n_conflict=0; n_insufficient=0
+reviewed_count=0
+declare -a reviewed_items=()  # JSON snippets, one per item
+declare -a errors=()           # JSON-quoted error strings
+```
+
+After each Step 4 verdict, increment the counter and append to
+`reviewed_items` with **`jq -n` to safely escape the title**:
+
+```bash
+n_conflict=$((n_conflict + 1))
+reviewed_count=$((reviewed_count + 1))
+# Build the URL based on item type:
+if [ "$item_type" = "pr" ]; then
+  item_url="https://github.com/$target_repo/pull/$item_number"
+else
+  item_url="https://github.com/$target_repo/issues/$item_number"
+fi
+item_json=$(jq -nc \
+  --argjson number "$item_number" \
+  --arg type "$item_type" \
+  --arg verdict "$verdict" \
+  --arg severity "$severity" \
+  --arg url "$item_url" \
+  --arg title "$item_title" \
+  '{number: $number, type: $type, verdict: $verdict, severity: $severity, url: $url, title: $title}')
+reviewed_items+=("$item_json")
+```
+
+After Step 4 finishes, build and append the run record:
+
+```bash
+mkdir -p ~/.gardener
+
+# Default RUN_MODE if not set
+: "${RUN_MODE:=manual}"
+
+# Rotate if file exceeds 5MB
+if [ -f ~/.gardener/runs.jsonl ] && [ "$(wc -c < ~/.gardener/runs.jsonl)" -gt 5242880 ]; then
+  mv ~/.gardener/runs.jsonl ~/.gardener/runs.jsonl.1
+fi
+
+# Build verdicts JSON
+verdicts_json=$(jq -nc \
+  --argjson aligned "$n_aligned" \
+  --argjson new "$n_new" \
+  --argjson needs "$n_needs" \
+  --argjson conflict "$n_conflict" \
+  --argjson insufficient "$n_insufficient" \
+  '{ALIGNED: $aligned, NEW_TERRITORY: $new, NEEDS_REVIEW: $needs, CONFLICT: $conflict, INSUFFICIENT_CONTEXT: $insufficient}')
+
+# Build items + errors JSON arrays from the bash arrays
+items_json=$(printf '%s\n' "${reviewed_items[@]}" | jq -sc '.')
+errors_json=$(printf '%s\n' "${errors[@]}" | jq -Rsc 'split("\n") | map(select(length > 0))')
+
+# Final run record line
+jq -nc \
+  --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  --arg mode "$RUN_MODE" \
+  --arg target "$target_repo" \
+  --arg tree_sha "${tree_sha:-}" \
+  --argjson scanned_prs "${num_prs:-0}" \
+  --argjson scanned_issues "${num_issues:-0}" \
+  --argjson true_total_prs "${true_pr_count:-0}" \
+  --argjson true_total_issues "${true_issue_count:-0}" \
+  --argjson reviewed "$reviewed_count" \
+  --argjson verdicts "$verdicts_json" \
+  --argjson items "$items_json" \
+  --argjson errors "$errors_json" \
+  '{ts: $ts, mode: $mode, target_repo: $target, tree_sha: $tree_sha, scanned_prs: $scanned_prs, scanned_issues: $scanned_issues, true_total_prs: $true_total_prs, true_total_issues: $true_total_issues, reviewed: $reviewed, verdicts: $verdicts, items: $items, errors: $errors}' \
+  >> ~/.gardener/runs.jsonl
+```
+
+`$RUN_MODE` is one of `manual` / `loop` / `schedule`. The wrappers
+`gardener-loop.md` and `gardener-schedule.md` set it explicitly. When
+`/gardener-manual` is invoked directly, `RUN_MODE` is unset and the
+shell parameter expansion `: "${RUN_MODE:=manual}"` defaults it to
+`manual`.
+
+**URL construction**: PRs use `/pull/<n>`, issues use `/issues/<n>`.
+GitHub redirects `/issues/<n>` to `/pull/<n>` for PRs but not vice
+versa, so always pick the correct form based on the item type from
+Step 1's queue.
+
+**Cloud schedule note**: in `RUN_MODE=schedule`, `~/.gardener/` lives
+in an ephemeral container and the file is wiped after each run. This
+is intentional — schedule runs are observable via the trigger output
+panel in `claude.ai/code/scheduled` rather than the local watcher.
 
 ## Summary
 
