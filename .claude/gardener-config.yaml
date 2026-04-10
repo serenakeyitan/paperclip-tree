@@ -1,4 +1,4 @@
 target_repo: paperclipai/paperclip
 tree_repo: https://github.com/serenakeyitan/paperclip-tree
 config_repo: serenakeyitan/paperclip-tree
-installed_version: v2.1.5
+installed_version: v2.1.6

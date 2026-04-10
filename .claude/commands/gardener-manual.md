@@ -383,7 +383,7 @@ Aligned with context tree. No concerns.
 
 <sub>Commands: `@gardener re-review` · `@gardener pause` · `@gardener ignore`</sub>
 
-<sub>🌱 Posted by [repo-gardener](https://github.com/agent-team-foundation/repo-gardener) — open-source context-aware review bot. Reviews against [<tree-owner>/<tree-name>](<tree-repo-url>).</sub>
+<sub>🌱 Posted by [repo-gardener](https://github.com/agent-team-foundation/repo-gardener) — open-source context-aware review bot built on [First-Tree](https://github.com/agent-team-foundation/first-tree). Reviews against [<tree-owner>/<tree-name>](<tree-repo-url>).</sub>
 ```
 
 ### 4d: Post or update review comment
@@ -430,7 +430,7 @@ For all non-silent verdicts, use this exact format:
 
 <sub>Reviewed commit: <code><short-sha></code> · Tree snapshot: <code><tree-sha></code> · Commands: <code>@gardener re-review</code> · <code>@gardener pause</code> · <code>@gardener ignore</code></sub>
 
-<sub>🌱 Posted by [repo-gardener](https://github.com/agent-team-foundation/repo-gardener) — an open-source context-aware review bot. Reviews this repo against [<tree-owner>/<tree-name>](<tree-repo-url>), a user-maintained context tree. Not affiliated with this project's maintainers.</sub>
+<sub>🌱 Posted by [repo-gardener](https://github.com/agent-team-foundation/repo-gardener) — an open-source context-aware review bot built on [First-Tree](https://github.com/agent-team-foundation/first-tree). Reviews this repo against [<tree-owner>/<tree-name>](<tree-repo-url>), a user-maintained context tree. Not affiliated with this project's maintainers.</sub>
 ````
 
 **Rendering notes:**
@@ -518,60 +518,79 @@ on any PR/issue):
 - Tree snapshot: <tree-sha>
 ```
 
-### 5b: Append structured run record to ~/.gardener/runs.jsonl
+### 5b: Stream structured events to ~/.gardener/runs.jsonl
 
-For the `gardener-watch` terminal popup. **Use `jq -n` to construct
-the JSON** — never string-interpolate into a heredoc, because PR/issue
-titles can contain quotes, backticks, and newlines that would break
-the JSON.
+The `gardener-watch` terminal popup tails this file. **Stream two
+event kinds**: an `item` line after each PR/issue gardener processes
+(so the user sees activity in real time), and a `run` line at the end
+of the run with the summary.
 
-**Throughout Step 4**, maintain these counter variables and the
-`reviewed_items` array:
+**Always use `jq -n` to construct JSON.** Never string-interpolate
+into a heredoc — PR/issue titles contain quotes, backticks, and
+newlines that would corrupt the log.
+
+**At the start of Step 4**, initialize counters:
 
 ```bash
+mkdir -p ~/.gardener
+: "${RUN_MODE:=manual}"
+
 n_aligned=0; n_new=0; n_needs=0; n_conflict=0; n_insufficient=0
 reviewed_count=0
-declare -a reviewed_items=()  # JSON snippets, one per item
-declare -a errors=()           # JSON-quoted error strings
+
+# Rotate if file exceeds 5MB
+if [ -f ~/.gardener/runs.jsonl ] && [ "$(wc -c < ~/.gardener/runs.jsonl)" -gt 5242880 ]; then
+  mv ~/.gardener/runs.jsonl ~/.gardener/runs.jsonl.1
+fi
 ```
 
-After each Step 4 verdict, increment the counter and append to
-`reviewed_items` with **`jq -n` to safely escape the title**:
+**After every item gardener processes** in Step 4 (regardless of
+verdict — even silent ALIGNED items), append a streaming `item`
+event to the log:
 
 ```bash
-n_conflict=$((n_conflict + 1))
-reviewed_count=$((reviewed_count + 1))
-# Build the URL based on item type:
+# Determine the item URL — PRs use /pull/, issues use /issues/
 if [ "$item_type" = "pr" ]; then
   item_url="https://github.com/$target_repo/pull/$item_number"
 else
   item_url="https://github.com/$target_repo/issues/$item_number"
 fi
-item_json=$(jq -nc \
+
+# Append a real-time item event for the watch popup
+jq -nc \
+  --arg kind "item" \
+  --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  --arg mode "$RUN_MODE" \
+  --arg target_repo "$target_repo" \
   --argjson number "$item_number" \
   --arg type "$item_type" \
   --arg verdict "$verdict" \
   --arg severity "$severity" \
   --arg url "$item_url" \
   --arg title "$item_title" \
-  '{number: $number, type: $type, verdict: $verdict, severity: $severity, url: $url, title: $title}')
-reviewed_items+=("$item_json")
+  '{kind: $kind, ts: $ts, mode: $mode, target_repo: $target_repo, number: $number, type: $type, verdict: $verdict, severity: $severity, url: $url, title: $title}' \
+  >> ~/.gardener/runs.jsonl
+
+# Bump the matching counter
+case "$verdict" in
+  ALIGNED) n_aligned=$((n_aligned + 1)) ;;
+  NEW_TERRITORY) n_new=$((n_new + 1)) ;;
+  NEEDS_REVIEW) n_needs=$((n_needs + 1)) ;;
+  CONFLICT) n_conflict=$((n_conflict + 1)) ;;
+  INSUFFICIENT_CONTEXT) n_insufficient=$((n_insufficient + 1)) ;;
+esac
+reviewed_count=$((reviewed_count + 1))
 ```
 
-After Step 4 finishes, build and append the run record:
+**Why this matters**: the watch popup reads the file with `tail -F`,
+so each appended JSON line shows up in the watcher within ~100ms of
+gardener writing it. Users see PRs/issues being reviewed live, with
+clickable URLs (in supported terminals) or plain URLs (in
+Terminal.app).
+
+**At the end of Step 4**, append one `run` summary event:
 
 ```bash
-mkdir -p ~/.gardener
-
-# Default RUN_MODE if not set
-: "${RUN_MODE:=manual}"
-
-# Rotate if file exceeds 5MB
-if [ -f ~/.gardener/runs.jsonl ] && [ "$(wc -c < ~/.gardener/runs.jsonl)" -gt 5242880 ]; then
-  mv ~/.gardener/runs.jsonl ~/.gardener/runs.jsonl.1
-fi
-
-# Build verdicts JSON
 verdicts_json=$(jq -nc \
   --argjson aligned "$n_aligned" \
   --argjson new "$n_new" \
@@ -580,15 +599,14 @@ verdicts_json=$(jq -nc \
   --argjson insufficient "$n_insufficient" \
   '{ALIGNED: $aligned, NEW_TERRITORY: $new, NEEDS_REVIEW: $needs, CONFLICT: $conflict, INSUFFICIENT_CONTEXT: $insufficient}')
 
-# Build items + errors JSON arrays from the bash arrays
-items_json=$(printf '%s\n' "${reviewed_items[@]}" | jq -sc '.')
-errors_json=$(printf '%s\n' "${errors[@]}" | jq -Rsc 'split("\n") | map(select(length > 0))')
+# errors_json should be a JSON array of strings (built from any errors caught)
+errors_json="${errors_json:-[]}"
 
-# Final run record line
 jq -nc \
+  --arg kind "run" \
   --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   --arg mode "$RUN_MODE" \
-  --arg target "$target_repo" \
+  --arg target_repo "$target_repo" \
   --arg tree_sha "${tree_sha:-}" \
   --argjson scanned_prs "${num_prs:-0}" \
   --argjson scanned_issues "${num_issues:-0}" \
@@ -596,11 +614,22 @@ jq -nc \
   --argjson true_total_issues "${true_issue_count:-0}" \
   --argjson reviewed "$reviewed_count" \
   --argjson verdicts "$verdicts_json" \
-  --argjson items "$items_json" \
   --argjson errors "$errors_json" \
-  '{ts: $ts, mode: $mode, target_repo: $target, tree_sha: $tree_sha, scanned_prs: $scanned_prs, scanned_issues: $scanned_issues, true_total_prs: $true_total_prs, true_total_issues: $true_total_issues, reviewed: $reviewed, verdicts: $verdicts, items: $items, errors: $errors}' \
+  '{kind: $kind, ts: $ts, mode: $mode, target_repo: $target_repo, tree_sha: $tree_sha, scanned_prs: $scanned_prs, scanned_issues: $scanned_issues, true_total_prs: $true_total_prs, true_total_issues: $true_total_issues, reviewed: $reviewed, verdicts: $verdicts, errors: $errors}' \
   >> ~/.gardener/runs.jsonl
 ```
+
+**If gardener aborts early** (e.g. user declines a confirmation,
+config error, tree clone fails), append a `run` event with the
+error captured in `errors`:
+
+```bash
+errors_json=$(jq -nc --arg msg "aborted before Step 4: $abort_reason" '[$msg]')
+# then write the run event as above with reviewed_count=0
+```
+
+This ensures the watcher always shows *something* — even aborted runs
+appear with a red ✗ icon.
 
 `$RUN_MODE` is one of `manual` / `loop` / `schedule`. The wrappers
 `gardener-loop.md` and `gardener-schedule.md` set it explicitly. When
