@@ -45,6 +45,10 @@ V1 supports import/export using a portable package contract:
 
 **Rationale:** Exportable company configs enable sharing templates ("pre-built marketing agency"), version-controlling org structure, and duplicating/forking companies. The markdown-first approach keeps packages readable and vendor-neutral.
 
+## Decision Records
+
+- [company-is-the-top-level-boundary.md](company-is-the-top-level-boundary.md) — Why Company is the primary isolation, governance, and work boundary in Paperclip.
+
 ## Open Questions
 
 - Company-level settings and configuration surface (beyond what exists today)

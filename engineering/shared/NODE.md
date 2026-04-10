@@ -50,3 +50,7 @@ Shared configuration shape used by both server and CLI.
 - **Const arrays, not TypeScript enums.** All domain values are `as const` arrays, which enables both type inference (`typeof X[number]`) and runtime iteration/validation. TypeScript enums are avoided.
 - **No runtime dependencies.** This package has zero npm dependencies — it is pure TypeScript types and constants. This keeps it safe to import anywhere without bloating bundles.
 - **Telemetry types are co-located** (`/src/telemetry/`) so both server and CLI share the same event schemas.
+
+## Decision Records
+
+- [const-arrays-and-zero-runtime-dependencies.md](const-arrays-and-zero-runtime-dependencies.md) — Why shared contracts are expressed with const arrays and kept dependency-free.

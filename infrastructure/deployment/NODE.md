@@ -57,6 +57,10 @@ The untrusted-review container is designed for running AI agents on untrusted co
 
 CI builds `linux/amd64` and `linux/arm64` images. Uses Docker Buildx with GitHub Actions cache (`type=gha`). Published to GitHub Container Registry (`ghcr.io`).
 
+## Decision Records
+
+- [authenticated-docker-and-local-trusted-dev.md](authenticated-docker-and-local-trusted-dev.md) — Why Docker defaults to authenticated mode while local development keeps a trusted fast path.
+
 ---
 
 ## Environment Variables (Production Defaults)

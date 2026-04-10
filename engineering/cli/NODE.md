@@ -56,3 +56,7 @@ A set of subcommands that call the Paperclip HTTP API for programmatic control:
 - **Client commands mirror the REST API.** Every major API resource has a corresponding CLI subcommand, making the CLI a complete alternative to the web UI for automation.
 - **Data directory isolation** (`--data-dir` flag). Allows running multiple isolated Paperclip instances on the same machine by overriding the default `~/.paperclip` data root.
 - **Telemetry is opt-in** and shares the same event schema as the server (via `@paperclipai/shared`).
+
+## Decision Records
+
+- [cli-mirrors-api-and-instance-ops.md](cli-mirrors-api-and-instance-ops.md) — Why the CLI is both the local instance operator surface and the resource-oriented API client.

@@ -76,6 +76,10 @@ Paperclip ships default agent templates:
 
 These are starting points and reference implementations, not mandated patterns.
 
+## Decision Records
+
+- [adapter-defined-agent-internals.md](adapter-defined-agent-internals.md) — Why Paperclip owns control-plane agent fields while adapters own runtime-specific behavior.
+
 ## Agent Statuses
 
 `active`, `paused`, `idle`, `running`, `error`, `terminated`. Terminated is irreversible (board only).

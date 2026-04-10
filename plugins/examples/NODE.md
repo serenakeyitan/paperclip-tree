@@ -24,6 +24,10 @@ Provide copy-able starting points for plugin authors and serve as living documen
 - **Examples live in-tree, not in a separate repo.** They are part of the pnpm workspace and import `@paperclipai/plugin-sdk` via `workspace:*`. This ensures they always compile against the current SDK version.
 - **Graduated complexity.** Hello World shows the minimum, File Browser shows a realistic integration, Kitchen Sink shows the full surface. Authors pick the closest starting point.
 
+## Decision Records
+
+- [examples-live-in-tree-as-sdk-contract-tests.md](examples-live-in-tree-as-sdk-contract-tests.md) — Why example plugins are kept in-workspace as both docs and compatibility coverage.
+
 ## Boundaries
 
 Examples demonstrate SDK usage patterns. They do not define the API surface (that is `../sdk`) or implement host-side behavior (that is `../runtime`).

@@ -54,3 +54,7 @@ Pages live in `/ui/src/pages/` and map to top-level routes:
 - **UI is pre-built and published as an npm package** (`@paperclipai/ui`). The server can serve it as static assets or proxy to a Vite dev server during development.
 - **Tailwind v4** (not v3) — uses the new CSS-first configuration approach.
 - **Adapter UI components are co-located with adapter packages** but imported into the main UI bundle for the management pages.
+
+## Decision Records
+
+- [api-layer-and-react-query-over-global-state.md](api-layer-and-react-query-over-global-state.md) — Why frontend data flow is organized around a shared API layer plus React Query instead of a global store.

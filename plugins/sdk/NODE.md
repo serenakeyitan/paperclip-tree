@@ -31,6 +31,10 @@ Give third-party developers a clean, typed, versioned API for extending Papercli
 - **UI slot isolation.** Plugin UI bundles are loaded into named slots (dashboardWidget, detailTab, sidebar, projectSidebarItem, commentAnnotation, commentContextMenuItem, settingsPage, page). Props always include a `PluginHostContext` with current company/project/entity IDs.
 - **Zod re-exported.** The SDK re-exports Zod so plugin authors can define config schemas and tool parameter schemas without adding a separate dependency.
 
+## Decision Records
+
+- [single-sdk-dependency-and-zod-reexports.md](single-sdk-dependency-and-zod-reexports.md) — Why plugin authors target one SDK package instead of importing host internals directly.
+
 ## Boundaries
 
 The SDK defines the contract; it does not implement the host side. Host-side service implementations (worker manager, event bus, job scheduler) live in `../runtime`. Shared type definitions and constants originate in `../../engineering/shared` and are re-exported through this SDK.

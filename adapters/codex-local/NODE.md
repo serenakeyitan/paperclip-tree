@@ -31,6 +31,10 @@ Adapter for **Codex CLI** (OpenAI's coding agent). Spawns `codex` as a local chi
 - **RPC-based quota** (`fetchCodexRpcQuota`) instead of scraping CLI output. This provides structured rate-limit window data with reset times.
 - **Skill injection before execution** via `ensureCodexSkillsInjected` rather than at skill-sync time. This ensures skills are always fresh for each run.
 
+## Decision Records
+
+- [rpc-quota-and-fresh-skill-injection.md](rpc-quota-and-fresh-skill-injection.md) — Why Codex quota comes from RPC and Paperclip skills are refreshed on the execution path.
+
 ---
 
 ## Boundaries

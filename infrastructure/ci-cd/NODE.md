@@ -70,6 +70,10 @@ The PR pipeline validates that every workspace `package.json` is listed in the D
 - Docker: cancel-in-progress per ref
 - Lockfile refresh: no cancel-in-progress (only one refresh at a time)
 
+## Decision Records
+
+- [ci-owns-the-lockfile.md](ci-owns-the-lockfile.md) — Why lockfile updates are centralized in automation instead of ordinary pull requests.
+
 ---
 
 ## Toolchain Versions

@@ -62,6 +62,10 @@ When an agent crashes mid-task, Paperclip does **not** auto-reassign or auto-rel
 
 Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low (4). Intentionally small. Use labels for additional categorization.
 
+## Decision Records
+
+- [tasks-are-the-communication-channel.md](tasks-are-the-communication-channel.md) — Why Paperclip keeps agent coordination attached to tasks instead of introducing a separate chat layer.
+
 ## Open Questions
 
 - Team-specific workflow states (aspirational model from TASKS.md) -- when to implement beyond the V1 fixed enum

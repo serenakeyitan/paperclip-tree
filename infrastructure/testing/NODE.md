@@ -69,6 +69,10 @@ Both e2e and release-smoke workflows upload Playwright HTML reports and test res
 
 `scripts/check-forbidden-tokens.mjs` scans the codebase for tokens that should never be committed (API keys, secrets). Run via `pnpm check:tokens`. This is a guardrail against accidental secret commits.
 
+## Decision Records
+
+- [no-llm-calls-in-default-ci.md](no-llm-calls-in-default-ci.md) — Why standard CI avoids required live model-provider calls.
+
 ---
 
 ## Test Commands Reference

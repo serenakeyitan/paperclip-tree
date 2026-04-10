@@ -33,6 +33,10 @@ Adapter for **OpenClaw** agents via the WebSocket gateway protocol. Unlike all o
 - **No skill sync.** OpenClaw agents manage their own capabilities remotely. Paperclip does not inject skills into gateway-mode agents.
 - **No session codec exported.** Unlike local adapters, session state is managed server-side by the OpenClaw gateway.
 
+## Decision Records
+
+- [websocket-gateway-and-device-pairing.md](websocket-gateway-and-device-pairing.md) — Why OpenClaw is modeled as a gateway protocol with pairing and remote session routing.
+
 ---
 
 ## Boundaries
