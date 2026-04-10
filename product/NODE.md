@@ -34,17 +34,17 @@ One Paperclip instance runs multiple **Companies**. Each Company has a **goal**,
 
 8. **Local-first, cloud-ready.** The mental model should not change between local solo use and shared/cloud deployment. Two runtime modes: `local_trusted` (no login friction) and `authenticated` (session-based with private/public exposure).
 
-9. **Thin core, rich edges.** Knowledge bases, external revenue tracking, rich chat, and special surfaces go into plugins -- not the core control plane.
+9. **Thin core, rich edges.** General-purpose knowledge bases, external revenue tracking, rich chat, and special surfaces go into plugins -- not the core control plane. A company-scoped file system (folders and documents) is foundational organizational infrastructure -- every company needs a structured place for its persistent files, the same way it needs an org chart and a budget.
 
 ## V1 Scope Summary
 
 V1 demonstrates the full control-plane loop end-to-end: a human board creates a company, defines goals, hires agents into an org tree, agents receive and execute tasks via heartbeat invocations, costs are tracked with budget hard-stops, and the board can intervene anywhere. Success means one operator can run a small AI-native company with clear visibility and control.
 
-**Explicitly deferred from V1:** plugin framework/SDK, knowledge base, revenue/expense accounting beyond tokens, public marketplace (ClipHub), multi-board governance, automatic self-healing orchestration.
+**Explicitly deferred from V1:** plugin framework/SDK, general-purpose knowledge base / wiki, revenue/expense accounting beyond tokens, public marketplace (ClipHub), multi-board governance, automatic self-healing orchestration. (Note: a company file system — structured folders and documents scoped to company, department, and agent — is in scope as foundational infrastructure, distinct from a general-purpose knowledge base product.)
 
 ## Anti-Requirements
 
-Paperclip is explicitly **not**: an agent runtime, a knowledge base, a SaaS, a general chat app, a complete Jira/GitHub replacement, or a delivery infrastructure manager. These boundaries are load-bearing and protect product focus.
+Paperclip is explicitly **not**: an agent runtime, a general-purpose knowledge base or wiki, a SaaS, a general chat app, a complete Jira/GitHub replacement, or a delivery infrastructure manager. These boundaries are load-bearing and protect product focus. (A company file system for structured folders and documents is organizational infrastructure — not a knowledge base product.)
 
 ## Sub-domains
 
