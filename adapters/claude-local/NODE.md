@@ -33,6 +33,10 @@ Adapter for **Claude Code** (Anthropic's CLI agent). Spawns `claude` as a local 
 - **Login flow (`runClaudeLogin`)** is exposed as a separate export so the server can trigger interactive auth setup outside of task execution.
 - **Max-turns detection** (`isClaudeMaxTurnsResult`) distinguishes "agent hit turn limit" from "agent errored," enabling the server to handle continuation differently.
 
+## Decision Records
+
+- [stream-json-and-headless-permissions.md](stream-json-and-headless-permissions.md) — Why Claude runs through structured stream output with explicit headless permission handling.
+
 ---
 
 ## Boundaries
