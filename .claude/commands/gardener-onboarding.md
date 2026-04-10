@@ -222,7 +222,27 @@ Which?"
 
 ## 7. Test run (optional)
 
-Ask the user:
+**External reviewer mode warning**: In external reviewer mode (no label
+permission on target), gardener posts a visible comment on **every**
+ALIGNED+low item — there is no silent path. On a large repo, the first
+fire could post dozens of unsolicited comments to a public repo you
+don't maintain.
+
+If `INSTALL_MODE=external`, tell the user:
+
+"⚠️ **First-fire warning for external reviewer mode**: gardener will
+post a visible comment on every item it reviews (including ALIGNED
+items), because it can't silently label on a repo you don't maintain.
+
+Before the first run on a large repo, I strongly recommend:
+1. Set `paths_ignored` in `.claude/gardener-config.yaml` to skip
+   docs, tests, vendor, etc.
+2. Consider setting `scan_limit: 5` for the first run to test on a
+   small batch, then increase after.
+3. Run `/gardener-manual` interactively first (not `/gardener-start`)
+   so you can see what it's about to post."
+
+Then ask:
 "⚠️ The test run will scan open PRs and issues on `<target_repo>` and
 may post real comments. Proceed?"
 

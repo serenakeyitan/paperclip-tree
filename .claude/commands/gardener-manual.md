@@ -39,7 +39,8 @@ target_repo: <owner>/<name>     # repo whose PRs/issues gardener reviews
 tree_repo: <url>                # context tree repo URL (required)
 config_repo: <owner>/<name>     # optional — where this config file lives
                                  # if unset, defaults to target_repo
-installed_version: <vX.Y.Z>     # written by onboarding/upgrade; used by /gardener-upgrade
+installed_version: <vX.Y.Z>     # written by onboarding/upgrade
+scan_limit: 30                   # optional — items per scan (increase for large repos)
 paths_ignored:                   # optional
   - "vendor/**"
 ```
@@ -82,36 +83,66 @@ gardener_user=$(gh api user --jq .login)
 Use `$gardener_user` (not a placeholder) in Step 4a reaction checks and
 Step 4f cleanup.
 
-**Capture true total counts** (used in Step 5 log):
+**Capture true total counts** (used in Step 5 log). `gh pr list`
+defaults to `--limit 30`, so explicitly use the search API for
+accurate totals on large repos:
 
 ```bash
-true_pr_count=$(gh pr list --repo $target_repo --state open --json number --jq length)
-true_issue_count=$(gh issue list --repo $target_repo --state open --json number --jq length)
+true_pr_count=$(gh api "search/issues?q=repo:${target_repo}+is:pr+is:open&per_page=1" --jq .total_count)
+true_issue_count=$(gh api "search/issues?q=repo:${target_repo}+is:issue+is:open&per_page=1" --jq .total_count)
+```
+
+Read `scan_limit` from config (default 30):
+
+```bash
+scan_limit=$(grep -E '^scan_limit:' .claude/gardener-config.yaml 2>/dev/null | sed 's/.*: *//' || echo 30)
 ```
 
 ## Step 1: Scan for work
 
-True counts are already captured in Step 0 (`$true_pr_count`, `$true_issue_count`).
-
-Fetch details into shell variables, then capture the post-filter counts
-(needed by Step 5b's run record):
+### 1a: Fetch recent items (the "window")
 
 ```bash
-prs_json=$(gh pr list --repo $target_repo --state open --limit 30 \
+prs_json=$(gh pr list --repo $target_repo --state open --limit "$scan_limit" \
   --json number,title,headRefName,author,body,additions,deletions,labels)
-issues_json=$(gh issue list --repo $target_repo --state open --limit 30 \
+issues_json=$(gh issue list --repo $target_repo --state open --limit "$scan_limit" \
   --json number,title,author,body,labels)
+```
 
+### 1b: Union mode — include previously-reviewed items that fell outside the window
+
+On busy repos, `gh pr list` sorts by `updatedAt desc`. Items gardener
+reviewed earlier slide out of the window as newer items get activity.
+To avoid abandoning reviewed items:
+
+```bash
+# Find items where gardener previously commented (regardless of window position)
+gardener_commented_prs=$(gh api "search/issues?q=repo:${target_repo}+is:pr+is:open+commenter:${gardener_user}&per_page=${scan_limit}" \
+  --jq '.items[].number' 2>/dev/null || true)
+gardener_commented_issues=$(gh api "search/issues?q=repo:${target_repo}+is:issue+is:open+commenter:${gardener_user}&per_page=${scan_limit}" \
+  --jq '.items[].number' 2>/dev/null || true)
+```
+
+Merge these into the window lists (deduplicate by number). For any
+item from the union that wasn't in the original window, fetch its
+details individually: `gh pr view <n> --repo $target_repo --json ...`.
+
+**Warning**: `gh search` has indexing lag (minutes behind the API).
+Use it for the union query (acceptable — worst case is missing a
+recently-reviewed item for one cycle), but **never use `gh search` to
+gate writes** (see Step 4e). The direct API (`/repos/.../issues/<n>/comments`)
+is always authoritative.
+
+### 1c: Post-filter
+
+```bash
 num_prs=$(echo "$prs_json" | jq length)
 num_issues=$(echo "$issues_json" | jq length)
 ```
 
-Fetch comments per-item in Step 2, not in bulk.
-
 If `paths_ignored` is set in config, run
 `gh pr diff <n> --repo $target_repo --name-only` and skip PRs where
-every file matches an ignored glob. **Decrement `num_prs` for each
-filtered PR** so Step 5b's logged count reflects actually-considered items.
+every file matches an ignored glob. Decrement `num_prs` for each.
 
 If nothing remains → log "🌱 Nothing to tend." and exit.
 
@@ -195,9 +226,14 @@ the regex on every run, creating a false-positive re-review loop.
 
 5. **`gardener:state` comment exists**:
    - Parse `reviewed=<sha>` from the marker.
+   - **Always write full 40-char SHAs** in new markers. Older versions
+     wrote 8-char short SHAs — use **prefix matching** for backward
+     compat: `[[ "$head_sha" == "$marker_sha"* ]]`. On re-review,
+     the PATCH will upgrade the marker to the full SHA.
    - **For PRs**: compare against current HEAD SHA
-     (`gh pr view <n> --json headRefOid`). If equal → skip. If differs
-     → re-review; remember the comment ID so Step 4e can PATCH it.
+     (`gh pr view <n> --json headRefOid`). If prefix-match → skip.
+     If differs → re-review; remember the comment ID so Step 4e can
+     PATCH it (and upgrade the SHA to full 40-char).
    - **For issues**: the marker is `reviewed=issue@<ISO-timestamp>`.
      Issues have no stable identifier like a commit SHA — `updated_at`
      bumps every time anyone (including gardener) edits any comment on
@@ -452,15 +488,34 @@ For all non-silent verdicts, use this exact format:
 
 ### 4e: Post new or PATCH existing comment
 
-**Finding the existing comment** (if re-reviewing from Step 2):
+**Hard-stop re-check before any write** (prevents duplicates caused by
+search-index lag, concurrent runs, or stale Step 2 classifications):
 
-You already have the comment ID from Step 2's classification. Use it:
-
-**PATCH existing comment:**
 ```bash
-# Write the new body to a temp file to avoid shell escaping issues:
+# Re-fetch comments RIGHT BEFORE posting. Direct API is authoritative.
+existing_gardener=$(gh api "/repos/$target_repo/issues/$number/comments" --paginate \
+  | jq --arg u "$gardener_user" '[.[] | select(.user.login == $u and (.body | contains("gardener:state")))]')
+existing_count=$(echo "$existing_gardener" | jq length)
+
+if [ "$existing_count" -gt 0 ] && [ -z "$comment_id" ]; then
+  # Step 2 said "first review" but we found an existing gardener comment.
+  # Another run must have posted between Step 2 and now.
+  # Switch to PATCH mode instead of POST.
+  comment_id=$(echo "$existing_gardener" | jq -r '.[0].id')
+fi
+
+# Self-heal: if multiple gardener:state comments exist, delete extras
+if [ "$existing_count" -gt 1 ]; then
+  echo "$existing_gardener" | jq -r '.[1:][].id' | while read -r dup_id; do
+    gh api -X DELETE "/repos/$target_repo/issues/comments/$dup_id"
+  done
+fi
+```
+
+**PATCH existing comment** (re-review or self-healed):
+```bash
 cat > /tmp/gardener-review-body.md <<'BODY'
-<!-- gardener:state · reviewed=abc1234 · verdict=CONFLICT · severity=high · tree_sha=def5678 -->
+<!-- gardener:state · reviewed=<full-40-char-sha> · verdict=<VERDICT> · severity=<level> · tree_sha=<tree-sha> -->
 ... rest of comment ...
 BODY
 
@@ -468,14 +523,14 @@ gh api -X PATCH "/repos/$target_repo/issues/comments/$comment_id" \
   -F body=@/tmp/gardener-review-body.md
 ```
 
-**Post new comment** (first review, no existing comment ID):
+**Post new comment** (first review, no existing comment after re-check):
 ```bash
 gh api -X POST "/repos/$target_repo/issues/$number/comments" \
   -F body=@/tmp/gardener-review-body.md
 ```
 
-Use `gh api issues/$number/comments` NOT `pulls/$number/comments` even
-for PRs — PR conversation comments live under the issues endpoint.
+Use `gh api issues/$number/comments` NOT `pulls/$number/comments` —
+PR conversation comments live under the issues endpoint.
 
 ### 4f: Handle user commands and cleanup
 

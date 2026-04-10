@@ -12,6 +12,22 @@ only when they `git pull` the run logs from a synced location, or by
 viewing the run summary stored as a comment on a known PR. For now,
 schedule runs are observable via stdout in the trigger output panel.)
 
+**Pre-flight auth check** — the cloud container needs GitHub auth.
+Before reading the runbook, verify `gh` is authenticated:
+
+```bash
+if ! gh auth status &>/dev/null; then
+  echo "❌ gh is not authenticated in this cloud container."
+  echo "   The cloud schedule needs a GitHub MCP connector."
+  echo "   Connect one at: https://claude.ai/settings/connectors"
+  exit 1
+fi
+echo "✓ gh authenticated as $(gh api user --jq .login)"
+```
+
+If this fails, the schedule will exit immediately with a visible error
+in the trigger output panel — not silently succeed with zero work.
+
 The schedule's source repo is the **config repo** — it holds the
 gardener commands and `.claude/gardener-config.yaml`. The `target_repo`
 to review is inside that config file and is accessed only via `gh api`;
