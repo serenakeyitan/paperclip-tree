@@ -9,9 +9,11 @@ This repository is the dedicated **Context Tree** for Paperclip.
 
 It is the living source of truth for **decisions, constraints, ownership, and
 cross-domain relationships** around the Paperclip project. It is **not** the
-implementation repo and it is **not** the place for low-level execution detail. build with [agent-team-foundation/first-tree](https://github.com/agent-team-foundation/first-tree)
+implementation repo and it is **not** the place for low-level execution detail. 
 
-**Source repository:** [paperclipai/paperclip](https://github.com/paperclipai/paperclip)
+💚 **build with** [agent-team-foundation/first-tree](https://github.com/agent-team-foundation/first-tree)
+
+💚 **Source repository:** [paperclipai/paperclip](https://github.com/paperclipai/paperclip)
 
 ## What Lives Here
 
