@@ -19,6 +19,8 @@
 /adapters/pi-local/minimal-session-state-and-cached-model-discovery.md @bingran-you @cryppadotta @serenakeyitan
 /drift/                                            @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/                         @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/infrastructure/          @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/infrastructure/security/ @@bingran-you @@serenakeyitan
 /drift/paperclip-e392f6b1/product/                 @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/product/task-system/     @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/product/task-system/issue-links/ @bingran-you @serenakeyitan
@@ -31,6 +33,7 @@
 /engineering/database/company-scoped-isolation.md  @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/                             @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/api-layer-and-react-query-over-global-state.md @bingran-you @cryppadotta @serenakeyitan
+/engineering/mcp-server/                           @@bingran-you @@cryppadotta @@serenakeyitan
 /engineering/shared/                               @bingran-you @cryppadotta @serenakeyitan
 /engineering/shared/const-arrays-and-zero-runtime-dependencies.md @bingran-you @cryppadotta @serenakeyitan
 /infrastructure/                                   @bingran-you @cryppadotta @serenakeyitan
