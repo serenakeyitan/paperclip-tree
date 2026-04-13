@@ -3,10 +3,13 @@ name: Update CODEOWNERS
 on:
   pull_request:
     types: [opened, synchronize]
+    branches-ignore:
+      - 'first-tree/sync-*'
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.head_ref, 'first-tree/sync-') }}
     permissions:
       contents: write
     steps:
