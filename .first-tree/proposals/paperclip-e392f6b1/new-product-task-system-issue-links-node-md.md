@@ -3,7 +3,7 @@ type: TREE_MISS
 source_id: paperclip-e392f6b1
 source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The main tree has no node for issue-to-issue links; the PR shipped link navigation, blocking semantics, and dependency wakeups — currently only in drift, the promoted tree needs this.
+rationale: The promoted tree has no node for issue-to-issue links; a drift node exists but lacks the blocking-as-first-class semantics and automatic dependency wakeup coordination model introduced by this PR.
 ---
 # Issue Links & Dependency Wakeups
 

@@ -3,7 +3,7 @@ type: TREE_MISS
 source_id: paperclip-e392f6b1
 source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The tree has no node covering issue list filtering, grouping, inline workflow transitions, or the refetch optimization that avoids re-fetching on filter-only changes — patterns this PR polished.
+rationale: The tree has no node covering how issue lists are filtered, sorted, grouped, or how inline workflow transitions and refetch optimizations work from the list and board views.
 ---
 # Issue List & Board Workflows
 
