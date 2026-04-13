@@ -1,42 +1,42 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The tree has proposals for execution workspaces but no actual node. This PR further hardens worktree runtime isolation, reinforcing that execution workspaces are a cross-cutting architectural concern that deserves a first-class tree node covering worktree creation, scoped checkout, reuse, and isolation guarantees.
+rationale: The PR hardens worktree runtime isolation and environment propagation — a cross-cutting concern spanning backend, CLI, and adapters with no dedicated tree node despite being mentioned in passing by backend, CLI, and database nodes.
 ---
 # Execution Workspaces
 
-How Paperclip provisions, manages, and reuses isolated work environments (git worktrees) for agent execution.
+How Paperclip provisions, manages, and reuses isolated git worktree-based work environments for agent execution.
 
 **Source:** `server/src/routes/execution-workspaces/`, `server/src/services/execution-workspace*`, `packages/shared/src/execution-workspace-guards.ts`, CLI `worktree` command.
 
 ## Architecture
 
-### Worktree-Based Isolation
-
-Each agent execution runs in a dedicated git worktree linked to the target repository. This provides filesystem isolation between concurrent agents without full repository clones. Worktrees are managed as first-class entities in the database (`execution_workspaces`, `workspace_operations`, `workspace_runtime_services` tables).
-
-### Scoped Wake Checkout
-
-When an agent wakes (via heartbeat, comment, or direct invocation), it checks out the issue it will work on. This checkout is scoped — the agent gets exclusive access to that issue's worktree. The checkout ties together the task system's atomic checkout (409 on conflict) with a physical worktree, ensuring no two agents modify the same files.
-
-### Linked Worktree Reuse
-
-Worktrees are not disposable — they can be reused across agent wake cycles. When an agent resumes work on the same issue, it reuses the existing linked worktree rather than creating a new one. This preserves uncommitted state, editor context, and avoids redundant clone/checkout overhead.
-
-### Runtime Isolation Hardening
-
-Worktree isolation is defensive: environment variables and project configuration are explicitly propagated (not inherited from the parent checkout), worktree paths are validated as writable before execution, and cleanup runs even on adapter crash or timeout. This prevents orphaned worktrees from accumulating and ensures agents cannot accidentally interfere with each other's filesystems.
+Each agent execution runs in a dedicated git worktree linked to the target repository, providing filesystem isolation between concurrent agents without full repository clones. Worktrees are managed as first-class entities in the database. When an agent wakes, it checks out the issue's worktree with exclusive access (409 on conflict). Worktrees are reusable across agent wake cycles, preserving uncommitted state.
 
 ## Key Decisions
 
-- **Worktrees over full clones.** Git worktrees share the object store with the main repo, making them fast to create and space-efficient. Critical when many agents run concurrently on the same repository.
-- **Workspace lifecycle tied to task lifecycle.** A workspace is created when an agent claims a task and persists until the task reaches a terminal state or is explicitly cleaned up.
-- **Reuse by default.** Linked worktrees persist between agent wakes to avoid redundant setup and preserve in-progress work.
-- **Cross-cutting concern.** Execution workspaces span CLI (user-facing `worktree` subcommand), backend (task orchestration triggers worktree creation), and adapters (receive the worktree path as their `cwd`). The backend owns lifecycle orchestration; the CLI owns the management subcommand.
+### Git Worktrees Over Full Clones
+
+Worktrees share the `.git` object store with the main checkout, making creation fast and disk-efficient. This is critical when multiple agents work on the same repo concurrently.
+
+### Reuse by Default
+
+Linked worktrees persist between agent wakes to avoid redundant setup and preserve in-progress work. When an agent wakes to continue work on an issue it previously worked on, it reuses the existing worktree rather than creating a new one.
+
+### Worktree Reseed
+
+When the base branch has advanced, the runtime reseeds the worktree in place rather than destroying and recreating it. This preserves local state (environment setup, cached builds) while keeping the workspace current with upstream changes.
+
+### Explicit Environment Propagation
+
+The runtime explicitly builds the worktree environment rather than inheriting from the parent process, preventing host environment leakage. Environment variables and project-level configuration are propagated deliberately into the worktree context.
+
+### Hardened Setup and Teardown
+
+Worktree creation and cleanup are defensive — validating that the target branch exists, the worktree path is writable, and cleanup runs even on adapter crash or timeout. This prevents orphaned worktrees from accumulating.
 
 ## Boundaries
 
-- Execution workspaces handle **filesystem isolation only**. Container isolation, network sandboxing, and resource limits belong to infrastructure/deployment.
-- The task system owns **logical checkout** (who is assigned). Execution workspaces own **physical checkout** (where the work happens).
+Execution workspaces handle filesystem isolation only. Container isolation and resource limits belong to `infrastructure/deployment`. The task system owns logical checkout (who is assigned); execution workspaces own physical checkout (where the work happens). This is a cross-cutting concern spanning CLI, backend, and adapters.

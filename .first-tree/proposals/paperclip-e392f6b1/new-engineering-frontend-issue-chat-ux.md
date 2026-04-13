@@ -1,9 +1,9 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: PR #3079 polishes issue comments into a chat-like UX using @assistant-ui/react, but the tree has no node capturing the issue chat UX pattern — the conversational comment model, assistant-ui integration, and the design decision to make issue threads feel like chat rather than a traditional comment list.
+rationale: PR #3079 polishes the issue chat UX (chat-like comment threads using @assistant-ui/react), but the frontend node only mentions 'chat UX' in a single bullet — no dedicated node captures the conversational thread pattern, assistant-ui integration, or the design decisions around bottom-up message flow and streaming support.
 ---
 # Issue Chat UX
 

@@ -1,27 +1,32 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The PR adds an MCP approval-create tool and tightens MCP API validation, but the tree has no node for the MCP server package — only unapproved proposals exist.
+rationale: The MCP server is a distinct package with approval creation tools, strict input validation, and Docker manifest integration — no tree node exists yet (proposal already drafted in drift but not merged).
 ---
-## Overview
+# MCP Server
 
-Standalone Model Context Protocol (MCP) server that exposes Paperclip capabilities to MCP-compatible AI clients (Claude Desktop, IDE extensions, external agents). Runs as its own process, separate from the Express backend, but reuses core service logic.
+Model Context Protocol server exposing Paperclip operations as MCP tools for external AI agents and IDEs. Source: `/packages/mcp-server`.
+
+Package: `@paperclipai/mcp-server`
+
+## Architecture
+
+### Manifest-Driven Tool Discovery
+
+Available tools are declared in a manifest file. The manifest is included in Docker's dependency stage so that tool definition changes trigger proper layer cache invalidation without requiring a full rebuild.
+
+### Shared Business Logic
+
+The MCP server imports backend service functions directly rather than duplicating logic or calling the REST API. This ensures a single source of truth for business rules while treating MCP as a distinct trust boundary with its own input validation layer.
+
+### Strict Input Validation
+
+All MCP tool inputs are tightly validated before forwarding to backend services. MCP is treated as an external trust boundary — validation is independent of and in addition to any REST API validation, since MCP callers may not go through the same authentication path as UI users.
 
 ## Key Decisions
 
-- **Separate package, shared logic.** The MCP server is a distinct entry point (`packages/mcp-server`) that imports service modules from the backend rather than duplicating them. This keeps the MCP surface thin while the backend remains the source of truth for business logic.
-- **Company-scoped access control.** Every MCP tool call is scoped to a `company_id`, consistent with the platform-wide isolation model.
-- **Strict request validation.** API inputs are validated tightly at the MCP boundary before forwarding to backend services, since MCP clients are untrusted external callers.
-- **Docker-aware packaging.** The MCP server manifest is included in the Docker deps stage so that container builds can resolve its dependencies without a full workspace install.
-
-## Current Tools
-
-- `approval-create` — Allows external agents to create approval requests through the MCP interface, integrating with the governance approval gates documented in `product/governance/`.
-
-## Relationships
-
-- Depends on backend service layer (`engineering/backend/`)
-- Integrates with governance approval system (`product/governance/`)
-- Packaged alongside other workspace packages (`infrastructure/deployment/`)
+- **MCP as a first-class integration surface** — not a wrapper around REST. External agents interact with Paperclip through typed MCP tools rather than raw HTTP calls.
+- **Governance tools are MCP-accessible** — approval creation (and future governance operations) can be triggered programmatically by external agents, bridging MCP to the governance system.
+- **Separate trust boundary** — MCP inputs are validated independently from REST API inputs, even when both call the same service functions.

@@ -1,9 +1,9 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The tree documents heartbeat-triggered wakes and dependency wakeups (proposal) but has no node for comment-triggered agent wakes — the pattern where posting a comment on an issue triggers the assigned agent to wake and respond, including the efficiency optimizations around debouncing, deduplication, and selective wake decisions.
+rationale: The PR introduces comment-triggered agent wakes with debouncing, deduplication, and selective wake rules — a distinct architectural pattern not captured by any existing tree node.
 ---
 # Comment Wake Protocol
 
@@ -13,24 +13,24 @@ How Paperclip wakes agents in response to comments on their assigned issues, and
 
 ## Architecture
 
-### Comment-Triggered Wakes
-
-When a comment is posted on an issue with an assigned agent, Paperclip can trigger an agent wake so the agent reads and responds to the comment. This is distinct from scheduled heartbeat wakes — comment wakes are event-driven and immediate. The comment wake uses the same adapter execution path as heartbeat runs but with comment-specific context delivery (the new comment and its thread context).
-
-### Wake Efficiency
-
-Naive comment wakes are expensive: every comment would spawn an adapter execution. The comment wake protocol includes efficiency measures to avoid redundant wakes:
-- **Debouncing** — rapid successive comments (e.g., during a human typing a multi-part message) are batched into a single wake.
-- **Deduplication** — if the agent is already running (from a heartbeat or prior comment wake), a new comment wake is suppressed or queued.
-- **Selective wake** — not every comment warrants a wake. System-generated comments, status change notifications, and comments from the agent itself do not trigger wakes.
+When a comment is posted on an issue with an assigned agent, Paperclip can trigger an agent wake so the agent reads and responds. Comment wakes are event-driven and immediate, distinct from scheduled heartbeat wakes. They use the same adapter execution path but with comment-specific context delivery.
 
 ## Key Decisions
 
-- **Comment wakes are a separate wake trigger, not a heartbeat override.** Comment wakes coexist with scheduled heartbeats. They use the same execution infrastructure but have independent triggering logic.
-- **Efficiency is server-side.** The debouncing and deduplication logic lives in the backend services, not in adapters. Adapters receive a wake request and execute; they don't know whether it was triggered by a comment, heartbeat, or dependency resolution.
+### Debouncing and Deduplication
+
+Rapid successive comments are batched into a single wake. If the agent is already running (from a heartbeat or prior comment wake), duplicate wake triggers are suppressed or queued.
+
+### Selective Wake Rules
+
+Not every comment triggers a wake. System-generated comments, status change notifications, and the agent's own comments do NOT trigger wakes. Only substantive comments from other participants cause a wake. Comments on `in_review` issues can re-checkout the task so the agent addresses feedback without manual status changes.
+
+### Server-Side Efficiency
+
+All efficiency logic (debouncing, deduplication, selective filtering) lives server-side in backend services. Adapters receive a uniform wake signal regardless of trigger type — they are unaware of whether the wake originated from a heartbeat, comment, or dependency resolution.
 
 ## Boundaries
 
-- The **heartbeat protocol** (scheduled wakes, context delivery spectrum) is defined in `product/agent-model`. This node covers **comment-triggered wakes** specifically.
-- The **task system** owns the comment model (tasks are the communication channel). This node covers the **wake mechanism** that reacts to comments.
-- **Execution workspace** setup during a comment wake follows the same worktree isolation pattern documented in the execution workspaces node.
+- The **heartbeat protocol** (scheduled wakes) is defined in `product/agent-model`. This node covers **comment-triggered wakes** specifically.
+- The **task system** owns the comment model. This node covers the **wake mechanism** that reacts to comments.
+- Execution workspace setup during a comment wake follows the worktree isolation pattern documented in `engineering/execution-workspaces`.

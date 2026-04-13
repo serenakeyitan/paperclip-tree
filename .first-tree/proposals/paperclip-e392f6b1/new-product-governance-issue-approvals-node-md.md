@@ -1,20 +1,24 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The governance node documents only V1 hiring and CEO strategy approval gates, but this PR implements issue-level approvals — a third approval type accessible via MCP and the UI with dedicated board approval card styling.
+rationale: The governance node lists fine-grained per-action approval gates as deferred, but the PR adds approval creation via MCP — the tree needs to capture that issue-level approvals are now realized.
 ---
-Issue-level approval gates allow specific issues to require board or designated-authority approval before work proceeds. This extends the existing governance approval infrastructure (previously limited to hiring and CEO strategy decisions) to individual work items.
+# Issue Approvals
 
-### Same Approval Infrastructure
+Human-in-the-loop approval gates at the issue level, extending the governance system beyond board-level hiring and strategy approvals.
 
-Issue approvals reuse the existing approval system (board powers, approval cards, audit trail) rather than introducing a separate mechanism. This keeps governance consistent across all approval types.
+## Key Decisions
 
-### MCP-Accessible
+### Multi-Channel Approval Creation
 
-External agents can create approval requests programmatically via the MCP `approval-create` tool, enabling automated governance workflows without direct API access.
+Approvals can be created from three surfaces: the web UI, the CLI (`paperclipai approval` subcommands), and the MCP server (`approval-create` tool). All three converge on the same backend approval service, ensuring consistent validation and audit logging regardless of the creation channel.
 
-### Relationship to Existing Gates
+### Programmatic Agent Access
 
-Issue approvals complement but do not replace the V1 hiring and CEO strategy gates. They operate at a finer granularity — per-issue rather than per-category — and can be triggered by agents or humans.
+Agents can request approvals programmatically via the MCP approval-create tool. This is critical for autonomous workflows where an agent reaches a governance gate and needs human sign-off before proceeding — the agent creates the approval, pauses, and resumes when the approval is resolved.
+
+## Relationship to Governance
+
+This realizes a capability previously listed as deferred in the governance node: "fine-grained per-action governance gates beyond hire and strategy approval." Issue approvals are scoped to individual issues rather than company-wide actions.
