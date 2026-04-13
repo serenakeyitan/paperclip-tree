@@ -3,7 +3,7 @@ type: TREE_MISS
 source_id: paperclip-e392f6b1
 source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: Bind presets (named network-binding profiles like localhost, tailnet, all-interfaces) and tailnet-aware binding hardening are new deployment concepts not covered by the existing deployment node.
+rationale: PR #3303 introduced bind presets (named network-binding profiles like localhost, tailnet, all-interfaces) and tailnet-aware binding hardening — the existing deployment node covers only Docker stages, compose configs, and env vars with no mention of bind presets or network topology configuration.
 ---
 # Bind Presets
 
@@ -27,4 +27,4 @@ Named presets replace ad-hoc bind address configuration. Most deployment failure
 
 ### Tailnet bind hardening
 
-The tailnet preset validates the Tailscale interface is present before accepting the configuration. This prevents silent fallback to a public interface if Tailscale is not running.
+The tailnet preset validates that the Tailscale interface is actually present before accepting the configuration. If the interface is missing, setup fails immediately rather than binding to a fallback address that could expose the server on an unintended network.

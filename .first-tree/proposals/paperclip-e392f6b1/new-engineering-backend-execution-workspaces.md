@@ -3,11 +3,13 @@ type: TREE_MISS
 source_id: paperclip-e392f6b1
 source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: Dev runner worktree isolation, linked worktree reuse, workspace import bootstrap, and worktree env hardening are core execution infrastructure patterns with no tree coverage (commits b611542, 6208899, a5aed93, c1bb938).
+rationale: Execution workspaces — git worktree isolation, worktree env bootstrap, linked worktree reuse, and the dev runner subsystem — are core execution infrastructure with no tree coverage despite being referenced in the backend routes.
 ---
 # Execution Workspaces
 
 How agents get isolated work environments via git worktrees, and how those worktrees are linked to tasks throughout the agent lifecycle.
+
+**Source:** Server-side execution infrastructure (`execution-workspaces` routes/services) + CLI `worktree` command
 
 ## Key Decisions
 
