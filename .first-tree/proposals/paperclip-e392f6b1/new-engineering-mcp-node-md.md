@@ -1,44 +1,30 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: MCP server is a new integration surface for external AI agents with its own trust boundary, tool manifest, and validation layer — no tree node exists for it.
+rationale: The MCP server (packages/mcp/) is an entirely new external integration surface with its own trust model, tool catalog, and Docker packaging — no tree node exists for it.
 ---
 # MCP Server
 
-Model Context Protocol server exposing Paperclip capabilities as tools to external AI agents.
+Standalone Model Context Protocol server exposing Paperclip capabilities as tools to MCP-compatible AI clients (Claude Desktop, IDE extensions, external agents). Source: `packages/mcp/`.
 
-**Source:** `packages/mcp/`
-**Package:** `@paperclipai/mcp`
-
----
+Package: `@paperclipai/mcp`
 
 ## Key Decisions
 
-### Tool-Based Interface with Strict Validation
+### Separate Process, Shared Services
 
-Each MCP tool maps to a discrete Paperclip action declared in a manifest. Request validation at the MCP boundary is independent of and stricter than backend route validation, because external agents operate at a different trust level than authenticated UI users.
+The MCP server runs as its own process but imports backend service modules directly rather than calling the REST API. This avoids duplicating business logic while keeping the MCP process independently deployable.
 
-**Rationale:** MCP is a trust boundary. External agents don't go through the same auth flow as the UI. Treating every inbound MCP request as untrusted-by-default keeps the attack surface auditable and the tool catalog explicit.
+### Untrusted Trust Boundary
 
-### Shared Services, Separate Package
+MCP is treated as an untrusted boundary — input validation at the MCP layer is stricter than internal backend route validation because MCP clients are not authenticated the same way as UI users. Every tool call is scoped to a `company_id` (platform-wide isolation applies).
 
-The MCP server imports backend service functions rather than duplicating business logic. It is a separate package with its own entry point, keeping the protocol boundary clean while reusing the canonical implementation.
+### Tool Catalog as API Surface
 
-**Rationale:** A single source of truth for business logic prevents drift between the UI-facing API and the agent-facing MCP surface.
+The MCP manifest defines the complete set of available tools. Unlisted actions are unreachable. The manifest is included in the Docker deps stage for correct layer caching.
 
-### Current Tools
+### First Tool: Approval Creation
 
-- **approval-create** — Lets external agents programmatically request board approval, bridging MCP to Paperclip's governance gates.
-
-### Docker Packaging
-
-The MCP server manifest is included in the Docker deps stage so that layer caching works correctly when only tool definitions change.
-
----
-
-## Boundaries
-
-- MCP tools are read/write but always subject to governance gates (approvals, budget hard-stops).
-- The tool catalog is the API surface — unlisted actions are unreachable.
+The first shipped MCP tool is `approval-create`, allowing external agents to programmatically request approval on any issue. This bridges MCP into Paperclip's governance layer — agents hitting a governance gate can request sign-off without human intervention in the UI.

@@ -1,22 +1,28 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The PR adds issue-level approval creation (via MCP tool), expanding governance beyond the V1 hiring and CEO strategy approval gates — the governance node doesn't capture this third approval type.
+rationale: The governance node lists fine-grained per-action approval gates as deferred, but this PR ships issue-level approvals — a third approval type beyond V1 hiring and CEO strategy gates, accessible via MCP and the UI.
 ---
-## Issue Approvals
+# Issue Approvals
 
-Issue-level approval requests extend the governance model beyond the original V1 gates (hiring approval, CEO strategy approval). Any issue can now have an approval request attached, enabling structured sign-off workflows at the task level.
+Issue-level approval gates allow any issue to require explicit sign-off before work proceeds. This extends the V1 governance model (which only gated hiring and CEO strategy approval) to individual work items.
 
-### How It Works
+## Key Decisions
 
-Approval requests can be created on issues through the UI or programmatically via the MCP `approval-create` tool. This means external agents connected through adapters can participate in governance workflows — requesting approval before proceeding with high-stakes actions.
+### Reuses Existing Approval Infrastructure
 
-### Relationship to Existing Gates
+Issue approvals use the same approval system as hiring and strategy gates — board powers, approval cards, audit trail, and synchronous blocking. The requesting agent blocks until the Board approves or rejects. No separate mechanism was introduced.
 
-V1 governance defined two hard-coded approval gates (hiring, CEO strategy). Issue approvals generalize this pattern: any issue can require approval, and the approval workflow follows the same audit trail and board-level visibility as the original gates.
+### MCP-Accessible Creation
 
-### Cross-Domain Links
+Approval requests can be created programmatically via the MCP `approval-create` tool, enabling agents connected through adapters to request governance sign-off without direct API access. This closes the loop between autonomous agent operation and human oversight.
 
-The MCP server (`engineering/mcp-server`) exposes the approval-create tool. The database schema includes `issue_approvals` alongside the existing `approvals` table. The frontend renders approval cards on the board with dedicated styling (polished in this PR).
+### Complements V1 Gates
+
+Issue approvals complement but do not replace the V1 hiring and CEO strategy gates. They operate at finer granularity — per-issue rather than per-category — and can be triggered by either agents or humans.
+
+## Relationship to Governance Model
+
+This is the first implementation of the "fine-grained per-action governance gates" previously listed as deferred in the governance node. The governance node's deferred list and open questions should be updated to reflect this.

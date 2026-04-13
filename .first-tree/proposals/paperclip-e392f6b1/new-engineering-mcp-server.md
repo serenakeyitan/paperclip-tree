@@ -1,27 +1,24 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The PR adds an MCP approval-create tool and tightens MCP API validation, but the tree has no node for the MCP server package — only unapproved proposals exist.
+rationale: The PR adds an MCP server package with an approval creation tool and strict validation patterns — no tree node exists for MCP.
 ---
-## Overview
+# MCP Server
 
-Standalone Model Context Protocol (MCP) server that exposes Paperclip capabilities to MCP-compatible AI clients (Claude Desktop, IDE extensions, external agents). Runs as its own process, separate from the Express backend, but reuses core service logic.
+Model Context Protocol server that exposes Paperclip operations as MCP tools, allowing external AI agents to interact with the platform programmatically.
 
 ## Key Decisions
 
-- **Separate package, shared logic.** The MCP server is a distinct entry point (`packages/mcp-server`) that imports service modules from the backend rather than duplicating them. This keeps the MCP surface thin while the backend remains the source of truth for business logic.
-- **Company-scoped access control.** Every MCP tool call is scoped to a `company_id`, consistent with the platform-wide isolation model.
-- **Strict request validation.** API inputs are validated tightly at the MCP boundary before forwarding to backend services, since MCP clients are untrusted external callers.
-- **Docker-aware packaging.** The MCP server manifest is included in the Docker deps stage so that container builds can resolve its dependencies without a full workspace install.
+### Tool-per-action surface
 
-## Current Tools
+Each MCP tool maps to a single Paperclip operation (e.g., creating an approval). Tools validate inputs tightly at the boundary before delegating to backend services. This keeps the MCP layer thin — it is a protocol adapter, not a business logic layer.
 
-- `approval-create` — Allows external agents to create approval requests through the MCP interface, integrating with the governance approval gates documented in `product/governance/`.
+### Strict API request validation
 
-## Relationships
+All incoming MCP requests are validated against strict schemas before reaching service logic. This was tightened to prevent malformed or unexpected payloads from reaching internal services, which is especially important because MCP clients are untrusted external agents.
 
-- Depends on backend service layer (`engineering/backend/`)
-- Integrates with governance approval system (`product/governance/`)
-- Packaged alongside other workspace packages (`infrastructure/deployment/`)
+### Docker packaging
+
+The MCP server manifest is included in the Docker deps stage so that container builds have access to the tool definitions. This ensures the MCP server is deployable alongside the main server without manual manifest copying.

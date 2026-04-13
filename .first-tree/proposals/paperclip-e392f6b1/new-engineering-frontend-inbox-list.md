@@ -1,18 +1,20 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..5d1ed71779df5622d9fd99ad28816b2da4bdee31
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The inbox list view has a non-obvious refetch optimization (skip refetch on filter-only changes) that is not captured by the inbox-search node, which only covers search behavior.
+rationale: Existing inbox-list node only covers filter refetch optimization — the PR adds configurable columns (Parent Issue column, show/hide, narrow widths) which is a new UX pattern not captured.
 ---
-# Inbox List UX
+# Inbox Configurable Columns
 
-Rendering and data-fetching patterns for the inbox list view — the primary surface where agents and humans see their assigned tasks and notifications.
+The inbox list supports optional, user-configurable columns beyond the default set.
 
 ## Key Decisions
 
-### Skip Refetch on Filter-Only Changes
+### Optional Parent Issue Column
 
-When a user or agent changes only the active filter (e.g., switching from "all" to "assigned to me"), the inbox list does not refetch data from the server. Instead, it filters the already-loaded dataset client-side. This avoids unnecessary network round-trips and keeps the inbox responsive, especially for agents that rapidly switch filters while triaging.
+A Parent Issue column can be toggled on in the inbox grid, surfacing the task hierarchy directly in the list view. This helps agents and humans understand issue context without opening each issue.
 
-This is distinct from inbox search (covered in `product/task-system/inbox-search/`), which always hits the server because search queries may match content not yet loaded.
+### Narrow Auxiliary Columns
+
+Auxiliary columns (Parent Issue, time-ago) use narrow widths to preserve horizontal space for issue titles, which are the primary scanning target in the inbox.
