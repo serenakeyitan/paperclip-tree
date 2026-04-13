@@ -622,6 +622,39 @@ The verdict is a judgment call, not a pattern match. Ask yourself:
 
 Assign severity: `low` / `medium` / `high` / `critical`.
 
+#### 4b-iv: React to the PR/issue with a verdict emoji
+
+After determining the verdict, add a reaction to the **original
+PR/issue** (not a comment — the top-level issue/PR body). This gives
+maintainers quick visual feedback that gardener reviewed the item,
+even before they read the comment.
+
+**Verdict → reaction mapping:**
+
+| Verdict | Reaction |
+|---------|----------|
+| `ALIGNED` | `rocket` 🚀 |
+| `NEW_TERRITORY` | `eyes` 👀 |
+| `NEEDS_REVIEW` | `confused` 😕 |
+| `CONFLICT` | `-1` 👎 |
+| `INSUFFICIENT_CONTEXT` | `eyes` 👀 |
+
+Local mode:
+```bash
+gh api -X POST "/repos/$target_repo/issues/$number/reactions" \
+  -f content="$reaction"
+```
+
+Schedule mode: call `mcp__github__create_reaction` if available.
+If the reaction endpoint is absent (some MCP connectors don't expose
+it), skip silently — the comment is the primary output, the reaction
+is a nice-to-have.
+
+**Do NOT react if gardener is PATCHing an existing comment** (re-review).
+The reaction from the first review is already there — adding another
+would be noisy. Only react on first review (no existing `gardener:state`
+comment).
+
 ### 4c: Silent path for ALIGNED + low severity
 
 **If verdict is `ALIGNED` AND severity is `low`**:
