@@ -1,30 +1,31 @@
-name: Generate CODEOWNERS
+name: Update CODEOWNERS
 
 on:
   pull_request:
-    branches: [main, master]
-    paths:
-      - "**/NODE.md"
+    types: [opened, synchronize]
 
 jobs:
-  codeowners:
+  update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ github.token }}
+
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - name: Generate CODEOWNERS from tree ownership
-        run: npx -p first-tree first-tree generate-codeowners
-      - name: Check for changes
-        id: diff
+          node-version: "22"
+
+      - run: npx -p first-tree first-tree generate-codeowners
+
+      - name: Commit if changed
         run: |
-          git diff --exit-code .github/CODEOWNERS || echo "changed=true" >> "$GITHUB_OUTPUT"
-      - name: Commit CODEOWNERS
-        if: steps.diff.outputs.changed == 'true'
-        run: |
+          git add .github/CODEOWNERS
+          git diff --cached --quiet .github/CODEOWNERS && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .github/CODEOWNERS
-          git commit -m "chore: auto-generate CODEOWNERS from tree ownership"
+          git commit -m "chore: update CODEOWNERS from tree ownership"
           git push

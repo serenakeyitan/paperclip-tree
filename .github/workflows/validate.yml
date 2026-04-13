@@ -1,18 +1,19 @@
-name: Validate Context Tree
+name: Validate Tree
 
 on:
   pull_request:
-    branches: [main, master]
-  push:
-    branches: [main, master]
+    paths:
+      - "**/*.md"
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - name: Verify context tree
+          node-version: "22"
+
+      - name: Validate tree
         run: npx -p first-tree first-tree verify
