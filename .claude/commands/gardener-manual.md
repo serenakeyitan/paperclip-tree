@@ -635,8 +635,8 @@ even before they read the comment.
 |---------|----------|
 | `ALIGNED` | `rocket` 🚀 |
 | `NEW_TERRITORY` | `eyes` 👀 |
-| `NEEDS_REVIEW` | `confused` 😕 |
-| `CONFLICT` | `-1` 👎 |
+| `NEEDS_REVIEW` | `eyes` 👀 |
+| `CONFLICT` | `eyes` 👀 |
 | `INSUFFICIENT_CONTEXT` | `eyes` 👀 |
 
 Local mode:
