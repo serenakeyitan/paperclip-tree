@@ -34,3 +34,5 @@ See [about.md](.agents/skills/first-tree/references/about.md) for background —
 See the installed framework documentation:
 - [principles.md](.agents/skills/first-tree/references/principles.md) — core principles with examples
 - [ownership-and-naming.md](.agents/skills/first-tree/references/ownership-and-naming.md) — node naming and ownership model
+
+- **[drift/](drift/NODE.md)** — Sync proposals pending review.
