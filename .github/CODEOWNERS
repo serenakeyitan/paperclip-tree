@@ -19,6 +19,8 @@
 /adapters/pi-local/minimal-session-state-and-cached-model-discovery.md @bingran-you @cryppadotta @serenakeyitan
 /drift/                                            @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/                         @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/adapters/                @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/adapters/windows-shell-invocation/ @@bingran-you @@serenakeyitan
 /drift/paperclip-e392f6b1/product/                 @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/product/task-system/     @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/product/task-system/issue-links/ @bingran-you @serenakeyitan
