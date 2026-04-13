@@ -1,14 +1,16 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The Codex Local Adapter node documents capabilities but has no mention of fast mode support, which is a new execution mode that affects how tasks are dispatched to Codex.
+rationale: PR adds fast mode support to the Codex adapter (--fast flag, env probe exclusion) which is not mentioned in the existing codex-local node.
 ---
 Update the existing Capabilities section to add:
 
-- **Fast mode:** Supported. Allows Paperclip to invoke Codex in fast mode for lower-latency responses at the cost of reduced reasoning depth. Controlled via adapter configuration.
+- **Fast mode:** Supports `--fast` flag for accelerated responses. Fast mode is explicitly excluded during environment probe (`envTest`) to avoid skewing capability detection results.
 
 Update the Key Decisions section to add:
 
-- **Fast mode as an adapter-level concern** — Fast mode is toggled at the adapter layer rather than the task layer, keeping the task system runtime-agnostic while letting operators choose speed vs. depth per adapter instance.
+### Fast Mode Exclusion in Environment Probe
+
+The `--fast` flag is not passed during `envTest` (environment capability probing). Fast mode changes model behavior in ways that could produce different capability signals, so probing always uses the standard mode to get consistent results.

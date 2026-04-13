@@ -3,7 +3,7 @@ type: TREE_MISS
 source_id: paperclip-e392f6b1
 source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The existing issue-links drift node only documents direct link navigation with blocking semantics listed as open questions, but the PR shipped first-class blocking relationships with automatic dependency wakeups — the node needs updating to reflect these as decided.
+rationale: The existing issue-links node lists blocking semantics and dependency behavior as open questions, but this PR ships first-class blocking relationships with automatic dependency wakeups — the node needs updating to reflect these as decided, not open.
 ---
 # Issue Links & Dependency Wakeups
 
@@ -13,7 +13,7 @@ Issues can declare directed relationships to other issues — primarily **blocki
 
 ### Direct Link Navigation
 
-Issue-to-issue links are optimized for fast traversal. When an agent or user views an issue, linked issues are immediately navigable without additional lookups.
+Issue-to-issue links are optimized for fast traversal. When an agent or user views an issue, linked issues are immediately navigable without additional lookups. This was a performance-critical decision — agents frequently need to follow dependency chains across many linked issues.
 
 ### Blocking as a First-Class Relationship
 
