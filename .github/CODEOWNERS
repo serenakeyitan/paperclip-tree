@@ -7,6 +7,7 @@
 /adapters/claude-local/stream-json-and-headless-permissions.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/codex-local/                             @bingran-you @cryppadotta @serenakeyitan
 /adapters/codex-local/rpc-quota-and-fresh-skill-injection.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/codex-local/fast-mode/                   @@bingran-you @@cryppadotta @@serenakeyitan
 /adapters/cursor-local/                            @bingran-you @cryppadotta @serenakeyitan
 /adapters/cursor-local/conservative-context-and-session-normalization.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/gemini-local/                            @bingran-you @cryppadotta @serenakeyitan
@@ -19,12 +20,15 @@
 /adapters/pi-local/minimal-session-state-and-cached-model-discovery.md @bingran-you @cryppadotta @serenakeyitan
 /drift/                                            @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/                         @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/infrastructure/          @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/infrastructure/security/ @@bingran-you @@serenakeyitan
 /drift/paperclip-e392f6b1/product/                 @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/product/task-system/     @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/product/task-system/issue-links/ @bingran-you @serenakeyitan
 /engineering/                                      @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/                              @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/shared-api-and-actor-scoped-authorization.md @bingran-you @cryppadotta @serenakeyitan
+/engineering/backend/dev-runner/                   @@bingran-you @@cryppadotta @@serenakeyitan
 /engineering/cli/                                  @bingran-you @cryppadotta @serenakeyitan
 /engineering/cli/cli-mirrors-api-and-instance-ops.md @bingran-you @cryppadotta @serenakeyitan
 /engineering/database/                             @bingran-you @cryppadotta @serenakeyitan
@@ -38,6 +42,7 @@
 /infrastructure/ci-cd/ci-owns-the-lockfile.md      @bingran-you @cryppadotta @serenakeyitan
 /infrastructure/deployment/                        @bingran-you @cryppadotta @serenakeyitan
 /infrastructure/deployment/authenticated-docker-and-local-trusted-dev.md @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/deployment/bind-presets/           @@bingran-you @@cryppadotta @@serenakeyitan
 /infrastructure/testing/                           @bingran-you @cryppadotta @serenakeyitan
 /infrastructure/testing/no-llm-calls-in-default-ci.md @bingran-you @cryppadotta @serenakeyitan
 /members/                                          @bingran-you @serenakeyitan
