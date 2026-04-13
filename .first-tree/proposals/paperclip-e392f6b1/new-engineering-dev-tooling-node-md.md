@@ -1,23 +1,15 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: PR refreshes worktree tooling conventions and scripts; the tree has a proposal for this node but it was never materialized — developer tooling strategy (worktree management, local dev scripts, DX conventions) has no dedicated node.
+rationale: PR refreshes worktree tooling and dev scripts; the tree has no node for developer tooling conventions, local dev workflows, or worktree management commands.
 ---
----
-title: "Developer Tooling"
-owners: [bingran-you, cryppadotta, serenakeyitan]
-soft_links: ["engineering/cli", "infrastructure/ci-cd", "engineering/backend"]
----
-
 # Developer Tooling
 
 Developer experience tooling, local development workflows, and worktree management for the Paperclip monorepo.
 
 **Source:** `scripts/`, CLI `worktree` commands, `CONTRIBUTING.md`, development documentation.
-
----
 
 ## Worktree Tooling
 
@@ -31,4 +23,4 @@ Paperclip uses git worktrees as the primary isolation mechanism for concurrent a
 
 ## Boundaries
 
-This node covers developer-facing tooling and workflows. Agent execution workspace lifecycle is a related but distinct concern — see the execution workspace services in the backend. CI/CD automation lives in `../infrastructure/ci-cd`.
+This node covers developer-facing tooling and workflows. Agent execution workspace lifecycle is a related but distinct concern — see `engineering/execution-workspaces/NODE.md`. CI/CD automation lives in `infrastructure/ci-cd/NODE.md`.

@@ -1,8 +1,6 @@
 {
   "bindingMode": "standalone-source",
   "entrypoint": "/",
-  "lastReconciledAt": "2026-04-13T20:57:01.321Z",
-  "lastReconciledSourceCommit": "5d1ed71779df5622d9fd99ad28816b2da4bdee31",
   "remoteUrl": "https://github.com/paperclipai/paperclip",
   "rootKind": "git-repo",
   "schemaVersion": 2,

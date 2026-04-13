@@ -1,9 +1,9 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The PR introduces multiple webhook signing/verification modes (github_hmac, none, and presumably a default) — a server security decision with no tree coverage; the backend NODE.md has no mention of webhooks or their verification.
+rationale: The PR adds github_hmac and none webhook signing modes to the server, but neither the backend NODE.md nor any existing tree node covers webhook verification or signing modes.
 ---
 ## Overview
 
@@ -13,7 +13,7 @@ The Paperclip server accepts inbound webhooks from external services (GitHub, Se
 
 - **`github_hmac`** — Validates payloads using GitHub's HMAC-SHA256 signature scheme (`X-Hub-Signature-256` header). Used for GitHub webhook integrations.
 - **`none`** — No signature verification. Suitable for development, internal services behind a VPN, or integrations that do not support signing.
-- **(default/existing)** — The pre-existing signing mode used before these additions (likely Sentry-style or a generic shared-secret approach).
+- **(default)** — The pre-existing signing mode used before these additions.
 
 ## Key Decisions
 

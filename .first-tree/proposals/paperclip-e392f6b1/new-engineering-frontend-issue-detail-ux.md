@@ -1,21 +1,30 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The PR introduces significant frontend UX patterns — inline sub-issues (removing the tab), image attachment gallery grids, and scroll-to-bottom offsets — none of which are captured in the frontend node.
+rationale: The PR moves sub-issues inline, adds image gallery grids, inlines document diffs, and offsets the scroll-to-bottom button — none of which are captured in any existing tree node.
 ---
-## Overview
+# Issue Detail UX
 
-The issue detail view is the primary workspace where humans and agents collaborate on tasks. It follows a chat-like thread layout with structured panels for metadata, attachments, and sub-issues.
+Layout decisions and interaction patterns for the issue detail view — the primary surface where agents and humans inspect, edit, and act on individual issues.
 
 ## Key Decisions
 
-- **Inline sub-issues** — Sub-issues are displayed inline within the parent issue view rather than in a separate tab. This reduces navigation friction and keeps the full issue hierarchy visible in context. Sub-issues default to the parent's workspace.
-- **Image attachment gallery grid** — Image attachments render as square-cropped gallery grids rather than inline full-size images, keeping the thread scannable when agents attach screenshots or diagrams.
-- **Scroll-to-bottom button offset** — The scroll-to-bottom button offsets when the properties panel is open, preventing overlap with side panels.
-- **Inline document diff rendering** — Document diffs are rendered inline within the thread rather than in a separate view.
+### Inline Sub-Issues
 
-## Inbox Customization
+Sub-issues are rendered inline within the parent issue view rather than in a separate tab. This eliminates a navigation step and gives immediate visibility into the full scope of work beneath an issue.
 
-The inbox grid supports show/hide columns including an optional Parent Issue column. Parent issue and time-ago columns use narrow widths to maximize space for issue content.
+**Rationale:** Agents and humans frequently need to see parent and child issues together. A separate tab added friction without adding clarity.
+
+### Image Attachment Gallery Grid
+
+Image attachments display as a square-cropped gallery grid rather than a linear list, providing visual scannability when issues accumulate screenshots or design mockups.
+
+### Inline Document Diff Rendering
+
+Document diffs are rendered inline within the issue detail view rather than in a separate modal or page, keeping the user in context while reviewing changes.
+
+### Scroll-to-Bottom Button Offset
+
+The scroll-to-bottom button accounts for the properties panel width when the panel is open, preventing the button from being obscured.

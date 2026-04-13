@@ -1,22 +1,22 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The PR adds issue-level approval creation (via MCP tool), expanding governance beyond the V1 hiring and CEO strategy approval gates — the governance node doesn't capture this third approval type.
+rationale: The governance node lists only two V1 approval gates (hiring and CEO strategy) and marks fine-grained gates as deferred, but this PR ships issue-level approval creation via MCP — a third approval type now exists.
 ---
-## Issue Approvals
+# Issue Approvals
 
-Issue-level approval requests extend the governance model beyond the original V1 gates (hiring approval, CEO strategy approval). Any issue can now have an approval request attached, enabling structured sign-off workflows at the task level.
+Issue-level approval requests that allow agents to request Board sign-off on specific pieces of work, beyond the V1 hiring and CEO strategy gates.
 
-### How It Works
+## Key Decisions
 
-Approval requests can be created on issues through the UI or programmatically via the MCP `approval-create` tool. This means external agents connected through adapters can participate in governance workflows — requesting approval before proceeding with high-stakes actions.
+### MCP-Accessible Approvals
 
-### Relationship to Existing Gates
+Issue approvals can be created through the MCP server's `approval-create` tool, enabling external agents to request human approval for governed actions on specific issues. This extends the approval system beyond internal adapter workflows.
 
-V1 governance defined two hard-coded approval gates (hiring, CEO strategy). Issue approvals generalize this pattern: any issue can require approval, and the approval workflow follows the same audit trail and board-level visibility as the original gates.
+### Board Approval Surface
 
-### Cross-Domain Links
+Issue approval requests appear in the Board's approval queue alongside hiring and strategy approvals. The Board reviews, approves, or rejects them through the same unified governance interface.
 
-The MCP server (`engineering/mcp-server`) exposes the approval-create tool. The database schema includes `issue_approvals` alongside the existing `approvals` table. The frontend renders approval cards on the board with dedicated styling (polished in this PR).
+**Rationale:** As agents take on more autonomous work, the set of decisions requiring human oversight expands beyond hiring and strategy. Issue-level approvals provide a general-purpose gate that agents can invoke when they encounter decisions that exceed their authority.

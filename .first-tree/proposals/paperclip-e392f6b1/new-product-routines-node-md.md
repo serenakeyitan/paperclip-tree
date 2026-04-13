@@ -1,11 +1,11 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: Routines are referenced across 5 engineering nodes (backend, database, shared, CLI, company-model) but have no product-level node capturing what routines are, their lifecycle (draft → active), run-time override semantics, trigger kinds, or concurrency policies — all of which are product decisions, not implementation details.
+rationale: Routines (draft lifecycle, run-time overrides, trigger kinds, concurrency policies) are a new product-level concept with no dedicated tree node — existing references in engineering nodes are implementation mentions, not product decisions.
 ---
-## Overview
+# Routines
 
 Routines are scheduled or event-triggered automation definitions scoped to a company. They allow AI agents and human operators to define repeatable workflows that execute on a schedule (cron) or in response to events, with template variable interpolation for parameterization.
 

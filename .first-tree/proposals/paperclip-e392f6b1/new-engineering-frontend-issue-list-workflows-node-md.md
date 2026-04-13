@@ -3,7 +3,7 @@ type: TREE_MISS
 source_id: paperclip-e392f6b1
 source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: A proposal exists for issue list & board workflows but does not document the decision to collapse empty kanban columns to save horizontal space — a UX pattern that affects how agents and humans scan board views.
+rationale: The tree has no node documenting how issue lists support inline workflow transitions, filtering, grouping, or the design decision that list and board are views over the same data and API.
 ---
 # Issue List & Board Workflows
 
@@ -14,10 +14,6 @@ The issue list is the primary surface for browsing, filtering, and acting on iss
 ### List and Board Are Views Over the Same Data
 
 Switching between list and board does not change the underlying query — only the rendering. Both views share the same API calls and filter state.
-
-### Collapse Empty Kanban Columns
-
-Empty status columns in the board view are collapsed to save horizontal space. This keeps the board compact and scannable when only a few statuses have active issues, which is common in early-stage projects or when agents have cleared a status lane.
 
 ### Inline Workflow Transitions
 
