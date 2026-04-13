@@ -1,12 +1,15 @@
 {
   "bindingMode": "standalone-source",
   "entrypoint": "/",
+  "lastReconciledAt": "2026-04-13T02:38:56.318Z",
+  "lastReconciledSourceCommit": "11de5ae9c9523064a290755c02fb66e4e1c1b1e3",
+  "remoteUrl": "https://github.com/paperclipai/paperclip",
   "rootKind": "git-repo",
+  "schemaVersion": 2,
   "scope": "repo",
   "sourceId": "paperclip-e392f6b1",
   "sourceName": "paperclip",
   "sourceRootPath": "../paperclip",
   "treeMode": "dedicated",
-  "treeRepoName": "paperclip-tree",
-  "schemaVersion": 1
+  "treeRepoName": "paperclip-tree"
 }

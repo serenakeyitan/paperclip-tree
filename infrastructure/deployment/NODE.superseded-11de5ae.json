@@ -1,0 +1,10 @@
+{
+  "supersedes": "infrastructure/deployment/NODE.md",
+  "source_commit": "11de5ae9c9523064a290755c02fb66e4e1c1b1e3",
+  "owners": [
+    "bingran-you",
+    "cryppadotta",
+    "serenakeyitan"
+  ],
+  "suggested_body": "The existing node should be updated to reflect:\n\n- **Bind presets** — Deployment setup now supports bind presets for common networking configurations, reducing manual bind configuration.\n- **Tailnet bind hardening** — Tailnet-based deployments have hardened bind setup to prevent misconfiguration.\n- **Reverse proxy keepAliveTimeout** — Node's `keepAliveTimeout` is increased behind reverse proxies to prevent premature 502 errors from proxy/Node timeout mismatches."
+}

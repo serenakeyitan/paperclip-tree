@@ -1,0 +1,10 @@
+{
+  "supersedes": "engineering/frontend/NODE.md",
+  "source_commit": "11de5ae9c9523064a290755c02fb66e4e1c1b1e3",
+  "owners": [
+    "bingran-you",
+    "cryppadotta",
+    "serenakeyitan"
+  ],
+  "suggested_body": "The existing node should be updated to add:\n\n- **assistant-ui** as a key dependency for chat-style issue threads\n- **Keyboard shortcuts framework** — Global keyboard shortcut system with a ? cheatsheet dialog, g-prefixed navigation shortcuts, and j/k traversal\n- **Image gallery** — Clicking images in chat messages opens a gallery overlay; attachments render as square-cropped grids\n- **Shimmer animations** — Working/Worked state indicators using oklch-based shimmer gradients with pause-between-repeats timing\n- **UX Lab** — Experimental UI surface for testing interaction patterns before promoting to production"
+}

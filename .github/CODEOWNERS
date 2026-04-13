@@ -17,6 +17,27 @@
 /adapters/opencode-local/dynamic-model-discovery-from-runtime-config.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/pi-local/                                @bingran-you @cryppadotta @serenakeyitan
 /adapters/pi-local/minimal-session-state-and-cached-model-discovery.md @bingran-you @cryppadotta @serenakeyitan
+/drift/                                            @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/                         @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/             @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/mcp-server/  @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/mcp-server/NODE.md/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/worktree/    @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/worktree/NODE.md/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/infrastructure/          @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/infrastructure/backup/   @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/infrastructure/backup/NODE.md/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/                 @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/execution-policy/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/execution-policy/NODE.md/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/inbox/           @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/inbox/NODE.md/   @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/issue-blockers/  @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/issue-blockers/NODE.md/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/issue-chat/      @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/issue-chat/NODE.md/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/routines/        @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/routines/NODE.md/ @bingran-you @serenakeyitan
 /engineering/                                      @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/                              @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/shared-api-and-actor-scoped-authorization.md @bingran-you @cryppadotta @serenakeyitan

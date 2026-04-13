@@ -1,0 +1,10 @@
+{
+  "supersedes": "adapters/claude-local/NODE.md",
+  "source_commit": "11de5ae9c9523064a290755c02fb66e4e1c1b1e3",
+  "owners": [
+    "bingran-you",
+    "cryppadotta",
+    "serenakeyitan"
+  ],
+  "suggested_body": "The existing node should be updated to add:\n\n- **AWS Bedrock support** — Users can select Bedrock-hosted models with region-prefixed model IDs. The adapter reuses a DIRECT_MODELS import for model validation and applies global region prefix matching.\n- **Session resume refinement** — The adapter now skips `--append-system-prompt-file` on resumed sessions and gates instructions file I/O to fresh sessions only, preventing duplicate prompt injection on resume."
+}

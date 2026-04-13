@@ -1,0 +1,10 @@
+{
+  "supersedes": "product/task-system/NODE.md",
+  "source_commit": "11de5ae9c9523064a290755c02fb66e4e1c1b1e3",
+  "owners": [
+    "bingran-you",
+    "cryppadotta",
+    "serenakeyitan"
+  ],
+  "suggested_body": "The existing node should be updated to reflect:\n\n- **Sub-issues rendered inline** — Sub-issues are displayed inline on the parent issue rather than in a separate tab. The sub-issues tab has been removed.\n- **Workspace and parent grouping** — Issue lists support grouping by workspace and parent issue, with execution workspaces getting a dedicated issues tab.\n- **Board approvals** — Generic issue-linked approvals can appear on board views with polished card styling."
+}

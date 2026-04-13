@@ -1,0 +1,10 @@
+{
+  "supersedes": "adapters/codex-local/NODE.md",
+  "source_commit": "11de5ae9c9523064a290755c02fb66e4e1c1b1e3",
+  "owners": [
+    "bingran-you",
+    "cryppadotta",
+    "serenakeyitan"
+  ],
+  "suggested_body": "The existing node should be updated to add:\n\n- **Fast mode** — Codex adapter supports a fast mode flag, but avoids enabling it during env probe to prevent configuration interference.\n- **Missing-rollout detection** — The adapter recognizes missing-rollout errors as stale sessions and surfaces them appropriately rather than failing silently."
+}

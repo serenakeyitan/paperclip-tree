@@ -1,0 +1,10 @@
+{
+  "supersedes": "product/governance/NODE.md",
+  "source_commit": "11de5ae9c9523064a290755c02fb66e4e1c1b1e3",
+  "owners": [
+    "bingran-you",
+    "cryppadotta",
+    "serenakeyitan"
+  ],
+  "suggested_body": "The existing node should be updated to reflect:\n\n- **Route-level authorization scoping** — Import, approvals, activity, and heartbeat routes are now explicitly scoped with authorization checks, closing gaps in the enforcement layer.\n- **JWT secret hardening** — The hardcoded JWT secret fallback was removed from `createBetterAuthInstance`; deployments must provide `BETTER_AUTH_SECRET` explicitly.\n- **Board-level approval visibility** — Approvals are now surfaced on issue board views with styled cards, not just in the dedicated approvals page."
+}
