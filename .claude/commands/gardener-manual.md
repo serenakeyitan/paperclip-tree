@@ -538,28 +538,87 @@ Clean up the reaction in Step 4f after processing completes.
 
 ### 4b: Determine verdict
 
-Fetch the PR diff or issue body:
+#### 4b-i: Gather evidence (never skip this)
+
+**For PRs** — fetch both the metadata AND the actual diff:
 ```bash
-# For PRs:
 gh pr view <n> --repo $target_repo --json title,body,author,files,additions,deletions
 gh pr diff <n> --repo $target_repo
+```
 
-# For issues:
+**For issues:**
+```bash
 gh issue view <n> --repo $target_repo --json title,body,author,labels
 ```
 
-Read relevant tree nodes from `.gardener-tree-cache/` based on the
-PR/issue content (search tree filenames and grep for keywords).
+**You MUST read the actual diff content for PRs, not just the file
+list.** The file list tells you *where* code changed; the diff tells
+you *what* changed. A file named `issues.ts` could contain a one-line
+typo fix (ALIGNED) or a new status enum value that breaks the V1
+workflow contract (CONFLICT). You cannot tell from the filename alone.
 
-Classify into one of five verdicts:
+For large diffs (>500 lines), read at least:
+- All new/modified function signatures, type definitions, and schema changes
+- All new API routes or endpoint changes
+- PR body/description (authors often explain intent there)
+- Skip test file diffs if the source changes are clear
 
-| Verdict | Meaning |
-|---------|---------|
-| `ALIGNED` | Fully consistent with tree decisions. No concerns. |
-| `NEW_TERRITORY` | Tree has no guidance. Safe but worth documenting. |
-| `NEEDS_REVIEW` | Partial overlap; human judgment required. |
-| `CONFLICT` | Directly contradicts a tree decision. |
-| `INSUFFICIENT_CONTEXT` | Tree has partial info but not enough to decide. |
+#### 4b-ii: Find relevant tree nodes
+
+Read tree nodes that match the PR/issue content. Start from domain
+NODE.md files and follow `soft_links`. Do NOT just grep filenames —
+read the actual tree node content to understand what decisions and
+constraints exist.
+
+**Minimum tree reading per review:**
+1. The domain NODE.md most relevant to the changed files (e.g.,
+   `product/task-system/NODE.md` if issue fields changed)
+2. Any leaf nodes linked from that domain NODE.md that are topically
+   relevant
+3. The root `product/NODE.md` Key Product Decisions list — check if
+   any of the 9 decisions apply
+
+#### 4b-iii: Apply the verdict
+
+The verdict is a judgment call, not a pattern match. Ask yourself:
+
+1. **Does the diff change, extend, or contradict any decision the
+   tree explicitly documents?** Read the tree decision, read the diff,
+   and compare them substantively. "The tree says X, the diff does Y"
+   — are X and Y compatible?
+
+2. **Does the diff introduce something the tree is silent about?**
+   Silence ≠ alignment. If the tree has no guidance on a topic (e.g.,
+   i18n, mobile, theming), the verdict is `NEW_TERRITORY`, not
+   `ALIGNED`. `ALIGNED` means "the tree has a decision and this fits
+   it," not "the tree doesn't say no."
+
+3. **Does the diff touch a V1 scope boundary?** The tree defines
+   explicit V1 scope (product/NODE.md: V1 Scope Summary) and explicit
+   deferrals. Adding capabilities in deferred areas is at minimum
+   `NEEDS_REVIEW`, even if the implementation is clean.
+
+**Do NOT use these shortcuts — they produce false ALIGNEDs:**
+- "It's a bug fix, so it's ALIGNED" — bug fixes can introduce new
+  behavior, expand scope, or contradict decisions. Read the diff.
+- "The filename matches a tree domain, so it's ALIGNED" — the file
+  could contain anything. Read the diff.
+- "It follows the plugin pattern, so it's ALIGNED" — plugins can
+  still conflict with core decisions (e.g., a plugin that builds a
+  knowledge base into core violates "thin core, rich edges" even
+  though it uses the plugin SDK).
+- "It's a small PR, so it's ALIGNED" — a 3-line PR adding a new
+  column to the issues table could change the task system contract.
+
+**Verdicts:**
+
+| Verdict | Meaning | When to use |
+|---------|---------|-------------|
+| `ALIGNED` | Fully consistent with a tree decision you can cite | You read the diff, found the relevant tree decision, and they match. You can name the specific decision in your comment. |
+| `NEW_TERRITORY` | Tree has no guidance on this topic | You searched the tree and found no relevant decision. The diff is reasonable but undocumented. |
+| `NEEDS_REVIEW` | Partial overlap or tension with tree decisions | The diff touches an area the tree covers, but the fit is ambiguous, the scope is borderline, or there's a reasonable argument either way. |
+| `CONFLICT` | Directly contradicts a documented tree decision | You can cite the specific tree decision and explain how the diff contradicts it. |
+| `INSUFFICIENT_CONTEXT` | Tree has partial info but not enough to judge | The tree mentions the topic but doesn't have enough detail to determine fit. |
 
 Assign severity: `low` / `medium` / `high` / `critical`.
 
