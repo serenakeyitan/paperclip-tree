@@ -17,6 +17,20 @@
 /adapters/opencode-local/dynamic-model-discovery-from-runtime-config.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/pi-local/                                @bingran-you @cryppadotta @serenakeyitan
 /adapters/pi-local/minimal-session-state-and-cached-model-discovery.md @bingran-you @cryppadotta @serenakeyitan
+/drift/                                            @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/                         @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/             @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/frontend/    @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/frontend/inbox-ux/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/frontend/inbox-ux/NODE.md/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/frontend/issue-detail-ux/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/frontend/issue-detail-ux/NODE.md/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/mcp-server/  @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/engineering/mcp-server/NODE.md/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/                 @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/governance/      @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/governance/issue-approvals/ @bingran-you @serenakeyitan
+/drift/paperclip-e392f6b1/product/governance/issue-approvals/NODE.md/ @bingran-you @serenakeyitan
 /engineering/                                      @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/                              @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/shared-api-and-actor-scoped-authorization.md @bingran-you @cryppadotta @serenakeyitan
