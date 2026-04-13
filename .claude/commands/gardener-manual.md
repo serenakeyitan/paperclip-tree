@@ -620,7 +620,7 @@ intro, the context fit table, and the tree nodes section.
 <!-- gardener:state · reviewed=<sha> · verdict=ALIGNED · severity=low · tree_sha=<tree-sha> -->
 <!-- gardener:last_consumed_rereview=<comment-id-or-none> -->
 
-🌱 **gardener** · `ALIGNED` · severity: `low` · commit: `<short-sha>`
+🌱 **gardener** · ✅ `ALIGNED` · severity: `low` · commit: `<short-sha>`
 
 > **What is this?** repo-gardener checks whether PRs and issues fit the project's **product decisions, architecture, and roadmap** — not code correctness. Think of it as a product-context review layer. For code review, see Greptile/CodeRabbit.
 
@@ -664,6 +664,13 @@ intro: `> **What is this?** repo-gardener checks whether...`. The
 verdict and severity in the header line already signal urgency — the
 intro should be welcoming, not alarming.
 
+**Verdict emoji mapping** (used in the header line `<verdict-emoji>`):
+- `ALIGNED` → `✅`
+- `NEW_TERRITORY` → `🆕`
+- `NEEDS_REVIEW` → `🔍`
+- `CONFLICT` → `⚠️`
+- `INSUFFICIENT_CONTEXT` → `❔`
+
 **Fit cell values:** `✅ Aligned`, `🆕 New`, `❓ Partial`, `⚠️ Conflict`,
 `❔ Insufficient`
 
@@ -671,7 +678,7 @@ intro should be welcoming, not alarming.
 <!-- gardener:state · reviewed=<sha-or-issue-timestamp> · verdict=<VERDICT> · severity=<level> · tree_sha=<tree-commit-sha> -->
 <!-- gardener:last_consumed_rereview=<comment-id-or-none> -->
 
-🌱 **gardener** · `<VERDICT>` · severity: `<level>` · commit: `<short-sha>`
+🌱 **gardener** · <verdict-emoji> `<VERDICT>` · severity: `<level>` · commit: `<short-sha>`
 
 > **What is this?** repo-gardener checks whether PRs and issues fit the project's **product decisions, architecture, and roadmap** — not code correctness. Think of it as a product-context review layer. For code review, see Greptile/CodeRabbit.
 
