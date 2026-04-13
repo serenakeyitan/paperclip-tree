@@ -1,6 +1,6 @@
 ---
 title: "Security"
-owners: [@bingran-you, @serenakeyitan, @bingran-you, @serenakeyitan]
+owners: [bingran-you, serenakeyitan, bingran-you, serenakeyitan]
 ---
 
 # Security

@@ -1,6 +1,6 @@
 ---
 title: "Issue Thread UX"
-owners: [@bingran-you, @cryppadotta, @serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Issue Thread UX

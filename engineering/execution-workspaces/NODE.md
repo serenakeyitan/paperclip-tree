@@ -1,6 +1,6 @@
 ---
 title: "Execution Workspaces"
-owners: [@bingran-you, @cryppadotta, @serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Execution Workspaces

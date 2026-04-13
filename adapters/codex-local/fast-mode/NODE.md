@@ -1,6 +1,6 @@
 ---
 title: "Codex Fast Mode"
-owners: [@bingran-you, @cryppadotta, @serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Codex Fast Mode

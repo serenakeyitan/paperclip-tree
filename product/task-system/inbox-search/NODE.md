@@ -1,6 +1,6 @@
 ---
 title: "Inbox Search"
-owners: [@bingran-you, @cryppadotta, @serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Inbox Search

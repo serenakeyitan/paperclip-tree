@@ -1,6 +1,6 @@
 ---
 title: "Bind Presets"
-owners: [@bingran-you, @cryppadotta, @serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Bind Presets

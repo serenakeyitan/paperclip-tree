@@ -1,6 +1,6 @@
 ---
 title: "Dev Runner"
-owners: [@bingran-you, @cryppadotta, @serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Dev Runner

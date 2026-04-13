@@ -1,6 +1,6 @@
 ---
 title: "Auto-Checkout on Wake"
-owners: [@bingran-you, @cryppadotta, @serenakeyitan]
+owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
 # Auto-Checkout on Wake
