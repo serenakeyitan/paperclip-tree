@@ -1,24 +1,28 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The PR introduces significant issue detail UX decisions (inline sub-issues replacing a separate tab, image attachment gallery grids, inline document diffs, scroll-to-bottom offsets) that are not captured in the frontend node.
+rationale: Multiple commits (bf3fba3, 1b55474, c414790, 622a8e4) introduce issue detail page UX patterns — image attachment gallery, inline sub-issues, scroll-to-bottom offset, document diff rendering — that are distinct from thread UX and have no covering node.
 ---
-The issue detail view is the primary workspace where humans and agents collaborate on tasks. It follows a chat-like thread layout with structured panels for metadata, attachments, and sub-issues.
+# Issue Detail UX
+
+Layout and interaction patterns for the issue detail view — the full page where agents and humans inspect, edit, and manage a single issue.
+
+## Key Decisions
 
 ### Inline Sub-Issues
 
-Sub-issues are displayed inline within the parent issue view rather than in a separate tab. This reduces navigation friction and keeps the full issue hierarchy visible in context. Sub-issues default to the parent's workspace.
+Sub-issues are displayed inline within the issue detail view rather than in a separate tab. This reduces navigation friction — agents and humans can see the full work breakdown without switching context.
 
 ### Image Attachment Gallery Grid
 
-Image attachments render as square-cropped gallery grids rather than inline full-size images, keeping the thread scannable when agents attach screenshots or diagrams.
-
-### Inline Document Diff Rendering
-
-Document diffs are rendered inline within the thread rather than in a separate view, keeping context together.
+Image attachments are rendered as a square-cropped gallery grid rather than inline full-size images. This keeps the issue detail view compact when multiple images are attached.
 
 ### Scroll-to-Bottom Button Offset
 
-The scroll-to-bottom button offsets when the properties panel is open, preventing overlap with side panels.
+The scroll-to-bottom button is offset when the properties panel is open, preventing it from being obscured by the side panel.
+
+### Inline Document Diff Rendering
+
+Document diffs are rendered inline within the issue detail rather than in a separate view or modal. This keeps revision comparison in context.

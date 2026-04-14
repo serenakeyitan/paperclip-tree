@@ -1,15 +1,10 @@
 ---
-type: TREE_MISS
+type: TREE_SUPPLEMENT
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The OpenClaw gateway node documents auth modes and session strategies but does not capture the per-agent configuration pattern (e.g., claimedApiKeyPath) that allows individual agents to override gateway-level defaults.
+rationale: The node documents session key strategies (issue/fixed/run) but does not mention that session keys are prefixed with the configured agent ID to prevent collisions when multiple agents share the same gateway.
 ---
-## Per-Agent Configuration Overrides
+Add to **Key Decisions** section:
 
-Gateway-level configuration (auth tokens, API key paths, session strategies) can be overridden on a per-agent basis. This allows a single gateway to serve multiple agents with different credentials and routing.
-
-- **`claimedApiKeyPath`** is configurable per agent, not just at the adapter level. This supports multi-tenant gateway setups where each agent claims its own API key from a different path.
-- Pattern: adapter-level config provides defaults; agent-level config can override any connection parameter.
-
-This decision should be added to the **Key Decisions** section of the existing `adapters/openclaw-gateway/NODE.md` rather than creating a new leaf node.
+- **Agent-ID-prefixed session keys.** Session keys are prefixed with the configured agent ID so that multiple Paperclip agents connecting to the same OpenClaw gateway do not collide on session routing. Without the prefix, two agents using the same session key strategy (e.g., both using `issue` mode on the same issue) would share a session unintentionally.

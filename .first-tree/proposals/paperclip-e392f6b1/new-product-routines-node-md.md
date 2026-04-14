@@ -1,22 +1,32 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: Routines are referenced across 5 engineering nodes (backend, database, shared, CLI, company-model) but have no product-level node capturing what routines are, their lifecycle (draft → active), run-time override semantics, trigger kinds, or concurrency policies — all of which are product decisions, not implementation details.
+rationale: No existing node covers 'routines' as a product concept — this is a new feature domain for defining repeatable agent workflows with draft states and run-time overrides.
 ---
-## Overview
+# Routines
 
-Routines are scheduled or event-triggered automation definitions scoped to a company. They allow AI agents and human operators to define repeatable workflows that execute on a schedule (cron) or in response to events, with template variable interpolation for parameterization.
+Routines define repeatable, scheduled agent workflows within a company. They allow operators to configure recurring tasks that agents execute on a cadence.
+
+**Source:** `server/src/services/routine*`, `server/src/routes/routine*`, related UI components.
+
+---
 
 ## Key Decisions
 
-1. **Draft lifecycle** — Routines support a draft status, allowing definitions to be authored and reviewed before activation. A routine must be explicitly published before it will trigger.
-2. **Run-time overrides** — When a routine is triggered, callers can supply override parameters that replace the routine's default variable bindings for that specific run. This enables reuse of a single routine definition across varying contexts.
-3. **Concurrency policies** — Each routine declares a concurrency policy (e.g., skip, queue, cancel-previous) that governs what happens when a new trigger fires while a previous run is still in progress.
-4. **Trigger kinds** — Routines support multiple trigger types (cron schedule, event-based, manual). The trigger kind is fixed at definition time.
-5. **Company-scoped** — Like all Paperclip entities, routines are scoped to a `company_id` and included in the `.paperclip.yaml` sidecar for company portability.
+### Draft Routines
 
-## Relationships
+Routines support a draft state, allowing operators to configure and iterate on a routine before activating it. Draft routines are visible in the UI but do not trigger execution until explicitly published.
 
-Routines interact with the task system (routine runs may create tasks), governance (budget and approval gates apply to routine-initiated work), and the agent model (routines can target specific agents or roles).
+### Run-Time Overrides
+
+When triggering a routine (manually or on schedule), callers can supply run-time overrides that modify parameters for that specific execution without changing the routine's saved configuration. This enables one-off customization of recurring workflows.
+
+---
+
+## Open Questions
+
+- How do routines interact with governance approval gates?
+- What is the relationship between routines and the heartbeat run orchestration lifecycle?
+- Can plugins define or extend routines?

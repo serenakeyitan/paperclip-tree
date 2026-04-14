@@ -1,11 +1,10 @@
 ---
-type: TREE_MISS
+type: TREE_SUPPLEMENT
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The Pi adapter node states 'No quota reporting' under Boundaries, but this PR adds quota exhaustion handling that treats exhaustion as a failed run — the node needs updating.
+rationale: The PR title 'Treat Pi quota exhaustion as a failed run' adds quota-exhaustion error handling to the Pi adapter — the existing node likely doesn't cover this behavior.
 ---
-Update the Boundaries section of the existing node. Replace 'No quota reporting.' with:
+### Quota Exhaustion Treated as Failed Run
 
-- **Quota exhaustion → failed run.** When Pi reports quota exhaustion, the adapter treats it as a terminal failure (failed run) rather than silently retrying or leaving the task in progress. This ensures the task system surfaces the failure for manual recovery, consistent with the 'no automatic recovery' principle.
-- Model config is read-only. The adapter discovers but does not write Pi configuration.
+When the Pi adapter encounters a quota exhaustion response, it marks the current run as failed rather than retrying or hanging. This prevents agents from spinning on an unrecoverable error and ensures the heartbeat orchestration layer can reassign or escalate the work.
