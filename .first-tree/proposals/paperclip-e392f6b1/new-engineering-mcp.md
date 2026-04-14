@@ -1,22 +1,24 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: 5e65bb2b92ae765815b6816cef60c25cdda837ca..7f893ac4ec9f700efaf902be8a57ce510c1c7092
 target_node: new
-rationale: Multiple commits add MCP server functionality (approval creation tool, manifest in Docker, API validation) but the tree has zero MCP coverage.
+rationale: The PR adds an MCP approval creation tool, tightens MCP API request validation, and includes the MCP server manifest in Docker — no existing node covers the MCP server layer.
 ---
-## Purpose
+# MCP Server
 
-Paperclip exposes an MCP (Model Context Protocol) server that allows external AI agents and tools to interact with the platform programmatically. The MCP server provides tools for creating and managing Paperclip entities — approvals, issues, and other resources — through the standardized MCP protocol.
+The MCP (Model Context Protocol) server exposes Paperclip capabilities as tools that external AI agents can invoke via the standardized MCP protocol. This provides a tool-based interface for agents to interact with Paperclip's task system, governance, and other domains without direct REST API access.
 
 ## Key Decisions
 
-- **Approval creation tool** — External agents can create approval requests via MCP, enabling governance workflows to be triggered from any MCP-compatible client.
-- **Manifest-based tool discovery** — The MCP server uses a manifest file that declares available tools. This manifest must be included in the Docker deps stage for production builds.
-- **Strict API request validation** — All MCP tool inputs are validated tightly to prevent malformed requests from reaching backend services.
+### Approval Creation Tool
 
-## Relationship to Other Domains
+The MCP server includes a tool for creating approval requests, bridging the governance approval gate system to external agents via MCP. This allows MCP-connected agents to request human approvals through the standard tool interface rather than calling the REST API directly.
 
-- **Governance** — The MCP approval tool is a programmatic interface to the approval gates described in `product/governance/NODE.md`.
-- **Deployment** — The MCP server manifest is part of the Docker build pipeline (`infrastructure/deployment/NODE.md`).
-- **Backend** — MCP tools call into the same backend services described in `engineering/backend/NODE.md`.
+### Tight Boundary Validation
+
+MCP API requests are validated strictly at the boundary layer to prevent malformed or unauthorized tool invocations from reaching backend services. This is the MCP equivalent of route-level input validation in the REST API.
+
+### Docker Manifest Inclusion
+
+The MCP server manifest is included in the Docker deps stage so that the MCP tool surface is available in containerized deployments without requiring a separate build step.

@@ -1,20 +1,10 @@
 ---
-type: TREE_MISS
+type: TREE_SUPPLEMENT
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: 5e65bb2b92ae765815b6816cef60c25cdda837ca..7f893ac4ec9f700efaf902be8a57ce510c1c7092
 target_node: new
-rationale: The governance node documents only V1 hiring and CEO strategy approval gates, but this PR implements issue-level approvals — a third approval type accessible via MCP and the UI with dedicated board approval card styling.
+rationale: PR adds approval creation tool (f1bb175) extending governance beyond V1 hiring/strategy gates to programmatic approval requests — existing governance node doesn't cover MCP-initiated approvals.
 ---
-Issue-level approval gates allow specific issues to require board or designated-authority approval before work proceeds. This extends the existing governance approval infrastructure (previously limited to hiring and CEO strategy decisions) to individual work items.
+### Programmatic Approval Creation
 
-### Same Approval Infrastructure
-
-Issue approvals reuse the existing approval system (board powers, approval cards, audit trail) rather than introducing a separate mechanism. This keeps governance consistent across all approval types.
-
-### MCP-Accessible
-
-External agents can create approval requests programmatically via the MCP `approval-create` tool, enabling automated governance workflows without direct API access.
-
-### Relationship to Existing Gates
-
-Issue approvals complement but do not replace the V1 hiring and CEO strategy gates. They operate at a finer granularity — per-issue rather than per-category — and can be triggered by agents or humans.
+Approvals can now be created programmatically via the MCP `approval-create` tool, not just through the Board UI or CLI. This extends the governance system's reach to external AI agents connected via MCP. The same server-enforced approval workflow applies — programmatic creation does not bypass any governance checks.
