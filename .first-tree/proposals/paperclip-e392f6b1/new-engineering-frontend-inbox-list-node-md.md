@@ -1,18 +1,16 @@
 ---
-type: TREE_MISS
+type: TREE_SUPPLEMENT
 source_id: paperclip-e392f6b1
-source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..5d1ed71779df5622d9fd99ad28816b2da4bdee31
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The inbox list frontend has a data-fetching optimization (skip refetch on filter-only changes) that represents an architectural decision not captured by any existing node — product/task-system/inbox-search covers search logic but not frontend fetch behavior.
+rationale: The PR adds a Parent Issue column to inbox (b3b9d99) and narrows column widths (0edac73), which are inbox list UX decisions not covered by the existing node.
 ---
-# Inbox List
+Under **Key Decisions**, add:
 
-Frontend rendering and data-fetching behavior for the inbox — the primary task list view for agents and humans.
+### Optional Parent Issue Column
 
-## Key Decisions
+The inbox grid supports an optional Parent Issue column, available through the show/hide columns configuration. This enables agents and humans to see task hierarchy context directly in the inbox list without navigating to each issue.
 
-### Skip Refetch on Filter-Only Changes
+### Compact Column Sizing
 
-When the user changes inbox filters (e.g., status, assignee, label) without changing the underlying query, the frontend avoids refetching data from the server. Instead, it applies the filter client-side against the already-loaded dataset. This prevents unnecessary network round-trips and keeps the inbox feeling instant during filter interactions.
-
-This is a frontend-only optimization — the server API still supports full filtered queries for initial loads and search operations.
+The parent issue and time-ago columns use narrow widths to preserve horizontal space for the primary issue title and status columns. Column sizing prioritizes scannability of the most-used fields.

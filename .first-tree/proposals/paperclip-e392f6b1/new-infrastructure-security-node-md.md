@@ -1,36 +1,26 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The PR redacts Bearer tokens from server log output — a security practice with no dedicated tree node. Security concerns are scattered across deployment, auth, and adapters with no unified security model node.
+rationale: The main tree has no infrastructure/security node; the drift proposal exists but hasn't been merged into the main tree, and this PR solidifies the 'no hardcoded JWT secret fallback' security convention as a load-bearing decision.
 ---
-Security model, threat boundaries, and security practices for the Paperclip platform.
+# Security
 
-## Security Boundaries
-
-### Agent Execution Isolation
-
-AI agents execute in isolated environments with constrained capabilities. The untrusted-review container drops ALL Linux capabilities, prevents privilege escalation, uses tmpfs for `/tmp`, and runs as a dedicated `reviewer` user. This is the hardest security boundary in the system — changes require explicit security review.
-
-### Multi-Company Data Isolation
-
-All data is scoped by `companyId` at the query level. There is no row-level security or separate databases per company — isolation is enforced in application code. This is a deliberate trade-off: simpler infrastructure at the cost of requiring discipline in every data access path.
-
-### Plugin Sandboxing
-
-Plugins run in separate child processes communicating via JSON-RPC 2.0 over stdio. This prevents plugins from accessing server memory or crashing the host process. The `PluginRuntimeSandbox` enforces resource and capability limits.
-
-### Credential Management
-
-Agent credentials (API keys, auth tokens) are managed by each agent CLI's own credential store, not by Paperclip. Paperclip validates that agents are authenticated via environment tests but never stores or proxies credentials.
-
-### Log Redaction
-
-Bearer tokens and other sensitive values are redacted from server log output to prevent credential leakage through logging infrastructure.
+Security conventions, hardening decisions, and defense-in-depth constraints for Paperclip infrastructure and application code.
 
 ## Key Decisions
 
-- **Defense in depth for agent execution.** Multiple isolation layers (worktree filesystem isolation, container capability dropping, process sandboxing) rather than relying on any single boundary.
-- **Auth handled by agent CLIs.** Paperclip delegates credential management to each agent's native tooling rather than centralizing secrets, reducing the attack surface of the Paperclip server itself.
-- **Sensitive data never in logs.** Bearer tokens are stripped from log output at the server level, ensuring credentials cannot leak through log aggregation or monitoring systems.
+### No hardcoded secret fallbacks
+
+Authentication initialization must never fall back to a hardcoded secret when the required `BETTER_AUTH_SECRET` environment variable is missing. The server must fail loudly at startup rather than silently operating with a predictable secret. This applies at the application layer — Docker compose also enforces the variable is set, but the server code must independently refuse to start without it.
+
+**Rationale:** Defense-in-depth. Relying solely on the deployment layer (compose `?:` syntax) to enforce secret presence leaves a gap when the server is run outside Docker (e.g., direct `node` invocation, CI, or dev scripts). A hardcoded fallback would allow the server to start in authenticated mode with a known secret, which is a critical security vulnerability.
+
+### Secret handling conventions
+
+- Agent API keys are hashed at rest (plaintext shown once at creation).
+- Secrets are redacted in logs and API responses.
+- The untrusted-review container drops ALL Linux capabilities and prevents privilege escalation.
+
+See also: [deployment/NODE.md](../deployment/NODE.md) for container-level security hardening and [engineering/backend/NODE.md](../../engineering/backend/NODE.md) for the secrets provider abstraction.

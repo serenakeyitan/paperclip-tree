@@ -1,30 +1,28 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: db4e1465517f6e96876dda85488d4ab7210412a1..5d1ed71779df5622d9fd99ad28816b2da4bdee31
 target_node: new
-rationale: The PR adds an MCP approval-create tool, tightens MCP API validation, and includes the MCP manifest in Docker — but the tree has zero nodes covering the MCP server, its tool surface, or its trust boundary role.
+rationale: PR adds an MCP approval creation tool and tightens MCP API validation, but NO existing tree node covers MCP server capabilities — this is a new domain area.
 ---
-Standalone Model Context Protocol (MCP) server that exposes Paperclip capabilities as MCP tools to external AI agents. Runs as a separate entry point from the Express backend but reuses core service logic.
+# MCP Server
+
+Model Context Protocol (MCP) server that exposes Paperclip capabilities as tools for external AI agents and clients.
+
+Source: `/server/src/mcp/` (or relevant path)
 
 ## Key Decisions
 
-### Separate Package, Shared Services
+### Tool-Based API Surface
 
-The MCP server is a distinct package that imports backend services rather than duplicating business logic. This keeps the MCP protocol boundary clean while the backend remains the single source of truth for business rules.
+The MCP server exposes Paperclip operations as discrete tools (e.g., approval creation) that external agents can invoke via the MCP protocol. This provides a structured, discoverable interface beyond the REST API.
 
-### Trust Boundary Validation
+### Strict Request Validation
 
-All incoming MCP requests are strictly validated at the boundary before reaching internal services. MCP callers are external agents with different trust characteristics than authenticated UI users, so validation is tightened independently of backend route validation.
+MCP API requests are validated tightly at the boundary. Invalid or malformed requests are rejected early rather than passed through to service logic.
 
-### Docker Packaging
+**Rationale:** MCP clients may be automated agents producing varying request quality. Strict validation at the MCP boundary prevents malformed requests from reaching core services.
 
-The MCP server manifest is included in the Docker deps stage so it is available at build time. Changes to the manifest must be reflected in the Dockerfile.
+### Docker Manifest Inclusion
 
-## Tools
-
-- `approval-create` — Creates approval requests programmatically, enabling agents to trigger governance workflows via MCP.
-
-## Cross-Domain
-
-The MCP server bridges the governance model (approval gates, budget controls) with external agent runtimes. Adapter-connected agents can invoke MCP tools to participate in governance workflows without direct API access.
+The MCP server manifest is included in the Docker deps stage to ensure the MCP server is available in containerized deployments.
