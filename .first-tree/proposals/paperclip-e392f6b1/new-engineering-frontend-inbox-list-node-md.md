@@ -1,18 +1,10 @@
 ---
-type: TREE_MISS
+type: TREE_SUPPLEMENT
 source_id: paperclip-e392f6b1
-source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..5d1ed71779df5622d9fd99ad28816b2da4bdee31
+source_commit_range: 5e65bb2b92ae765815b6816cef60c25cdda837ca..7f893ac4ec9f700efaf902be8a57ce510c1c7092
 target_node: new
-rationale: The inbox list frontend has a data-fetching optimization (skip refetch on filter-only changes) that represents an architectural decision not captured by any existing node — product/task-system/inbox-search covers search logic but not frontend fetch behavior.
+rationale: PR adds a configurable Parent Issue column with show/hide controls and column width tuning to the inbox grid — the existing inbox list node only covers filter-based refetch skipping.
 ---
-# Inbox List
+### Configurable Column Visibility
 
-Frontend rendering and data-fetching behavior for the inbox — the primary task list view for agents and humans.
-
-## Key Decisions
-
-### Skip Refetch on Filter-Only Changes
-
-When the user changes inbox filters (e.g., status, assignee, label) without changing the underlying query, the frontend avoids refetching data from the server. Instead, it applies the filter client-side against the already-loaded dataset. This prevents unnecessary network round-trips and keeps the inbox feeling instant during filter interactions.
-
-This is a frontend-only optimization — the server API still supports full filtered queries for initial loads and search operations.
+The inbox grid supports show/hide toggles for optional columns, including a Parent Issue column. Users can customize which columns are visible. Column widths (e.g., parent issue and time-ago columns) are tuned for information density without overwhelming the grid layout.

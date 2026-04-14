@@ -1,17 +1,10 @@
 ---
-type: TREE_MISS
+type: TREE_SUPPLEMENT
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: 5e65bb2b92ae765815b6816cef60c25cdda837ca..7f893ac4ec9f700efaf902be8a57ce510c1c7092
 target_node: new
-rationale: The testing node documents test layers and frameworks but has no mention of server endpoint test isolation patterns — a convention this PR establishes for how route modules are isolated in unit tests.
+rationale: The testing node covers test layers and frameworks but says nothing about test isolation patterns for server route/endpoint tests, which this PR introduces.
 ---
-### Server Endpoint Test Isolation
+### Server Route Test Isolation
 
-Server route endpoint tests isolate each route module to prevent cross-test contamination and ensure tests are independent. Rather than testing against a fully wired-up Express app, each test file imports and registers only the route module under test.
-
-This pattern ensures:
-- Tests don't depend on registration order or side effects from other route modules
-- Each test suite has a predictable, minimal surface area
-- Failures are attributable to the specific route module, not to interactions between modules
-
-This convention was established in PR #3206 (`pap-1239-server-test-isolation`). All new server endpoint tests should follow this isolation pattern.
+Endpoint tests for backend routes isolate each route module so tests do not leak state or dependencies between suites. Route modules are loaded in isolation per test file, preventing shared mutable state (middleware, app-level side effects) from causing flaky or order-dependent test results. This pattern complements the route/service split architecture — since routes are thin HTTP handlers, isolating them in tests is straightforward and keeps the unit test layer fast and deterministic.

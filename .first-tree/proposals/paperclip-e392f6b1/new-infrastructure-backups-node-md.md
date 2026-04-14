@@ -1,34 +1,28 @@
 ---
 type: TREE_MISS
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: 5e65bb2b92ae765815b6816cef60c25cdda837ca..7f893ac4ec9f700efaf902be8a57ce510c1c7092
 target_node: new
-rationale: PR #3015 introduces gzip compression, tiered retention policies, and UI controls for backups — a new operational domain with no dedicated tree node (only a one-line mention in engineering/database).
+rationale: The PR introduces a full backup subsystem with gzip compression, tiered retention policies, and UI configuration — this is a new infrastructure concern with its own configuration surface, not just a DB utility.
 ---
 # Backups
 
-Backup strategy, compression, retention policies, and configuration UI for Paperclip data.
-
----
-
-## Overview
-
-Paperclip provides built-in backup capabilities wrapping `pg_dump`/`pg_restore` (see [engineering/database](../../engineering/database/NODE.md)). This domain covers the operational layer on top: how backups are compressed, how long they are retained, and how operators configure these settings.
+Backup infrastructure for Paperclip data, covering automated database snapshots, compression, retention policies, and user-facing configuration.
 
 ## Compression
 
-Backups use **gzip compression** to reduce storage footprint. This applies to database dumps produced by the backup system.
+Backups use **gzip compression** to reduce storage footprint. This applies to all backup artifacts produced by the system.
 
 ## Tiered Retention
 
-Backups follow a **tiered retention policy** — recent backups are kept at higher granularity, while older backups are thinned out over time. The specific retention tiers are configurable.
+Retention follows a tiered policy — recent backups are kept at higher granularity, older backups are thinned out over time. The specific retention tiers (e.g., daily for 7 days, weekly for 4 weeks, monthly for 12 months) are configurable.
 
 ## UI Controls
 
-Backup configuration (compression settings, retention tiers) is exposed through the Paperclip frontend UI, allowing company administrators to manage backup policies without direct server access.
+Backup configuration is exposed through the frontend UI, allowing company administrators to view backup status, trigger manual backups, and adjust retention settings. This is a governance-adjacent feature: backup policy is part of operational control for AI companies running on Paperclip.
 
 ## Key Decisions
 
-- **Gzip over alternatives.** Gzip was chosen for broad compatibility and acceptable compression ratio for database dumps.
-- **Tiered retention over flat TTL.** A tiered approach balances storage cost against the need for recent point-in-time recovery while keeping longer-term snapshots for disaster recovery.
-- **UI-configurable retention.** Backup policies are a per-deployment operational concern, so they are exposed as admin-configurable settings rather than hardcoded defaults.
+- **Gzip over raw dumps.** Storage efficiency matters for self-hosted deployments; gzip is universally supported and adds minimal CPU overhead.
+- **Tiered retention over flat TTL.** A single retention window either keeps too many old backups or loses recent granularity. Tiered retention balances storage cost with recovery flexibility.
+- **User-configurable via UI.** Backup policy is an operational concern that company admins should control without touching config files or CLI.
