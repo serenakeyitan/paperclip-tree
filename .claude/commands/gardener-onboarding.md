@@ -65,8 +65,12 @@ echo "Installing repo-gardener $GARDENER_VERSION"
 
 BASE="https://raw.githubusercontent.com/agent-team-foundation/repo-gardener/${GARDENER_VERSION}"
 mkdir -p .claude/commands
-for cmd in gardener-manual gardener-schedule gardener-start gardener-loop \
-           gardener-stop gardener-onboarding gardener-watch gardener-upgrade; do
+for cmd in gardener-comment-manual gardener-comment-schedule gardener-comment-start \
+           gardener-comment-loop gardener-comment-stop gardener-comment-watch \
+           gardener-sync-manual gardener-sync-schedule gardener-sync-start \
+           gardener-sync-loop gardener-sync-stop \
+           gardener-start gardener-stop \
+           gardener-onboarding gardener-upgrade; do
   curl -fsSL -o ".claude/commands/${cmd}.md" "${BASE}/.claude/commands/${cmd}.md"
 done
 ```
@@ -103,14 +107,14 @@ The install mode was already chosen in Step 0.
 
 ## 3.5. Verify GitHub MCP connector (cloud pre-flight)
 
-**Why this step exists**: `/gardener-start`, `/gardener-schedule`, and
-`/gardener-manual` run in Anthropic's cloud when invoked via the remote
+**Why this step exists**: `/gardener-start`, `/gardener-comment-schedule`, and
+`/gardener-comment-manual` run in Anthropic's cloud when invoked via the remote
 schedule. Cloud containers do **not** have `gh` CLI installed — all
 GitHub access goes through the GitHub MCP connector the user connects
 at https://claude.ai/settings/connectors. If the connector is missing
 or scoped to a different repo, every cloud run silently aborts at
 Step 4 with `MCP tools restricted to <other-repo>, cannot post to
-<target_repo>`. The local `/gardener-loop` keeps working (it uses
+<target_repo>`. The local `/gardener-comment-loop` keeps working (it uses
 `gh`), which masks the problem and makes it look like the schedule is
 paused.
 
@@ -362,15 +366,40 @@ Before the first run on a large repo, I strongly recommend:
    docs, tests, vendor, etc.
 2. Consider setting `scan_limit: 5` for the first run to test on a
    small batch, then increase after.
-3. Run `/gardener-manual` interactively first (not `/gardener-start`)
+3. Run `/gardener-comment-manual` interactively first (not `/gardener-start`)
    so you can see what it's about to post."
 
 Then ask:
 "⚠️ The test run will scan open PRs and issues on `<target_repo>` and
 may post real comments. Proceed?"
 
-- Yes → execute `.claude/commands/gardener-manual.md` once.
+- Yes → execute `.claude/commands/gardener-comment-manual.md` once.
 - No → skip to Step 8.
+
+## 7b. Optional: Set up tree sync
+
+Ask the user:
+"Would you like to enable automatic tree sync? This detects when
+your source repo drifts from the context tree and opens PRs to
+update the tree.
+
+Requirements:
+- A bound context tree (first-tree must be initialized)
+- `first-tree` CLI installed
+- `claude` CLI installed and authenticated
+
+Enable tree sync? (y/n)"
+
+If yes:
+1. Check that `first-tree` CLI is available: `first-tree --version`
+   - If not → "Install first-tree first: npm install -g first-tree"
+2. Check that tree has bindings: look for `.first-tree/bindings/*.json`
+   - If none → "Bind a source repo first: first-tree bind"
+3. Install sync command files:
+   - Copy gardener-sync-manual.md, gardener-sync-loop.md,
+     gardener-sync-schedule.md, gardener-sync-start.md,
+     gardener-sync-stop.md to .claude/commands/
+4. Log: "✓ Sync module installed. Start with /gardener-sync-start"
 
 ## 8. Confirm
 
@@ -383,8 +412,9 @@ Output:
 **Important**: restart Claude Code (or start a new session) so the new
 slash commands are picked up. After restarting:
 
-- `/gardener-start` — start automation (loop + schedule)
-- `/gardener-manual` — one-off review
-- `/gardener-watch` — open a terminal popup that tails run logs live (clickable URLs)
+- `/gardener-start` — start all modules (comment + sync)
+- `/gardener-comment-manual` — one-off PR review
+- `/gardener-sync-manual` — one-off tree sync
+- `/gardener-comment-watch` — open a terminal popup that tails run logs live (clickable URLs)
 - `/gardener-upgrade` — auto-update to the latest release
-- `/gardener-stop` — pause everything"
+- `/gardener-stop` — stop all modules"

@@ -60,8 +60,12 @@ If `n` → exit cleanly with no changes.
 BASE="https://raw.githubusercontent.com/agent-team-foundation/repo-gardener/${latest_version}"
 mkdir -p .claude/commands
 
-for cmd in gardener-manual gardener-schedule gardener-start gardener-loop \
-           gardener-stop gardener-onboarding gardener-watch gardener-upgrade; do
+for cmd in gardener-comment-manual gardener-comment-schedule gardener-comment-start \
+           gardener-comment-loop gardener-comment-stop gardener-comment-watch \
+           gardener-sync-manual gardener-sync-schedule gardener-sync-start \
+           gardener-sync-loop gardener-sync-stop \
+           gardener-start gardener-stop \
+           gardener-onboarding gardener-upgrade; do
   curl -fsSL -o ".claude/commands/${cmd}.md" "${BASE}/.claude/commands/${cmd}.md"
 done
 
@@ -73,6 +77,25 @@ for f in .claude/commands/gardener-*.md; do
   fi
 done
 ```
+
+## 5b. Migrate old command names
+
+If old-style command files exist, rename them:
+
+```bash
+for old_name in gardener-manual gardener-loop gardener-schedule \
+                gardener-start gardener-stop gardener-watch; do
+  old_file=".claude/commands/${old_name}.md"
+  new_file=".claude/commands/gardener-comment-${old_name#gardener-}.md"
+  if [ -f "$old_file" ] && [ ! -f "$new_file" ]; then
+    mv "$old_file" "$new_file"
+    echo "Migrated ${old_name}.md → gardener-comment-${old_name#gardener-}.md"
+  fi
+done
+```
+
+Also fetch the new shared commands (gardener-start.md, gardener-stop.md)
+and sync commands if they exist in the release.
 
 ## 6. Update installed_version in config
 

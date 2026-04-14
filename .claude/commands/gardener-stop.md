@@ -1,25 +1,21 @@
-Stop all repo-gardener automation for this project.
+Stop all gardener automation for this project.
 
-## 1. Stop local loop
+## 1. Stop comment module
 
-Check if a `/loop` is currently running `/gardener-loop`.
-If yes, use `/loop stop` to stop it. If `/loop stop` is not available,
-tell the user: "Please stop the local loop manually by pressing Ctrl+C
-in the session running `/loop`."
+Check if `.claude/commands/gardener-comment-stop.md` exists.
+- If yes → read and execute it as a runbook.
+- If no → skip.
 
-## 2. Disable cloud schedule
+## 2. Stop sync module
 
-List all scheduled triggers with the RemoteTrigger tool (`action: "list"`).
-Find any trigger whose name is `repo-gardener`.
-For each one, disable it with the RemoteTrigger tool:
-`action: "update"`, `trigger_id: "<id>"`, `body: {"enabled": false}`
-
-Do NOT delete the trigger — just disable it so it can be re-enabled later.
+Check if `.claude/commands/gardener-sync-stop.md` exists.
+- If yes → read and execute it as a runbook.
+- If no → skip.
 
 ## 3. Confirm
 
 Output:
-"🌱 repo-gardener stopped.
-- Local loop: stopped
-- Cloud schedule: disabled (not deleted)
-- Restart anytime: `/gardener-start`"
+"🌱 gardener stopped.
+- Comment module: <stopped | not installed>
+- Sync module: <stopped | not installed>
+- Restart: `/gardener-start`"
