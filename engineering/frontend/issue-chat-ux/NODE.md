@@ -23,4 +23,4 @@ Thread markdown rendering gracefully handles agent-generated content which may b
 
 ## Boundaries
 
-This node covers the frontend chat interaction pattern. Markdown polish and reference resolution are in [engineering/frontend/issue-thread-ux](../issue-thread-ux/NODE.md). The product-level communication model is in [product/task-system/issue-thread-ux](../../product/task-system/issue-thread-ux/NODE.md). Backend comment APIs are part of [engineering/backend](../backend/NODE.md).
+This node covers the frontend chat interaction pattern. Markdown polish and reference resolution are in [engineering/frontend/issue-thread-ux](../issue-thread-ux/NODE.md). The product-level communication model is in [product/task-system/issue-thread-ux](../../../product/task-system/issue-thread-ux/NODE.md). Backend comment APIs are part of [engineering/backend](../../backend/NODE.md).
