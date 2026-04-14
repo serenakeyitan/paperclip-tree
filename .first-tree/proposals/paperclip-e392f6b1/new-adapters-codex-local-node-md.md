@@ -1,14 +1,18 @@
 ---
-type: TREE_MISS
+type: TREE_SUPPLEMENT
 source_id: paperclip-e392f6b1
-source_commit_range: a3e125f79659e9d6a2caac8ff3a0eb3cd4127039..d6b06788f6efacb002791c1a60b4889d7bfdb22d
+source_commit_range: 45ebecab5a3d404970f555d1750dc73cf2b3a2be..7f893ac4ec9f700efaf902be8a57ce510c1c7092
 target_node: new
-rationale: The Codex Local Adapter node documents capabilities but has no mention of fast mode support, which is a new execution mode that affects how tasks are dispatched to Codex.
+rationale: The Codex adapter node documents session params, skills, and quota but says nothing about workspace runtime behavior or navigation ergonomics — the PR's core focus.
 ---
-Update the existing Capabilities section to add:
+## Suggested Additions to Key Decisions
 
-- **Fast mode:** Supported. Allows Paperclip to invoke Codex in fast mode for lower-latency responses at the cost of reduced reasoning depth. Controlled via adapter configuration.
+### Workspace Runtime Ergonomics
 
-Update the Key Decisions section to add:
+The adapter includes workspace-specific runtime improvements that enhance how Codex operates within its assigned git worktree. This covers working directory management, file navigation context, and ensuring Codex has ergonomic access to the workspace structure during execution.
 
-- **Fast mode as an adapter-level concern** — Fast mode is toggled at the adapter layer rather than the task layer, keeping the task system runtime-agnostic while letting operators choose speed vs. depth per adapter instance.
+### Navigation Ergonomics
+
+Improvements to how the Codex adapter sets up and communicates workspace navigation context to the Codex CLI, making it easier for the agent to discover and operate on relevant files within its execution workspace.
+
+*(Note: Unable to fetch full PR diff — supplement details should be refined once the actual changes in #3680 are reviewed.)*
