@@ -30,3 +30,5 @@
 {"pattern":"content_inaccuracy","pr":297,"fix":"rewrote_spa_fallback_around_asset_miss_invariant","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
 {"pattern":"parent_subdomain_missing","pr":297,"fix":"added_backend_subdirectories_section","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
 {"pattern":"duplicate_node_path","pr":259,"fix":"flagged_path_conflict_with_270","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
+{"pattern":"subdomain_link_format","pr":295,"fix":"converted_code_text_to_markdown_link","date":"2026-04-15T21:11:20Z","reviewer":"bingran-you"}
+{"pattern":"duplicate_node_path","pr":259,"fix":"dropped_file_from_sibling_pr","date":"2026-04-15T21:11:20Z","reviewer":"bingran-you"}
