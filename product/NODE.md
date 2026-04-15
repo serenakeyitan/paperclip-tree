@@ -52,3 +52,4 @@ Paperclip is explicitly **not**: an agent runtime, a knowledge base, a SaaS, a g
 - **[agent-model/](agent-model/NODE.md)** -- Agent lifecycle, adapter protocol, org structure, cross-team coordination.
 - **[task-system/](task-system/NODE.md)** -- Task hierarchy, workflow states, atomic checkout, inter-agent communication.
 - **[governance/](governance/NODE.md)** -- Board powers, approval gates, budget controls, cost tracking.
+- **[routines/](routines/NODE.md)** -- Scheduled and event-triggered automation definitions, draft lifecycle, concurrency policies.

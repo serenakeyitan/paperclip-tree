@@ -1,6 +1,7 @@
 ---
 title: "Routines"
 owners: [bingran-you, cryppadotta, serenakeyitan]
+soft_links: ["product/task-system", "product/governance", "product/agent-model"]
 ---
 
 # Routines
