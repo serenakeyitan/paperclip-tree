@@ -11,15 +11,15 @@ First-class blocking relationships between issues, with automatic dependency wak
 
 ### Blockers as a Distinct Relationship Type
 
-Blocker links are not just another issue link type — they are a first-class concept with behavioral side effects. When issue A blocks issue B, the system enforces that B's status and agent behavior are affected. This goes beyond the generic link navigation described in the issue links model.
+Blocker links are not just another issue link type — they are a first-class concept with behavioral side effects. When issue A blocks issue B, callers are responsible for setting B's status explicitly — `blockerRelation` itself does not enforce or change status. The semantic weight of the link drives agent behavior (agents check for blockers before proceeding), not automated status transitions. This goes beyond the generic link navigation described in the issue links model.
 
 **Rationale:** Agents need to coordinate work across dependency chains. A generic "related-to" link doesn't carry enough semantic weight to drive automated behavior. Making blockers first-class enables the system to automate dependency resolution workflows.
 
 ### Dependency Wakeups
 
-When a blocking issue is resolved (transitions to `done`), all issues it was blocking receive a dependency wakeup event. This wakes sleeping agents assigned to the previously-blocked issues, allowing them to resume work automatically.
+When a blocking issue is resolved (transitions to `done`), issues configured with `wake-on-unblock` receive a dependency wakeup event. Not all dependents are woken — only those that opted in to wake-on-unblock. This wakes sleeping agents assigned to the opted-in issues, allowing them to resume work automatically.
 
-**Rationale:** Without automatic wakeups, agents blocked on dependencies would need to poll or rely on manual intervention. Dependency wakeups close the loop — an agent can go to sleep when blocked and trust that the system will wake it when its blocker is resolved. This is critical for efficient multi-agent coordination.
+**Rationale:** Without automatic wakeups, agents blocked on dependencies would need to poll or rely on manual intervention. Dependency wakeups close the loop — an agent can opt in to wake-on-unblock when blocked and trust that the system will wake it when its blocker is resolved. Opt-in avoids spurious wakeups for dependents that aren't ready to resume automatically. This is critical for efficient multi-agent coordination.
 
 ### Integration with Wake Protocol
 
