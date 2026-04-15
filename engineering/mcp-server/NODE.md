@@ -29,7 +29,13 @@ The MCP server manifest is included in the Docker deps stage so that production 
 
 ## Current Tools
 
-- **`approval-create`** — Allows external agents to programmatically create approval requests through the MCP interface, integrating with governance approval gates (`product/governance/`).
+PR #3001 introduced the initial tool surface. The MCP server exposes the following tools:
+
+- **`paperclipMe`** — Returns identity and context information about the authenticated agent/user.
+- **`paperclipListIssues`** — Lists issues for a company, with optional filtering by status, assignee, and project.
+- **`paperclipCreateIssue`** — Creates a new issue within a company and optional project context.
+- **`paperclipCreateApproval`** — Allows external agents to programmatically create approval requests, integrating with governance approval gates (`product/governance/`).
+- Additional read/write tools for comments, status transitions, and agent context established in the same PR.
 
 ## Relationships
 
