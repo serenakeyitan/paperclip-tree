@@ -43,6 +43,14 @@ Execution worktrees carry their own dependency and environment state rather than
 
 **Rationale:** Filesystem isolation (separate git worktrees) is necessary but not sufficient — agents also need isolated runtime state. Without this, two worktrees sharing the same `node_modules` or `.env` can cause subtle cross-contamination bugs during concurrent execution.
 
+### Worktree Reseed and Lifecycle Safety
+
+The `worktree reseed` command requires explicit source/target selection (`--from <worktree>` or `--from-config`/`--from-data-dir`/`--from-instance`) so the reseed source is unambiguous. Mixed selectors are rejected. Target paths are derived from the worktree's adjacent `.paperclip/.env` file (`PAPERCLIP_HOME` and `PAPERCLIP_INSTANCE_ID`); if the env file is missing or incomplete, reseed fails fast with an error indicating the target does not look like a worktree-local Paperclip instance.
+
+The workspace-link preflight (which verifies the worktree is properly configured before operations) now only runs inside linked git worktrees. Non-worktree checkouts skip the preflight entirely, avoiding false negatives in primary-checkout development workflows.
+
+**Rationale:** Reseed operates on runtime state (config, secrets, instance data) — an ambiguous source could silently copy the wrong instance into a worktree, causing agents to run with mismatched identity. Explicit selectors and fail-fast on missing env prevent this class of misconfiguration.
+
 ## Boundaries
 
 - Worktree creation and git operations are the server's responsibility, not the adapter's.
