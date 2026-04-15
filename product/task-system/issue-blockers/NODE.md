@@ -17,9 +17,9 @@ Blocker links are not just another issue link type — they are a first-class co
 
 ### Dependency Wakeups
 
-When a blocking issue is resolved (transitions to `done`), issues configured with `wake-on-unblock` receive a dependency wakeup event. Not all dependents are woken — only those that opted in to wake-on-unblock. This wakes sleeping agents assigned to the opted-in issues, allowing them to resume work automatically.
+When **all** of a dependent issue's blockers transition to `done`, the system fires a dependency wakeup for the dependent's assigned agent via the `blockedByIssueIds` relation. A `cancelled` blocker does not count as resolved — only `done` clears the dependency. There is no per-dependent opt-in flag; the wakeup fires automatically once the all-blockers-done condition is met.
 
-**Rationale:** Without automatic wakeups, agents blocked on dependencies would need to poll or rely on manual intervention. Dependency wakeups close the loop — an agent can opt in to wake-on-unblock when blocked and trust that the system will wake it when its blocker is resolved. Opt-in avoids spurious wakeups for dependents that aren't ready to resume automatically. This is critical for efficient multi-agent coordination.
+**Rationale:** Without automatic wakeups, agents blocked on dependencies would need to poll or rely on manual intervention. Dependency wakeups close the loop — an agent that is blocked can trust that the system will wake it once every blocker is resolved. The all-blockers-done gate prevents premature wakeups when only some blockers are cleared. This is critical for efficient multi-agent coordination.
 
 ### Integration with Wake Protocol
 
