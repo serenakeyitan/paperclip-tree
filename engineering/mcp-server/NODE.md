@@ -27,15 +27,15 @@ Every MCP tool call is scoped to a `company_id`, consistent with the platform-wi
 
 The MCP server manifest is included in the Docker deps stage so that production containers can serve the tool manifest without a full workspace rebuild.
 
-## Current Tools
+## Initial Tool Surface (PR #3001)
 
-PR #3001 introduced the initial tool surface. The MCP server exposes the following tools:
+The MCP server ships a broad initial surface covering the core Paperclip domain objects:
 
-- **`paperclipMe`** — Returns identity and context information about the authenticated agent/user.
-- **`paperclipListIssues`** — Lists issues for a company, with optional filtering by status, assignee, and project.
-- **`paperclipCreateIssue`** — Creates a new issue within a company and optional project context.
-- **`paperclipCreateApproval`** — Allows external agents to programmatically create approval requests, integrating with governance approval gates (`product/governance/`).
-- Additional read/write tools for comments, status transitions, and agent context established in the same PR.
+**Read tools:** `paperclipMe`, `paperclipInboxLite`, `paperclipListAgents`, `paperclipGetAgent`, `paperclipListIssues`, `paperclipGetIssue`, `paperclipGetHeartbeatContext`, `paperclipListComments`, `paperclipGetComment`, `paperclipListIssueApprovals`, `paperclipListDocuments`, `paperclipGetDocument`, `paperclipListDocumentRevisions`, `paperclipListProjects`, `paperclipGetProject`, `paperclipListGoals`, `paperclipGetGoal`, `paperclipListApprovals`, `paperclipGetApproval`, `paperclipGetApprovalIssues`, `paperclipListApprovalComments`.
+
+**Write tools:** `paperclipCreateIssue`, `paperclipUpdateIssue`, `paperclipCheckoutIssue`, `paperclipReleaseIssue`, `paperclipAddComment`, `paperclipUpsertIssueDocument`, `paperclipRestoreIssueDocumentRevision`, `paperclipCreateApproval`, `paperclipLinkIssueApproval`, `paperclipUnlinkIssueApproval`, `paperclipApprovalDecision`, `paperclipAddApprovalComment`.
+
+**Escape hatch:** `paperclipApiRequest` — limited to paths under `/api` with JSON bodies, for endpoints without a dedicated MCP tool yet.
 
 ## Relationships
 

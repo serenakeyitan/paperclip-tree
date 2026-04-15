@@ -17,6 +17,7 @@ Technical architecture and implementation of the Paperclip orchestration platfor
 - **[cli/](cli/NODE.md)** — `paperclipai` CLI for setup, diagnostics, worktree management, and API client operations.
 - **[mcp/](mcp/NODE.md)** — Standalone MCP server (`@paperclipai/mcp-server`) exposing Paperclip capabilities as tools for MCP-compatible AI clients.
 - **[contributor-guide/](contributor-guide/NODE.md)** — Developer setup, contribution workflows, and project conventions.
+- **[mcp-server/](mcp-server/NODE.md)** — Standalone MCP server package: tool surface enumeration, transport modes, and auth design.
 
 ## Key Architectural Decisions
 
