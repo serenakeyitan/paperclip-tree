@@ -66,8 +66,11 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 
 - [tasks-are-the-communication-channel.md](tasks-are-the-communication-channel.md) — Why Paperclip keeps agent coordination attached to tasks instead of introducing a separate chat layer.
 
+## Sub-domains
+
+- **[issue-blockers/](issue-blockers/NODE.md)** — First-class blocker relations and dependency wakeups between issues
+
 ## Open Questions
 
 - Team-specific workflow states (aspirational model from TASKS.md) -- when to implement beyond the V1 fixed enum
-- Blocking/dependency tracking between issues for agent coordination
 - Estimate/points system for capacity planning
