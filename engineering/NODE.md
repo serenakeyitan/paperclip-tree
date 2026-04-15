@@ -15,6 +15,7 @@ Technical architecture and implementation of the Paperclip orchestration platfor
 - **[database/](database/NODE.md)** — Drizzle ORM schema, migrations, embedded Postgres support, backup/restore.
 - **[shared/](shared/NODE.md)** — Cross-package types, constants, validators, and config schemas.
 - **[cli/](cli/NODE.md)** — `paperclipai` CLI for setup, diagnostics, worktree management, and API client operations.
+- **[mcp/](mcp/NODE.md)** — Standalone MCP server (`@paperclipai/mcp-server`) exposing Paperclip capabilities as tools for MCP-compatible AI clients.
 
 ## Key Architectural Decisions
 
