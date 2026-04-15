@@ -13,7 +13,7 @@ The server sets explicit `Cache-Control` headers on static assets (JS, CSS, imag
 
 ## SPA Fallback
 
-For single-page app routing, the server returns `index.html` for any non-API route that doesn't match a static file. This allows React Router (client-side routing) to handle navigation without 404s. API routes (`/api/*`, `/auth/*`, WebSocket endpoints) are excluded from the fallback and handled by their respective Express route handlers.
+The fallback invariant: non-asset routes can fall back to `index.html`, but missing `/assets/*` paths must return 404. This prevents the HTML shell from being cached as a JS module when the browser requests a hashed asset URL that no longer exists (e.g., after a deploy). API routes (`/api/*`, including `/api/auth/*`) and WebSocket endpoints are excluded from the fallback and handled by their respective Express route handlers.
 
 ## Key Decisions
 

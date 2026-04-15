@@ -64,6 +64,12 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 - **Agent execution is adapter-driven.** The server never calls LLM APIs directly — it delegates to adapter packages that implement a standard interface.
 - **Secrets are provider-abstracted.** Supports file-based, environment-based, and external secret providers so the same server code works in local dev and cloud deployments.
 
+## Sub-domains
+
+- [dev-runner/](dev-runner/) — Local development runner and worktree dev tooling
+- [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
+- [static-asset-serving/](static-asset-serving/) — Static asset cache headers and SPA fallback routing
+
 ## Decision Records
 
 - [shared-api-and-actor-scoped-authorization.md](shared-api-and-actor-scoped-authorization.md) — Why board and agent traffic share one API surface, with authorization derived from a common request actor model.
