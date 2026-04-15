@@ -1,13 +1,14 @@
 ---
 title: "MCP Server"
 owners: [bingran-you, cryppadotta, serenakeyitan]
+soft_links: ["product/governance/NODE.md", "engineering/backend/NODE.md", "infrastructure/deployment/NODE.md"]
 ---
 
 # MCP Server
 
-Model Context Protocol server package that exposes Paperclip capabilities as MCP tools for external AI agents. Source: `packages/mcp/`.
+Model Context Protocol server package that exposes Paperclip capabilities as MCP tools for external AI agents. Source: `packages/mcp-server/`.
 
-Package: `@paperclipai/mcp`
+Package: `@paperclipai/mcp-server`
 
 ## Key Decisions
 
