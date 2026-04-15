@@ -49,7 +49,9 @@ The `worktree reseed` command requires explicit source/target selection (`--from
 
 The workspace-link preflight (which verifies the worktree is properly configured before operations) now only runs inside linked git worktrees. Non-worktree checkouts skip the preflight entirely, avoiding false negatives in primary-checkout development workflows.
 
-**Rationale:** Reseed operates on runtime state (config, secrets, instance data) — an ambiguous source could silently copy the wrong instance into a worktree, causing agents to run with mismatched identity. Explicit selectors and fail-fast on missing env prevent this class of misconfiguration.
+By default, reseed refuses to operate on a target worktree whose Paperclip server is still running (the live-target guard). Contributors must stop the target server before reseeding, or explicitly override the protection with `--allow-live-target`. This prevents reseeding config and instance data underneath a running server, which could cause identity drift or silent data corruption.
+
+**Rationale:** Reseed operates on runtime state (config, secrets, instance data) — an ambiguous source could silently copy the wrong instance into a worktree, causing agents to run with mismatched identity. Explicit selectors, the live-target guard, and fail-fast on missing env prevent this class of misconfiguration.
 
 ## Boundaries
 
