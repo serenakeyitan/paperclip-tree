@@ -15,6 +15,7 @@ Deployment, Docker, CI/CD pipelines, testing strategy, and operational concerns 
 - **[deployment/](deployment/NODE.md)** -- Docker images, compose configs, deployment modes, and entrypoint logic.
 - **[ci-cd/](ci-cd/NODE.md)** -- GitHub Actions workflows, release pipeline, lockfile management.
 - **[testing/](testing/NODE.md)** -- Vitest unit tests, Playwright e2e, promptfoo evals, release smoke tests.
+- **[backups/](backups/NODE.md)** -- Automated database snapshots, compression, tiered retention, and backup configuration.
 
 ---
 

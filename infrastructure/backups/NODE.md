@@ -17,7 +17,7 @@ Retention follows a tiered policy — recent backups are kept at higher granular
 
 ## UI Controls
 
-Backup configuration is exposed through the frontend UI, allowing company administrators to view backup status, trigger manual backups, and adjust retention settings. This is a governance-adjacent feature: backup policy is part of operational control for AI companies running on Paperclip.
+Backup configuration is exposed through the settings UI. The current implementation surfaces backup status and retention configuration. Manual trigger and fine-grained retention editing are planned but not yet fully implemented in the frontend.
 
 ## Key Decisions
 
