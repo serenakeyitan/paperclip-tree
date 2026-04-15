@@ -1,27 +1,27 @@
 ---
-title: "Worktree Dev Tooling"
+title: "Dev Environment Tooling"
 owners: [bingran-you, cryppadotta, serenakeyitan]
 ---
 
-# Worktree Dev Tooling
+# Dev Environment Tooling
 
-Dev-time tooling that makes the Paperclip development experience work correctly inside git worktree workspaces. When agents run in isolated worktrees (see Execution Workspaces), standard dev tooling (Vite, pnpm workspace links, HTTP logging) can break because worktrees don't share the same node_modules or file watchers as the main checkout.
+Dev-time tooling that improves the Paperclip development experience, covering asset routing, file-watch filtering, and workspace package link repair. These changes apply broadly to the dev server, not only to worktree-based workflows.
 
 ## Key Decisions
 
-### Workspace Package Link Enforcement
+### Dev Asset Routing Order
 
-A dedicated script (`scripts/ensure-workspace-package-links.ts`) ensures that pnpm workspace symlinks (`workspace:*` protocol) resolve correctly inside worktree directories. Worktrees created by git share the `.git` directory but not `node_modules`, so internal package links can break. This script is run as part of worktree setup to re-establish links.
+In Vite dev mode, the server serves public assets (from `ui/public/`) via `express.static` **before** the HTML shell catch-all handler (`server/src/app.ts`). This ensures that static files like `/sw.js`, `/favicon.ico`, and `/site.webmanifest` are served directly rather than falling through to the Vite HTML transform. The set of known static paths is maintained in `VITE_DEV_STATIC_PATHS`.
 
-### Vite File Watching in Worktrees
+### Vite Dev Watch Filtering
 
-A `vite-watch` utility (`ui/src/lib/vite-watch.ts`) handles file-system watching quirks specific to worktree environments. Standard Vite file watchers may not detect changes correctly when the working directory is a worktree rather than the root checkout.
+A `vite-watch` utility (`ui/src/lib/vite-watch.ts`) reduces unnecessary dev-server work by ignoring test files (`*.test.*`, `*.spec.*`) and test directories (`__tests__/`, `tests/`) during file watching. It also provides a WSL polling fallback for `/mnt/` paths where `inotify` is unavailable. The filtering is general-purpose dev ergonomics, not worktree-specific.
 
-### HTTP Log Policy Middleware
+### Workspace Package Link Repair
 
-An HTTP log policy middleware (`server/src/middleware/http-log-policy.ts`) filters request logging to reduce noise during dev runs inside worktrees, where high-frequency polling and workspace health checks generate excessive log output.
+A script (`scripts/ensure-workspace-package-links.ts`) detects and repairs stale pnpm workspace symlinks (`workspace:*` protocol). The script now runs whenever a workspace-level `node_modules` directory exists, not only inside linked worktree checkouts. This broadens the repair to cover any checkout where workspace links may have gone stale (e.g., after a fresh `pnpm install` or branch switch).
 
 ## Boundaries
 
-- These are dev-time utilities, not production concerns. They are relevant only when running the Paperclip dev server inside worktree workspaces.
+- These are dev-time utilities, not production concerns. They affect only the local development server and build tooling.
 - Worktree creation and lifecycle management remain the responsibility of the Dev Runner and Execution Workspaces modules.
