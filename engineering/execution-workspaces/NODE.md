@@ -23,6 +23,16 @@ Worktrees that were previously created for an issue are reused when the same iss
 
 **Rationale:** Creating a new worktree on every wake would discard context and force agents to re-derive state. Reuse makes agent restarts cheap and preserves continuity, which is critical for long-running tasks that span multiple heartbeat cycles.
 
+### Worktree Runtime Hardening
+
+PR #2435 in the source repo introduced hardening to make worktree execution more reliable during comment-driven wakes. Key hardening measures:
+
+- **Stale lock detection:** Worktrees left in a locked state from a previous crashed execution are detected and forcibly released rather than blocking new checkouts indefinitely.
+- **Race condition guards:** Concurrent wake signals for the same issue (e.g., multiple rapid comments) are deduplicated at the checkout level — only one wake proceeds to execution, others are dropped or queued based on concurrency policy.
+- **Cleanup on abort:** If an agent's worktree session exits abnormally, the workspace release is guaranteed via a server-side abort handler, preventing orphaned locks.
+
+**Rationale:** Comment wake introduces event-driven concurrency patterns not present in scheduled heartbeats. Hardening the runtime ensures the execution workspace layer can handle rapid-fire wakes without leaving orphaned state.
+
 ## Boundaries
 
 - Worktree creation and git operations are the server's responsibility, not the adapter's.
