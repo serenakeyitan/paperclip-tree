@@ -30,14 +30,15 @@ The Board has **unrestricted access** to the entire system:
 
 **Rationale:** The board must always be able to stop anything, change anything, or override anything. This is the safety foundation that makes autonomous operation acceptable.
 
-### Approval Gates (V1)
+### Approval Gates
 
-Two gates in V1:
+Three gates are implemented:
 
 1. **Hiring** -- New agent creation requires Board approval (agents propose hires via the approval system; Board can also create agents directly, which is still logged as a governance action)
 2. **CEO Strategy Approval** -- CEO's initial strategic breakdown (org structure, sub-tasks, hiring plan) must be approved before execution begins. Before first strategy approval, CEO may only draft tasks, not transition them to active execution states.
+3. **Issue Approvals** -- Individual issues can require human sign-off before work proceeds. External agents can create approval requests via the MCP `approval-create` tool. See [issue-approvals/NODE.md](issue-approvals/NODE.md).
 
-**Rationale:** These are the two highest-leverage decision points. Hiring determines who has access and costs money. Strategy approval sets the direction for all downstream work. Other governance gates (goal changes, firing agents) are TBD.
+**Rationale:** Hiring and strategy approval are the two highest-leverage fixed checkpoints. Issue approvals extend governance to individual work items at finer granularity, allowing agents and humans to gate specific tasks without requiring a new category-level gate.
 
 ### Budget Hard-Stops
 
@@ -79,13 +80,16 @@ Every mutation writes to `activity_log`. Every approval decision is logged. Agen
 
 **Rationale:** "Surface problems, don't hide them" is a core principle. The audit trail is what makes autonomous operation trustworthy.
 
+## Sub-domains
+
+- **[issue-approvals/](issue-approvals/NODE.md)** -- Per-issue approval gates, MCP-accessible approval creation, and integration with the board approval workflow.
+
 ## Deferred Governance Features
 
 - Multi-member boards
 - Hiring budgets (auto-approve hires within $X/month)
 - Delegated authority (CEO can hire within limits)
 - Role-based human permission granularity
-- Fine-grained per-action governance gates beyond hire and strategy approval
 
 ## Decision Records
 
@@ -93,6 +97,5 @@ Every mutation writes to `activity_log`. Every approval decision is logged. Agen
 
 ## Open Questions
 
-- What governance-gated actions exist beyond hiring and CEO strategy approval?
 - Budget period flexibility (per-day, per-week, rolling) beyond the V1 monthly window
 - Dashboard design -- which metrics matter most at each governance level
