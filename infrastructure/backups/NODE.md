@@ -13,11 +13,17 @@ Backups use **gzip compression** to reduce storage footprint. This applies to al
 
 ## Tiered Retention
 
-Retention follows a tiered policy — recent backups are kept at higher granularity, older backups are thinned out over time. The specific retention tiers (e.g., daily for 7 days, weekly for 4 weeks, monthly for 12 months) are configurable.
+Retention follows a three-tier policy with preset options validated at the schema level:
+
+- **Daily tier:** keep all backups from the last N days. Presets: `3`, `7`, or `14` days.
+- **Weekly tier:** keep the newest backup per calendar week for N weeks. Presets: `1`, `2`, or `4` weeks.
+- **Monthly tier:** keep the newest backup per calendar month for N months. Presets: `1`, `3`, or `6` months.
+
+Defaults: daily for 7 days, weekly for 4 weeks, monthly for 1 month. Backups beyond all retention tiers are pruned automatically.
 
 ## UI Controls
 
-Backup configuration is exposed through the settings UI. The current implementation surfaces backup status and retention configuration. Manual trigger and fine-grained retention editing are planned but not yet fully implemented in the frontend.
+Retention preset configuration is exposed through `InstanceGeneralSettings` in the settings UI. The UI allows company admins to select from the validated preset values for each tier. No backup status dashboard or manual trigger UI has been shipped yet.
 
 ## Key Decisions
 
