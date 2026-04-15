@@ -12,12 +12,13 @@ The issue list is a separate surface from the inbox list. While the inbox shows 
 
 ## Key Decisions
 
-- **Workspace grouping uses the `workspaceId` query parameter.** When a workspace is selected in the sidebar, the issue list filters to that workspace's issues by passing `workspaceId` on the backend query. Switching workspaces does not reload the page — the query parameter updates and React Query refetches.
-- **Page-level search blurs on Escape and on outside-click.** The search input in the issue list header clears its active/focused state on `Escape` keydown and on `mousedown` outside the search container. It does not blur on `Enter` — `Enter` confirms the search and keeps focus so the user can refine. This avoids the pattern of losing the search field after submitting.
-- **List controls use icon-only buttons in compact mode.** Filter, sort, and group-by controls in the list toolbar render as icon-only `<Button variant="ghost" size="icon">` when the viewport width is below the `md` breakpoint (768 px). Labels are hidden via `hidden md:inline` and a `Tooltip` is attached to each icon button so the action name is discoverable on hover.
 - **List and board are views over the same data and API.** Switching between list and board does not change the underlying query — only the rendering component.
-- **Filters are URL-driven.** Filter state (`status`, `assignee`, `priority`, `label`, `workspaceId`) is encoded in the URL query string so views are shareable and bookmarkable. The frontend reads filter state from `useSearchParams` and writes it back on change.
+- **Workspace grouping uses `resolveIssueFilterWorkspaceId`.** When a workspace is selected in the sidebar, the issue list filters to that workspace's issues. Switching workspaces updates the query parameter and React Query refetches without a page reload.
+- **View state persisted in company-scoped local storage.** Filter, sort, and group-by state are stored in `localStorage` keyed by a `viewStateKey`, not in URL query params. This means view state is per-device, not shareable via URL.
+- **Page search blurs on Enter and conditionally on Escape.** The search input blurs on `Enter` (`shouldBlurPageSearchOnEnter`) to confirm the search. It blurs on `Escape` only when the field is empty (`shouldBlurPageSearchOnEscape`). This avoids losing the search field during refinement while still allowing keyboard dismissal.
+- **List controls use icon-only buttons at compact viewports.** Filter, sort, and group-by controls render as `<Button variant="outline" size="icon">` with a `title` attribute and tighter grid sizing at smaller viewports.
 - **Inline workflow transitions mutate optimistically.** Status changes, assignee changes, and priority changes made from the list view use React Query optimistic updates so the row reflects the new value immediately without waiting for the server round-trip.
+- **Inbox-side filter preferences persisted separately.** Inbox filter state uses `loadInboxFilterPreferences` to persist across sessions, and `matchesInboxIssueSearch` provides client-side search filtering for the inbox view.
 
 ## Open Questions
 
