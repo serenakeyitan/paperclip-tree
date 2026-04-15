@@ -33,6 +33,16 @@ PR #2435 in the source repo introduced hardening to make worktree execution more
 
 **Rationale:** Comment wake introduces event-driven concurrency patterns not present in scheduled heartbeats. Hardening the runtime ensures the execution workspace layer can handle rapid-fire wakes without leaving orphaned state.
 
+### Worktree Runtime-State Isolation
+
+Execution worktrees carry their own dependency and environment state rather than inheriting the base repo's runtime state:
+
+- **Worktree-local `node_modules`:** The provisioning script (`provision-worktree.sh`) installs dependencies into the worktree itself instead of symlinking to the base repo's `node_modules`. This prevents cross-worktree dependency pollution when different issues require different dependency states.
+- **Repo-local `.paperclip/.env` bootstrap:** Each linked worktree has its own `.paperclip/.env` file containing `PAPERCLIP_HOME` and `PAPERCLIP_INSTANCE_ID`. The runtime reads env state from the worktree's local `.paperclip/` directory, not from the primary checkout.
+- **Fail-fast on missing env:** If a linked worktree is missing its repo-local `.paperclip/.env` or the env file lacks the required fields, the runtime fails immediately rather than silently falling back to the base repo's configuration. This prevents agents from accidentally operating with the wrong instance identity.
+
+**Rationale:** Filesystem isolation (separate git worktrees) is necessary but not sufficient — agents also need isolated runtime state. Without this, two worktrees sharing the same `node_modules` or `.env` can cause subtle cross-contamination bugs during concurrent execution.
+
 ## Boundaries
 
 - Worktree creation and git operations are the server's responsibility, not the adapter's.
