@@ -21,4 +21,5 @@ Contributors working on Paperclip use git worktrees for isolated development env
 
 - Actual contributor documentation content lives in the source repo.
 - This node captures decisions about what contributor docs cover and how they're structured.
-- Worktree mechanics are documented in `../execution-workspaces/NODE.md` and `../backend/dev-runner/NODE.md`.
+- Agent execution worktrees (how agents get isolated environments at runtime) are a separate concern documented in `../execution-workspaces/NODE.md`.
+- Dev runner tooling is documented in `../backend/dev-runner/NODE.md`.
