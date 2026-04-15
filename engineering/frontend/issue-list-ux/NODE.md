@@ -16,9 +16,8 @@ The issue list is a separate surface from the inbox list. While the inbox shows 
 - **Workspace grouping uses `resolveIssueFilterWorkspaceId`.** When a workspace is selected in the sidebar, the issue list filters to that workspace's issues. Switching workspaces updates the query parameter and React Query refetches without a page reload.
 - **View state persisted in company-scoped local storage.** Filter, sort, and group-by state are stored in `localStorage` keyed by a `viewStateKey`, not in URL query params. This means view state is per-device, not shareable via URL.
 - **Page search blurs on Enter and conditionally on Escape.** The search input blurs on `Enter` (`shouldBlurPageSearchOnEnter`) to confirm the search. It blurs on `Escape` only when the field is empty (`shouldBlurPageSearchOnEscape`). This avoids losing the search field during refinement while still allowing keyboard dismissal.
-- **List controls use icon-only buttons at compact viewports.** Filter, sort, and group-by controls render as `<Button variant="outline" size="icon">` with a `title` attribute and tighter grid sizing at smaller viewports.
+- **List controls use icon-only buttons unconditionally.** Sort and group-by controls render as `<Button variant="outline" size="icon">` with a `title` attribute. The filter button (`IssueFiltersPopover`) keeps its default `buttonVariant="ghost"` but also receives `iconOnly` to render at `size="icon"`. The icon-only mode is always active, not viewport-gated.
 - **Inline workflow transitions mutate optimistically.** Status changes, assignee changes, and priority changes made from the list view use React Query optimistic updates so the row reflects the new value immediately without waiting for the server round-trip.
-- **Inbox-side filter preferences persisted separately.** Inbox filter state uses `loadInboxFilterPreferences` to persist across sessions, and `matchesInboxIssueSearch` provides client-side search filtering for the inbox view.
 
 ## Open Questions
 
