@@ -9,9 +9,10 @@ The Paperclip server accepts inbound webhooks from external services (GitHub, Se
 
 ## Supported Modes
 
-- **`github_hmac`** — Validates payloads using GitHub's HMAC-SHA256 signature scheme (`X-Hub-Signature-256` header). Used for GitHub webhook integrations.
-- **`none`** — No signature verification. Suitable for development, internal services behind a VPN, or integrations that do not support signing.
-- **(default/existing)** — The pre-existing signing mode used before these additions (likely Sentry-style or a generic shared-secret approach).
+- **`bearer`** — Validates webhooks using a Bearer token in the `Authorization` header. Pre-existing mode.
+- **`hmac_sha256`** — Generic HMAC-SHA256 signature verification using a shared secret. Pre-existing mode.
+- **`github_hmac`** — Validates payloads using GitHub's HMAC-SHA256 signature scheme (`X-Hub-Signature-256` header). Added in PR #1961 for GitHub webhook integrations.
+- **`none`** — No signature verification. Suitable for development, internal services behind a VPN, or integrations that do not support signing. Added in PR #1961.
 
 ## Key Decisions
 
