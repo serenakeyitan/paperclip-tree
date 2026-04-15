@@ -22,3 +22,11 @@
 {"pattern":"content_inaccuracy","pr":296,"fix":"rewritten_from_source","date":"2026-04-15T20:15:34Z","reviewer":"bingran-you"}
 {"pattern":"content_inaccuracy","pr":294,"fix":"added_workspace_command_model","date":"2026-04-15T20:15:34Z","reviewer":"bingran-you"}
 {"pattern":"overstated_ui_surface","pr":259,"fix":"corrected_button_variants","date":"2026-04-15T20:15:34Z","reviewer":"bingran-you"}
+{"pattern":"content_inaccuracy","pr":264,"fix":"added_live_target_guard","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
+{"pattern":"content_inaccuracy","pr":295,"fix":"corrected_supportsSkills_derivation","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
+{"pattern":"content_inaccuracy","pr":293,"fix":"reframed_from_precomputed_snapshots_to_bounded_projections","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
+{"pattern":"content_inaccuracy","pr":294,"fix":"broadened_service_only_to_service_job_command_model","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
+{"pattern":"overstated_ui_surface","pr":294,"fix":"removed_false_mobile_default_collapsed","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
+{"pattern":"content_inaccuracy","pr":297,"fix":"rewrote_spa_fallback_around_asset_miss_invariant","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
+{"pattern":"parent_subdomain_missing","pr":297,"fix":"added_backend_subdirectories_section","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
+{"pattern":"duplicate_node_path","pr":259,"fix":"flagged_path_conflict_with_270","date":"2026-04-15T21:00:00Z","reviewer":"bingran-you"}
