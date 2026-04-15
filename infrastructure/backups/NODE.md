@@ -23,10 +23,10 @@ Defaults: daily for 7 days, weekly for 4 weeks, monthly for 1 month. Backups bey
 
 ## UI Controls
 
-Retention preset configuration is exposed through `InstanceGeneralSettings` in the settings UI. The UI allows company admins to select from the validated preset values for each tier. No backup status dashboard or manual trigger UI has been shipped yet.
+Retention preset configuration is exposed through `InstanceGeneralSettings` in the settings UI. The UI allows instance-level administrators (board users with instance-admin access) to select from the validated preset values for each tier. No backup status dashboard or manual trigger UI has been shipped yet.
 
 ## Key Decisions
 
 - **Gzip over raw dumps.** Storage efficiency matters for self-hosted deployments; gzip is universally supported and adds minimal CPU overhead.
 - **Tiered retention over flat TTL.** A single retention window either keeps too many old backups or loses recent granularity. Tiered retention balances storage cost with recovery flexibility.
-- **User-configurable via UI.** Backup policy is an operational concern that company admins should control without touching config files or CLI.
+- **User-configurable via UI.** Backup policy is an operational concern that instance administrators should control without touching config files or CLI. Access is scoped to board users with instance-admin privileges via `PATCH /instance/settings/general`.
