@@ -55,6 +55,14 @@ Pages live in `/ui/src/pages/` and map to top-level routes:
 - **Tailwind v4** (not v3) — uses the new CSS-first configuration approach.
 - **Adapter UI components are co-located with adapter packages** but imported into the main UI bundle for the management pages.
 
+## Sub-domains
+
+- [inbox-list/](inbox-list/) — Inbox list rendering, workspace grouping, and keyboard traversal
+- [issue-document-freshness/](issue-document-freshness/) — Issue document staleness detection and refresh patterns
+- [issue-list-ux/](issue-list-ux/) — Scoped issue list (list + board views), filtering, grouping, inline workflow transitions
+- [issue-thread-ux/](issue-thread-ux/) — Issue detail thread/comment UX
+- [live-updates/](live-updates/) — Real-time update infrastructure via React context + React Query cache invalidation, route/path-scoped
+
 ## Decision Records
 
 - [api-layer-and-react-query-over-global-state.md](api-layer-and-react-query-over-global-state.md) — Why frontend data flow is organized around a shared API layer plus React Query instead of a global store.
