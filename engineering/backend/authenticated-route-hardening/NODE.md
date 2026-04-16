@@ -5,6 +5,8 @@ owners: [bingran-you, cryppadotta, serenakeyitan]
 
 # Authenticated Route Hardening
 
+This node is the **practical checklist for adding or modifying authenticated routes** — the recurring patterns (per-route tenant check, private-hostname gate, idempotency, co-located authz test) contributors should apply when touching the routes layer. For the **underlying authorization model** (helper-module factoring, cross-tenant policy, why it's centralized), see [route-authorization/](../route-authorization/NODE.md); that node owns the *what and why*, this node owns the *how-to*.
+
 Paperclip's backend applies a consistent hardening pattern across authenticated HTTP routes. The pattern enforces tenant isolation, private-hostname gating, and idempotency on state-changing endpoints, with dedicated test suites per route family to prevent regressions.
 
 ## Key Decisions

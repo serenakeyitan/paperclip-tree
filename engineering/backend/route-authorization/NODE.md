@@ -5,6 +5,8 @@ owners: [bingran-you, cryppadotta, serenakeyitan]
 
 # Route Authorization
 
+This node owns the **what and why** of the backend authorization model: the policy shape, where it lives, why it's factored that way, and how it's tested. For the **checklist of what to do when adding or modifying a route**, see [authenticated-route-hardening/](../authenticated-route-hardening/NODE.md) — it defers to this node for the underlying policy.
+
 How the backend server enforces authorization on authenticated routes — who can read, mutate, or invoke operations on a given resource, and how cross-tenant access is prevented.
 
 **Source:** `server/src/routes/` (per-route handlers), `server/src/routes/authz.ts`, `server/src/routes/workspace-command-authz.ts`, `server/src/routes/workspace-runtime-service-authz.ts`
@@ -17,7 +19,7 @@ Authorization logic is factored into dedicated helper modules rather than inline
 
 ### Cross-Tenant Access Is a First-Class Test Concern
 
-Company-scoped isolation (see the root `CLAUDE.md` architectural decisions) is enforced at the route layer and verified with dedicated cross-tenant test suites: `agent-cross-tenant-authz-routes.test.ts`, `issue-workspace-command-authz.test.ts`, `workspace-runtime-routes-authz.test.ts`, `workspace-runtime-service-authz.test.ts`, `plugin-routes-authz.test.ts`, `agent-permissions-routes.test.ts`. Every new authenticated route that exposes a company-scoped resource is expected to have a matching authz test that attempts access from a different tenant and asserts denial.
+Company-scoped isolation — all entities are scoped to a `company_id` and data must never leak across companies — is enforced at the route layer and verified with dedicated cross-tenant test suites: `agent-cross-tenant-authz-routes.test.ts`, `issue-workspace-command-authz.test.ts`, `workspace-runtime-routes-authz.test.ts`, `workspace-runtime-service-authz.test.ts`, `plugin-routes-authz.test.ts`, `agent-permissions-routes.test.ts`. Every new authenticated route that exposes a company-scoped resource is expected to have a matching authz test that attempts access from a different tenant and asserts denial.
 
 ### Private Hostname Gate at the App Level
 
