@@ -3,9 +3,15 @@ title: "Issue Filters"
 owners: [bingran-you, serenakeyitan, cryppadotta]
 ---
 
-Issue filters are a structured, composable query layer over the issues list, distinct from free-text Inbox search. They let users narrow the list by state, assignee, labels, and related dimensions from a single popover (`IssueFiltersPopover`), and the selected filters are reflected in the URL via the router so filtered views are shareable and reloadable.
+Issue filters are a structured, composable query layer over the issues list, distinct from free-text Inbox search. They let users narrow the list by state, priority, assignee, creator, labels, projects, and workspaces from a single popover (`IssueFiltersPopover`), plus an "hide routine executions" toggle when that capability is enabled.
 
-The filter model and its parsing/serialization live in `ui/src/lib/issue-filters.ts` (with `issue-filters.test.ts` as the contract). Treat this module as the single source of truth for how a filter set is represented, normalized, and round-tripped with the URL — UI components must not invent their own shapes. `IssuesList` and `Inbox`/`IssueDetail` pages consume the parsed filter state rather than raw query params.
+The filter model and its parsing/normalization live in `ui/src/lib/issue-filters.ts` (with `issue-filters.test.ts` as the contract). Treat this module as the single source of truth for how a filter set is represented and normalized — UI components must not invent their own shapes. `IssuesList` reads the normalized filter state through this module when constructing its view.
+
+Filter state persistence is local, not URL-based:
+
+- `IssuesList` persists its full view state — selected filters, quick-filter preset, column layout — to `localStorage` keyed per list instance, and rehydrates through `normalizeIssueFilterState` so legacy blobs are safe on read.
+- The `Issues` page only round-trips the free-text `q` search param (and an optional `participantAgentId`) in the URL. Structured filter selections are not part of the URL and are not shareable via link today.
+- `Inbox` keeps its own preference blob in `localStorage` (`ui/src/lib/inbox.ts`), separate from issue-list filter state.
 
 Keep Inbox search (keyword/substring matching across inbox items) conceptually separate from issue filters (structured predicates on issue fields). They can compose, but their models should not be merged — search narrows by text, filters narrow by facets.
 
