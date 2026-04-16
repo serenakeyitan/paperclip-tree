@@ -61,7 +61,7 @@ Pages live in `/ui/src/pages/` and map to top-level routes:
 - [issue-document-freshness/](issue-document-freshness/) — Issue document editor freshness and save conflict handling
 - [issue-list-ux/](issue-list-ux/) — Issue list/board rendering, filtering, and grouping UX
 - [issue-thread-ux/](issue-thread-ux/) — Issue detail chat thread and comment UX
-- [production-build-config/](production-build-config/) — Production Vite build transforms (drop `console.*`, strip legal comments)
+- [production-build-config/](production-build-config/) — Production Vite build transforms (drop `console.*` and `debugger`, strip legal comments)
 
 ## Decision Records
 
