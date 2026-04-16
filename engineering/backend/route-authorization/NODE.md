@@ -5,7 +5,7 @@ owners: [bingran-you, cryppadotta, serenakeyitan]
 
 # Route Authorization & Cross-Tenant Isolation
 
-Authenticated Express routes in the Paperclip server enforce company-scoped isolation through dedicated authorization helpers. Every mutating or read endpoint that touches a company-scoped entity (agents, approvals, plugins, execution workspaces, issues, activity, projects) must verify that the requesting principal belongs to the owning company before resolving the resource. Cross-tenant access attempts return a uniform authorization error rather than a 404, so probing for resource existence across tenants is not possible.
+Authenticated Express routes in the Paperclip server enforce company-scoped isolation through dedicated authorization helpers. Every mutating or read endpoint that touches a company-scoped entity (agents, approvals, plugins, execution workspaces, issues, activity, projects) must verify that the requesting principal belongs to the owning company before resolving the resource. When a company-scoped resource exists but belongs to a different tenant, the route returns an authorization error (403) rather than the resource; when the resource does not exist at all, the route still returns 404. This is the invariant exercised by `agent-cross-tenant-authz-routes.test.ts` and `workspace-runtime-routes-authz.test.ts`. This node should not be read as claiming the stronger anti-enumeration guarantee of making missing and foreign resources indistinguishable — the current implementation does not provide that.
 
 ## Key Decisions
 
