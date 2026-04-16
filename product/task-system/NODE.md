@@ -69,6 +69,7 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 ## Sub-domains
 
 - **[issue-blockers/](issue-blockers/NODE.md)** — First-class blocker relations and dependency wakeups between issues
+- [agent-inbox-lite/](agent-inbox-lite/) — Lightweight per-agent inbox surface including routine-execution issues
 
 ## Open Questions
 
