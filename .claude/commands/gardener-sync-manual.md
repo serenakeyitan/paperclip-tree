@@ -33,17 +33,17 @@ child node has its parent updated.
 ## Run
 
 ```bash
-first-tree sync --apply --tree-path .
+first-tree sync --apply --tree-path . --log-jsonl ~/.gardener/sync-runs.jsonl
 ```
 
 If you want to preview without opening PRs:
 ```bash
-first-tree sync --propose --tree-path .
+first-tree sync --propose --tree-path . --log-jsonl ~/.gardener/sync-runs.jsonl
 ```
 
 If you want to detect drift only:
 ```bash
-first-tree sync --tree-path .
+first-tree sync --tree-path . --log-jsonl ~/.gardener/sync-runs.jsonl
 ```
 
 ## Review sync PRs

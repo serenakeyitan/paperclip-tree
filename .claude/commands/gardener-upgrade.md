@@ -63,7 +63,9 @@ mkdir -p .claude/commands
 for cmd in gardener-comment-manual gardener-comment-schedule gardener-comment-start \
            gardener-comment-loop gardener-comment-stop gardener-comment-watch \
            gardener-sync-manual gardener-sync-schedule gardener-sync-start \
-           gardener-sync-loop gardener-sync-stop \
+           gardener-sync-loop gardener-sync-stop gardener-sync-watch \
+           gardener-respond-manual gardener-respond-schedule gardener-respond-start \
+           gardener-respond-loop gardener-respond-stop gardener-respond-watch \
            gardener-start gardener-stop \
            gardener-onboarding gardener-upgrade; do
   curl -fsSL -o ".claude/commands/${cmd}.md" "${BASE}/.claude/commands/${cmd}.md"
