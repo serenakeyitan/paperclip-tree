@@ -69,7 +69,7 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 - [dev-runner/](dev-runner/) — Local development runner and worktree dev tooling
 - [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
 - [static-asset-serving/](static-asset-serving/) — Static asset cache headers and SPA fallback routing
-- `board-mutation-guard/` — Board Mutation Guard
+- [board-mutation-guard/](board-mutation-guard/) — Trust `PAPERCLIP_PUBLIC_URL` for board mutation origin checks
 
 ## Decision Records
 
