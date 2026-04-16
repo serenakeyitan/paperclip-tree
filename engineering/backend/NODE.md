@@ -69,7 +69,8 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 - [dev-runner/](dev-runner/) — Local development runner and worktree dev tooling
 - [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
 - [static-asset-serving/](static-asset-serving/) — Static asset cache headers and SPA fallback routing
-- `route-authorization/` — Route Authorization
+- `route-authori- `authenticated-route-hardening/` — Authenticated Route Hardening
+zation/` — Route Authorization
 
 ## Decision Records
 
