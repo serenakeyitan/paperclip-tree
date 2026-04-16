@@ -17,7 +17,7 @@ Authorization logic is factored into dedicated helper modules rather than inline
 
 ### Cross-Tenant Access Is a First-Class Test Concern
 
-Company-scoped isolation (see the root `CLAUDE.md` architectural decisions) is enforced at the route layer and verified with dedicated cross-tenant test suites: `agent-cross-tenant-authz-routes.test.ts`, `issue-workspace-command-authz.test.ts`, `workspace-runtime-routes-authz.test.ts`, `workspace-runtime-service-authz.test.ts`, `plugin-routes-authz.test.ts`, `agent-permissions-routes.test.ts`. Every new authenticated route that exposes a company-scoped resource is expected to have a matching authz test that attempts access from a different tenant and asserts denial.
+Company-scoped isolation — all entities are scoped to a `company_id` and data must never leak across companies — is enforced at the route layer and verified with dedicated cross-tenant test suites: `agent-cross-tenant-authz-routes.test.ts`, `issue-workspace-command-authz.test.ts`, `workspace-runtime-routes-authz.test.ts`, `workspace-runtime-service-authz.test.ts`, `plugin-routes-authz.test.ts`, `agent-permissions-routes.test.ts`. Every new authenticated route that exposes a company-scoped resource is expected to have a matching authz test that attempts access from a different tenant and asserts denial.
 
 ### Private Hostname Gate at the App Level
 
