@@ -39,3 +39,4 @@
 {"pattern":"content_inaccuracy","pr":293,"fix":"split_four_concerns","date":"2026-04-15T22:00:00Z","reviewer":"bingran-you","detail":"Node collapsed persisted merging, bounded projections, compact summaries, and failure comments into one layer"}
 {"pattern":"content_inaccuracy","pr":293,"fix":"corrected_recovery_path","date":"2026-04-15T22:00:00Z","reviewer":"bingran-you","detail":"Recovery comments from summarizeRunFailureForIssueComment in reconcileStrandedAssignedIssues, not buildHeartbeatRunIssueComment in reapOrphanedRuns"}
 {"pattern":"duplicate_node_path","pr":270,"fix":"dropped_governance_files","date":"2026-04-15T22:00:00Z","reviewer":"bingran-you","detail":"Governance files already merged via #263; PR scoped to unique frontend nodes only"}
+{"pattern":"duplicate_node_path","pr":299,"fix":"dropped_duplicate_file","date":"2026-04-15T22:00:00Z","reviewer":"gardener-sync"}
