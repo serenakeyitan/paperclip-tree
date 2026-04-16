@@ -15,7 +15,7 @@ Issue approvals reuse the same approval system (board powers, approval cards, au
 
 ### MCP-Accessible Approval Creation
 
-External agents can create approval requests programmatically via the MCP `approval-create` tool, enabling automated governance workflows without direct API access. Agents connected through any adapter can participate in governance — requesting approval before proceeding with high-stakes actions.
+External agents can create approval requests programmatically via the MCP `approval-create` tool, enabling automated governance workflows without direct API access. This means agents connected through any adapter can participate in governance — requesting approval before proceeding with high-stakes actions.
 
 ### Complement, Don't Replace V1 Gates
 

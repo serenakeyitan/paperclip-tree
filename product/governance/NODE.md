@@ -80,10 +80,6 @@ Every mutation writes to `activity_log`. Every approval decision is logged. Agen
 
 **Rationale:** "Surface problems, don't hide them" is a core principle. The audit trail is what makes autonomous operation trustworthy.
 
-## Sub-domains
-
-- **[issue-approvals/](issue-approvals/NODE.md)** -- Per-issue approval gates, MCP-accessible approval creation, and integration with the board approval workflow.
-
 ## Deferred Governance Features
 
 - Multi-member boards
@@ -94,6 +90,10 @@ Every mutation writes to `activity_log`. Every approval decision is logged. Agen
 ## Decision Records
 
 - [server-enforced-approvals-and-budget-stops.md](server-enforced-approvals-and-budget-stops.md) — Why approvals, budget hard stops, and their audit trail are enforced in the server rather than delegated to agents or adapters.
+
+## Sub-domains
+
+- **[issue-approvals/](issue-approvals/NODE.md)** -- Per-issue approval gates, MCP-accessible approval creation, and integration with the board approval workflow.
 
 ## Open Questions
 
