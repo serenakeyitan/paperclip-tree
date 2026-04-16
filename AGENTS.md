@@ -75,3 +75,7 @@ Paperclip is an open-source orchestration and control plane for autonomous AI co
 - **product/** — Product strategy, company/agent/task model, governance decisions
 - **infrastructure/** — Docker deployment, CI/CD, testing strategy
 - **members/** — Team members and their responsibilities
+
+## GitHub Task Workflow
+
+- For `serenakeyitan/paperclip-tree` issues that ask for Breeze status propagation, update the issue label before responding and keep exactly one current status label: use `breeze:wip` while working, `breeze:human` if blocked on input, and `breeze:done` when finished.
