@@ -74,6 +74,7 @@ All sessioned adapters share a common `sessionCodec` pattern that normalizes fie
 - **[openclaw-gateway/](openclaw-gateway/NODE.md)** — OpenClaw WebSocket gateway adapter
 - **[opencode-local/](opencode-local/NODE.md)** — OpenCode CLI adapter
 - **[pi-local/](pi-local/NODE.md)** — Pi CLI adapter
+- **[capability-flags/](capability-flags/NODE.md)** — Capability flags on ServerAdapterModule for conditional UI rendering
 
 ---
 
