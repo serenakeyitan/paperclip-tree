@@ -5,6 +5,8 @@ owners: [bingran-you, cryppadotta, serenakeyitan]
 
 # Route Authorization
 
+This node owns the **what and why** of the backend authorization model: the policy shape, where it lives, why it's factored that way, and how it's tested. For the **checklist of what to do when adding or modifying a route**, see [authenticated-route-hardening/](../authenticated-route-hardening/NODE.md) — it defers to this node for the underlying policy.
+
 How the backend server enforces authorization on authenticated routes — who can read, mutate, or invoke operations on a given resource, and how cross-tenant access is prevented.
 
 **Source:** `server/src/routes/` (per-route handlers), `server/src/routes/authz.ts`, `server/src/routes/workspace-command-authz.ts`, `server/src/routes/workspace-runtime-service-authz.ts`
