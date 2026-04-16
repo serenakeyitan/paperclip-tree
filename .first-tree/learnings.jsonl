@@ -50,3 +50,11 @@
 {"pattern":"stale_claude_md_reference","pr":307,"fix":"restated_invariant_inline","date":"2026-04-16T04:07:43Z","reviewer":"bingran-you","note":"node referenced 'root CLAUDE.md architectural decisions' but the Context Tree cannot assume a root CLAUDE.md exists in every consumer; restate the invariant inline instead of deep-linking to a top-level framework file."}
 {"pattern":"content_inaccuracy","pr":305,"fix":"added_debugger_alongside_console","date":"2026-04-16T04:07:43Z","reviewer":"bingran-you","note":"source esbuild config drops both 'console' and 'debugger'; node only documented console.*"}
 {"pattern":"overstated_ui_surface","pr":304,"fix":"rewrote_persistence_paragraph","date":"2026-04-16T04:07:43Z","reviewer":"bingran-you","note":"issue-filters drift node claimed URL round-trip and IssueDetail consumption; source actually uses localStorage per-list-instance, URL only carries 'q'/'participantAgentId', and IssueDetail doesn't consume filters."}
+{"pattern":"subdomain_link_format_backtick","pr":293,"fix":"converted_to_canonical_markdown_link","date":"2026-04-16T04:41:40Z","reviewer":"serenakeyitan-gardener-sync"}
+{"pattern":"subdomain_link_format_backtick","pr":295,"fix":"converted_to_canonical_bold_markdown_link","date":"2026-04-16T04:41:40Z","reviewer":"serenakeyitan-gardener-sync"}
+{"pattern":"parent_subdomain_missing","pr":294,"fix":"added_sub_domains_section_to_both_parents","date":"2026-04-16T04:41:40Z","reviewer":"serenakeyitan-gardener-sync"}
+{"pattern":"node_rename_dropped_content","pr":299,"fix":"restored_issue_list_ux_and_removed_duplicate_issue_list","date":"2026-04-16T04:41:40Z","reviewer":"serenakeyitan-gardener-sync"}
+{"pattern":"parent_subdomain_missing","pr":299,"fix":"added_sub_domains_section_to_frontend_parent","date":"2026-04-16T04:41:40Z","reviewer":"serenakeyitan-gardener-sync"}
+{"pattern":"scope_overlap_between_siblings","pr":306,"fix":"sharpened_opening_paragraphs_declaring_what_vs_how_to","date":"2026-04-16T04:41:40Z","reviewer":"bingran-you"}
+{"pattern":"scope_overlap_between_siblings","pr":307,"fix":"sharpened_opening_paragraphs_declaring_what_vs_how_to","date":"2026-04-16T04:41:40Z","reviewer":"bingran-you"}
+{"pattern":"dead_doc_reference","pr":306,"fix":"restated_invariant_inline_tree_has_no_root_CLAUDE_md","date":"2026-04-16T04:41:40Z","reviewer":"bingran-you"}
