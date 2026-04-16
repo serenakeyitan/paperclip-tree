@@ -18,6 +18,30 @@ comments to reviewers, and learnings logged for gardener-sync to read.
 - If a fix requires reading source repo code, use `gh api` to fetch
   file contents. Do not clone the source repo.
 
+## JSONL logging
+
+If `$RESPOND_LOG` is set, append structured JSONL events to that file
+for live monitoring via `/gardener-respond-watch`.
+
+```bash
+: "${RESPOND_LOG:=$HOME/.gardener/respond-runs.jsonl}"
+mkdir -p "$(dirname "$RESPOND_LOG")"
+
+log_event() {
+  echo "{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",$(echo "$1")}" >> "$RESPOND_LOG"
+}
+```
+
+Call `log_event` at the following points in the runbook:
+
+- **After Step 1 scan:** `log_event '"kind":"scan","tree_repo":"'$TREE_REPO'","total_prs":'$COUNT',"needs_fix":'$FIX_COUNT`
+- **After each fix (Step 3e):** `log_event '"kind":"fix","pr_number":'$NUMBER',"pattern":"'$PATTERN'","summary":"'$SUMMARY'"'`
+- **After each reply (Step 3e reply):** `log_event '"kind":"reply","pr_number":'$NUMBER',"reviewer":"'$REVIEWER'"'`
+- **After each learning (Step 3f):** `log_event '"kind":"learn","pattern":"'$PATTERN'","count":'$COUNT`
+- **After each skip (Step 2 classify):** `log_event '"kind":"skip","pr_number":'$NUMBER',"reason":"'$REASON'"'`
+- **On error:** `log_event '"kind":"error","message":"'$MSG'"'`
+- **End of run (Step 5):** `log_event '"kind":"run","prs_scanned":'$SCANNED',"prs_fixed":'$FIXED',"learnings":'$LEARNINGS',"duration_s":'$DURATION`
+
 ## Execution mode detection
 
 ```bash
@@ -64,25 +88,74 @@ gh api repos/$TREE_REPO/issues/$NUMBER/comments \
 ```
 
 Classify each PR:
-- **APPROVED** → log and skip (the reviewer agent merges after approving)
-- **CHANGES_REQUESTED** → queue for fix (Step 2)
-- **Has `@gardener fix` comment** → queue for fix (Step 2), even if no formal review
+- **APPROVED** → queue for merge (Step 2)
+- **CHANGES_REQUESTED** → queue for fix (Step 3)
+- **Has `@gardener fix` comment** → queue for fix (Step 3), even if no formal review
 - **No review / REVIEW_REQUIRED** → skip
-- **Housekeeping** (title contains "housekeeping") → handle in Step 4
+- **Housekeeping** (title contains "housekeeping") → handle in Step 5
 
-Priority: `@gardener fix` PRs are processed first (explicit request from reviewer).
+Priority: `@gardener fix` PRs first, then CHANGES_REQUESTED, then APPROVED.
 
-**Note on merging:** gardener-respond does NOT merge PRs. The reviewer
-agent (e.g., bingran's githuber) is responsible for merging after
-approving. This separation ensures the PR author (gardener-sync) never
-merges its own PRs — the reviewer who validated the content does.
+## Step 2: Merge APPROVED PRs
 
-If APPROVED PRs are sitting unmerged for >24h, log a warning:
+gardener-respond merges APPROVED PRs because it has the full tree
+context needed to resolve conflicts. The reviewer agent only reviews
+— it doesn't know how to rebase or resolve tree file conflicts.
+
+**Merge flow:**
+
 ```
-⚠ #$NUMBER: APPROVED but not merged for >24h. Reviewer may need to enable auto-merge.
+Reviewer approves PR
+  → gardener-respond detects APPROVED status
+  → checks if PR is mergeable
+  → if conflict: rebase on main, resolve conflicts, force-push
+  → squash merge
 ```
 
-## Step 2: Fix CHANGES_REQUESTED PRs
+For each APPROVED PR (except housekeeping):
+
+```bash
+# Check if mergeable
+MERGEABLE=$(gh pr view $NUMBER --repo $TREE_REPO --json mergeable --jq .mergeable)
+
+if [ "$MERGEABLE" = "MERGEABLE" ]; then
+  gh pr merge $NUMBER --repo $TREE_REPO --squash
+  log_event '"kind":"merge","pr_number":'$NUMBER',"status":"merged"'
+elif [ "$MERGEABLE" = "CONFLICTING" ]; then
+  # Rebase on main to resolve conflicts
+  BRANCH=$(gh pr view $NUMBER --repo $TREE_REPO --json headRefName --jq .headRefName)
+  git fetch origin main $BRANCH
+  git checkout $BRANCH
+  git rebase origin/main || {
+    # Resolve conflicts: prefer main for shared files, keep ours for PR-specific NODE.md
+    for f in $(git diff --name-only --diff-filter=U); do
+      if echo "$f" | grep -qE "NODE\.md$"; then
+        git checkout --ours "$f"
+      else
+        git checkout --theirs "$f"
+      fi
+    done
+    git add -A && git rebase --continue
+  }
+  git push origin HEAD --force-with-lease
+  git checkout main
+  # Retry merge after rebase
+  sleep 10
+  gh pr merge $NUMBER --repo $TREE_REPO --squash
+  log_event '"kind":"merge","pr_number":'$NUMBER',"status":"merged_after_rebase"'
+fi
+```
+
+If merge still fails after rebase, log and skip:
+```
+⚠ #$NUMBER: APPROVED but could not merge even after rebase. Manual intervention needed.
+```
+
+**Important:** gardener-respond only merges PRs that a reviewer has
+APPROVED. It never merges its own unreviewed changes. The reviewer
+is the gatekeeper; respond is the executor.
+
+## Step 3: Fix CHANGES_REQUESTED PRs
 
 For each CHANGES_REQUESTED PR:
 
@@ -265,7 +338,7 @@ Historical review feedback (from learnings.jsonl):
   reflected in the source PR's changed file paths.
 ```
 
-## Step 3: Handle edge cases
+## Step 4: Handle edge cases
 
 ### Merge conflicts
 If a PR branch conflicts with main after earlier merges:
@@ -290,7 +363,7 @@ This cannot be fixed in-place. Recommend closing and letting the next sync run g
 @reviewer please close if you agree."
 ```
 
-## Step 4: Housekeeping PR
+## Step 5: Housekeeping PR
 
 Check if ALL other sync PRs are either merged or closed:
 ```bash
@@ -298,15 +371,19 @@ OPEN_COUNT=$(gh pr list --repo $TREE_REPO --state open \
   --json headRefName --jq '[.[] | select(.headRefName | startswith("first-tree/sync-")) | select(.headRefName | contains("housekeeping") | not)] | length')
 ```
 
-If OPEN_COUNT == 0:
-Log: `✓ Housekeeping #$HOUSEKEEPING_NUMBER: all sync PRs resolved. Ready for reviewer to merge.`
+If OPEN_COUNT == 0 and the housekeeping PR is APPROVED:
+```bash
+gh pr merge $HOUSEKEEPING_NUMBER --repo $TREE_REPO --squash
+```
+Log: `✓ Housekeeping #$HOUSEKEEPING_NUMBER: all sync PRs resolved, merged.`
 
-The reviewer agent will merge the housekeeping PR after approving it,
-just like content PRs. gardener-respond does not merge.
+If OPEN_COUNT == 0 but housekeeping is not yet APPROVED:
+Log: `⏭ Housekeeping #$HOUSEKEEPING_NUMBER: all sync PRs resolved. Waiting for reviewer approval.`
 
-If not: `⏭ Housekeeping #$NUMBER: $OPEN_COUNT sync PRs still open.`
+If OPEN_COUNT > 0:
+Log: `⏭ Housekeeping #$HOUSEKEEPING_NUMBER: $OPEN_COUNT sync PRs still open.`
 
-## Step 5: Summary
+## Step 6: Summary
 
 ```
 gardener-respond run complete ($RUN_MODE)
