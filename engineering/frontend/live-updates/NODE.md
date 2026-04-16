@@ -17,9 +17,9 @@ Live updates are delivered via a React context provider (`LiveUpdatesProvider`) 
 
 The live update system is designed to handle the high-frequency mutations typical of autonomous agent activity — rapid status transitions, comment bursts, and concurrent field updates — without overwhelming the UI with refetches.
 
-### Breadcrumb-Aware Context
+### Route/Path-Based Invalidation Scoping
 
-The `BreadcrumbContext` tracks the user's current navigation position (which issue, which project) and is consumed by the live update layer to scope invalidation. This prevents unrelated cache busts and keeps update traffic proportional to what the user is viewing.
+The live update layer scopes cache invalidation using the current URL pathname via `resolveVisibleIssueRouteContext(...)`. This function extracts the visible issue reference from the route and matches incoming events (run status changes, agent activity) against the displayed issue's agent and run IDs. Only queries for the currently viewed issue are invalidated, preventing unrelated cache busts and keeping update traffic proportional to what the user is viewing. `BreadcrumbContext` is a separate concern — it deduplicates breadcrumb rerenders but is not consumed by the live update layer.
 
 ## Boundaries
 
