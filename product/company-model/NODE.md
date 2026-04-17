@@ -22,11 +22,17 @@ A Company's direction is defined by its set of **Initiatives** (the highest-leve
 
 **Rationale:** Real companies pursue multiple strategic objectives simultaneously. A single goal field would be too rigid; initiatives provide the needed flexibility while still anchoring all work to company direction.
 
-### Single-Tenant Deployment, Multi-Company Data Model
+### Single-Tenant Deployment, Multi-Operator Access
 
-Paperclip is not a SaaS. One deployment = one human operator's companies. Multi-company support is about one person running multiple AI businesses, not about sharing a platform across unrelated users.
+Paperclip is not a SaaS. One deployment = one organization's companies. Multiple human operators within that organization can share a deployment — with real identities, company membership, invite flows, and company-scoped access controls — but the deployment is still scoped to one org, not shared across unrelated users or organizations.
 
-**Rationale:** Single-tenancy eliminates an entire class of isolation, billing, and trust-boundary problems. The multi-company model lets power users run diverse AI businesses from one control plane.
+**Multi-operator access** is first-class: operators authenticate via session-based auth, join companies via invite links or join requests, hold roles (admin/member) with company-scoped grants, and see each other in the company member directory. This is "shared within one org", not generic multi-tenancy.
+
+**Runtime modes:**
+- `local_trusted` — no login friction, for solo local use where the operator trusts the environment
+- `authenticated` — session-based, supports multiple human operators with invite/membership flows and private/public hostname exposure
+
+**Rationale:** The move from single-operator to multi-operator does not require SaaS-style cross-org isolation. Keeping deployment-scoped tenancy eliminates billing and cross-org trust-boundary complexity while enabling real team use. Company-scoping remains the isolation unit — operators access only companies they are members of.
 
 ### Company Lifecycle
 

@@ -12,9 +12,9 @@ Board powers, approval gates, budget controls, and cost tracking -- the human ov
 
 ### Single Human Board (V1)
 
-Every Company has a Board that governs high-impact decisions. V1: one human operator per deployment. The Board is not just an approval gate -- it is a live control surface. The human can intervene at any level at any time.
+Every Company has a Board that governs high-impact decisions. V1 supports multiple human operators per deployment (via invite/membership flows), but multi-member Board governance, delegated authority, and per-member hiring budgets are deferred — the Board acts as a unified control surface for now. The human can intervene at any level at any time.
 
-**Rationale:** Conservative default. Human control is non-negotiable for V1. Multi-member boards, delegated authority, and hiring budgets are deferred to avoid premature complexity in the governance model.
+**Rationale:** Conservative default. Human control is non-negotiable for V1. Multi-member board governance and delegated authority are deferred to avoid premature complexity, even though the deployment now supports multiple authenticated operators.
 
 ### Board Powers (Always Available)
 
