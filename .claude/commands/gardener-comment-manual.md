@@ -291,7 +291,8 @@ gh api "/repos/$target_repo/issues/$number/comments" --paginate | jq -s --arg u 
     has_state: (.body | contains("<!-- gardener:state")),
     has_paused: (.body | contains("<!-- gardener:paused")),
     has_ignored: (.body | contains("<!-- gardener:ignored")),
-    last_consumed_rereview: (.body | capture("gardener:last_consumed_rereview=(?<id>[0-9]+)")?.id),
+    last_consumed_rereview: (.body | capture("gardener:last_consumed_rereview=(?<id>[0-9]+)") | .id),
+    quiet_refresh_cid: (.body | capture("gardener:quiet_refresh_cid=(?<id>[0-9]+)") | .id),
     is_command: (
       (.user.login != $u) and
       (.body | test("@gardener (re-review|pause|resume|ignore)"))
@@ -362,6 +363,30 @@ the regex on every run, creating a false-positive re-review loop.
      The loop-safe rule:
      1. Compare current `updated_at` to the marker's stored timestamp.
         If equal → skip.
+     1b. **Quiet-refresh fast path** (only runs when `updated_at` differs
+        from marker timestamp): parse `quiet_refresh_cid` from the state
+        comment. If set, check for comments newer than the marker timestamp:
+        ```bash
+        newer_comments=$(gh api "/repos/$target_repo/issues/$number/comments" \
+          --paginate | jq -s --arg ts "$marker_ts" --arg cid "$quiet_refresh_cid" '
+          [.[] | .[] | select(.created_at > $ts)]
+        ')
+        newer_count=$(echo "$newer_comments" | jq length)
+        only_own=$(echo "$newer_comments" | jq --arg cid "$quiet_refresh_cid" '
+          if length == 0 then true
+          elif length == 1 then (.[0].id | tostring) == $cid
+          else false
+          end
+        ')
+        ```
+        - If `only_own == true` (0 newer comments, or the sole newer comment
+          is gardener's own state comment identified by `quiet_refresh_cid`) →
+          silently update the marker timestamp, skip the full timeline call,
+          continue to next item. Log: `⏭ #$number: quiet-refresh skip
+          (own comment only, cid=$quiet_refresh_cid)`.
+        - Otherwise → fall through to sub-step 2 (full timeline call).
+        If `quiet_refresh_cid` is not set (old marker), fall through to
+        sub-step 2 as before.
      2. If different, fetch all events on the issue with
         `created_at > <marker timestamp>` (issue comments + issue
         metadata changes via `gh api /repos/$target_repo/issues/<n>/timeline`).
@@ -372,7 +397,19 @@ the regex on every run, creating a false-positive re-review loop.
         comment, only changing the timestamp inside the marker), then
         skip. This breaks the loop.
      5. If the filtered list is **non-empty** → real human/agent
-        activity, re-review.
+        activity detected. Proceed to Step 4b (full re-review).
+        **You MUST read the new comments/events** as part of your
+        Step 4b evidence gather:
+        - The non-gardener events list is already in memory from sub-step 3.
+          For each event that is a comment, read its body content.
+        - Read the new comment content before forming a verdict — the
+          human may have added context, changed scope, or resolved the
+          concern behind the original verdict.
+        - Do NOT carry forward the prior verdict unchanged. Even if you
+          reach the same verdict, it must be based on the current state
+          of the issue including new activity.
+        - If more than 10 new non-gardener events exist, read the most
+          recent 10 and note the count in your comment body.
 
 5b. **`gardener:reviewed` label is present on the item** (silent-aligned
     via label, no state comment exists). The label was already fetched
@@ -711,6 +748,7 @@ intro, the context fit table, and the tree nodes section.
 ````markdown
 <!-- gardener:state · reviewed=<sha> · verdict=ALIGNED · severity=low · tree_sha=<tree-sha> -->
 <!-- gardener:last_consumed_rereview=<comment-id-or-none> -->
+<!-- gardener:quiet_refresh_cid=<comment-id-of-this-post> -->
 
 🌱 **gardener** · ✅ `ALIGNED` · severity: `low` · commit: `<short-sha>`
 
@@ -769,6 +807,7 @@ intro should be welcoming, not alarming.
 ````markdown
 <!-- gardener:state · reviewed=<sha-or-issue-timestamp> · verdict=<VERDICT> · severity=<level> · tree_sha=<tree-commit-sha> -->
 <!-- gardener:last_consumed_rereview=<comment-id-or-none> -->
+<!-- gardener:quiet_refresh_cid=<comment-id-of-this-post> -->
 
 🌱 **gardener** · <verdict-emoji> `<VERDICT>` · severity: `<level>` · commit: `<short-sha>`
 
@@ -894,9 +933,22 @@ Pass the body string directly — no temp file, no `-F @file`.
 
 Local mode:
 ```bash
-gh api -X POST "/repos/$target_repo/issues/$number/comments" \
+new_comment_id=$(gh api -X POST "/repos/$target_repo/issues/$number/comments" \
+  -F body=@/tmp/gardener-review-body.md --jq .id)
+```
+
+After a successful POST, substitute `$new_comment_id` into the
+`<!-- gardener:quiet_refresh_cid=<comment-id-of-this-post> -->` marker
+in the comment body and PATCH the comment to embed it:
+```bash
+sed -i '' "s/gardener:quiet_refresh_cid=<comment-id-of-this-post>/gardener:quiet_refresh_cid=${new_comment_id}/" /tmp/gardener-review-body.md
+gh api -X PATCH "/repos/$target_repo/issues/comments/$new_comment_id" \
   -F body=@/tmp/gardener-review-body.md
 ```
+For PATCH (re-review), the comment ID does not change — use the existing
+`$comment_id`. Substitute it into the template before writing.
+Schedule mode: read `.id` from the `add_issue_comment` response and
+embed it directly in the body string before calling `update_issue_comment`.
 
 Schedule mode: call
 `mcp__github__add_issue_comment(owner, repo, issue_number, body=<full body string>)`.
@@ -935,6 +987,46 @@ if [ -n "$reaction_id" ]; then
   gh api -X DELETE "/repos/$target_repo/issues/$number/reactions/$reaction_id"
 fi
 ```
+
+## Step 4-post: ALIGNED spot-check for large PRs
+
+After all items in Step 4 are processed, and before writing the Step 5
+log, run a quality spot-check on large-PR ALIGNED verdicts.
+
+**Trigger**: at least 1 PR item in this run has `verdict == ALIGNED` AND
+`additions + deletions > 500`. Issues and label-only silences are exempt.
+If no such items exist, skip this step entirely and log:
+`⏭ Spot-check: no large ALIGNED PRs this run.`
+
+**Selection**: from qualifying items, randomly select up to 2. If only 1
+qualifies, check that 1.
+
+**Check**: re-read each item's posted gardener comment body. Evaluate:
+
+1. **Specificity** — does the "Context fit" table cite a named tree
+   decision (by number or description), a specific tree node path, or a
+   named architectural principle?
+   - ✅ Acceptable: "Follows `product/task-system/NODE.md` decision #3: one status field per task."
+   - ❌ Not acceptable: "Follows existing patterns." / "Consistent with the architecture." / "Aligns with project conventions."
+
+2. **Tree node citation** — does the "Tree nodes referenced" section list
+   at least one real path with a one-line summary that names a specific
+   decision or constraint (not just "checked this file")?
+
+**If both criteria pass** for all sampled items: log
+`✅ Spot-check passed: <N> ALIGNED large-PR sample(s) had specific tree citations.`
+
+**If either criterion fails** for any sampled item:
+1. Log: `⚠️ Spot-check: PR #$number ALIGNED verdict appears generic — re-reviewing.`
+2. Add the item to a `recheck_queue` (capped at 2 items per run).
+3. Re-run Step 4b (re-read diff + relevant tree nodes) for each item in
+   `recheck_queue`. PATCH the existing comment with updated reasoning.
+   If the verdict changes, update the verdict emoji and `gardener:state`
+   marker too.
+4. Append a fresh `item` event to `runs.jsonl` with `"recheck":true` for
+   each re-checked item so the watcher can distinguish it.
+
+---
 
 ## Step 5: Log results
 

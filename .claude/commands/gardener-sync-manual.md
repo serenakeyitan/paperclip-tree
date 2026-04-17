@@ -209,6 +209,30 @@ If a source PR number is found:
    source_repo="$(echo "$pr_body" | grep -oP 'source_repo=\K[^\s]+')"
    source_pr="$(gh pr view "$source_pr_number" --repo "$source_repo" --json title,body)"
    ```
+1b. Fetch the source PR changed file list and read key file contents:
+   ```bash
+   source_files="$(gh pr diff "$source_pr_number" --repo "$source_repo" --name-only)"
+   ```
+   Select **1-2 key files** from `source_files` using this priority:
+   - Files whose names or paths correspond to topics cited in the NODE.md
+     (e.g., if NODE.md mentions "JWT rotation", prefer `auth/jwt.ts`
+     over `tests/lint.test.ts`).
+   - Prefer `.ts`/`.py`/`.go`/`.rs` source files over test, config, and
+     generated files.
+   - If no file obviously matches NODE.md content, pick the deepest-path /
+     most specific-name source file.
+
+   For each selected file (max 2), fetch the current content:
+   ```bash
+   gh api "/repos/$source_repo/contents/$file_path" \
+     --jq '.content' | base64 -d | head -200
+   # If 404 (file deleted in PR), skip and try the next candidate.
+   # If encoding=none (>1MB), note: "Source file <path> too large — skipped."
+   # If 401/403, note: "Content check skipped — source repo not accessible."
+   ```
+   **Read the fetched content.** Do not just confirm the file exists.
+   This content becomes evidence in the AI judgment in sub-step 3.
+   Record the file(s) sampled as: `"Checked source file: <path>"`.
 2. Read the NODE.md content from the PR diff.
 3. **AI judgment**: Does the NODE.md content accurately reflect what the
    source PR did? Check for:
@@ -216,6 +240,9 @@ If a source PR number is found:
      about JWT rotation)
    - Missing key details from the source PR
    - Fabricated claims not supported by the source PR
+   - **Claims that contradict the actual file content fetched in step 1b**
+     (e.g., NODE.md says "we now use RS256 signing" but the fetched
+     `jwt.ts` still shows HS256)
 4. If misaligned, record: `"Content: NODE.md mentions <X> but source PR is about <Y>"`
 
 ### Step 4g: AI judgment check — Sibling/parent consistency
