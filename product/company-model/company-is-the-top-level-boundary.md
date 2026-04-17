@@ -28,8 +28,9 @@ model would introduce in V1.
   company level before going deeper.
 - Import/export and portability features should preserve the company as the
   stable package boundary.
-- Deployment-level multi-company support exists for one operator running
-  multiple businesses, not for unrelated operators sharing an instance.
+- Deployment-level multi-company support exists for one organization's operators
+  running multiple businesses, not for unrelated organizations sharing an instance.
+  Multiple human operators within the same org can share a deployment via invite/membership flows.
 
 ## Related Domains
 
