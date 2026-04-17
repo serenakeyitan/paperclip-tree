@@ -94,6 +94,7 @@ Every mutation writes to `activity_log`. Every approval decision is logged. Agen
 ## Sub-domains
 
 - **[issue-approvals/](issue-approvals/NODE.md)** -- Per-issue approval gates, MCP-accessible approval creation, and integration with the board approval workflow.
+- `multi-user-access/` — Multi-User Access & Invites
 
 ## Open Questions
 
