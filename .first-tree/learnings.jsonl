@@ -58,3 +58,4 @@
 {"pattern":"scope_overlap_between_siblings","pr":306,"fix":"sharpened_opening_paragraphs_declaring_what_vs_how_to","date":"2026-04-16T04:41:40Z","reviewer":"bingran-you"}
 {"pattern":"scope_overlap_between_siblings","pr":307,"fix":"sharpened_opening_paragraphs_declaring_what_vs_how_to","date":"2026-04-16T04:41:40Z","reviewer":"bingran-you"}
 {"pattern":"dead_doc_reference","pr":306,"fix":"restated_invariant_inline_tree_has_no_root_CLAUDE_md","date":"2026-04-16T04:41:40Z","reviewer":"bingran-you"}
+{"pattern":"parent_subdomain_missing","pr":308,"fix":"added_to_parent","date":"2026-04-19T06:00:30Z","reviewer":"serenakeyitan"}
