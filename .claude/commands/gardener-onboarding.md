@@ -1,191 +1,93 @@
-Set up gardener for this Context Tree. Run this from inside your tree repo.
+Set up `first-tree gardener` for this Context Tree. Run this from
+inside the tree repo (the one with `NODE.md` and `.first-tree/`).
 
-Gardener has two modules:
-- **Comment** — reviews source repo PRs against the tree (posts verdict comments)
-- **Sync** — detects source drift and opens tree-update PRs
+Gardener is a maintenance agent that reviews source-repo PRs and
+issues against this tree, responds to reviewer feedback on tree-sync
+PRs, and (push mode) installs a workflow that replaces the long-running
+gardener service with event-driven per-PR sync.
 
-Both modules are installed by this onboarding.
+There are two deployment shapes. Pick the one that matches your repo
+access:
+
+| Mode | When to use |
+|---|---|
+| **Push (workflow)** | You control the source repo and can land a workflow file in it. Lowest latency, zero infra. |
+| **Pull (breeze daemon)** | The source repo is third-party or you can't push workflow files. |
 
 ## 1. Verify this is a tree repo
-
-Check that `.first-tree/` directory exists (or any first-tree metadata).
 
 ```bash
 if [ ! -d ".first-tree" ]; then
   echo "❌ This does not look like a Context Tree repo."
-  echo "   Run this onboarding from inside your tree repo (the one with NODE.md files)."
-  echo "   If you don't have a tree yet, create one with: npx first-tree init"
+  echo "   Run this from inside your tree repo, or create one with:"
+  echo "   npx -p first-tree first-tree tree init"
   exit 1
 fi
 echo "✓ Context Tree detected."
 ```
 
-## 2. Verify bindings exist and have remoteUrl
+## 2. Verify config
 
-```bash
-BINDINGS=$(ls .first-tree/bindings/*.json 2>/dev/null)
-if [ -z "$BINDINGS" ]; then
-  echo "❌ No bound source repos found in .first-tree/bindings/"
-  echo "   Bind a source repo first: first-tree bind --tree-path ."
-  exit 1
-fi
+Gardener reads `.claude/gardener-config.yaml` from the tree repo:
 
-# Check each binding has remoteUrl
-for f in .first-tree/bindings/*.json; do
-  SOURCE_ID=$(basename "$f" .json)
-  REMOTE_URL=$(cat "$f" | grep -o '"remoteUrl"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"remoteUrl"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-  if [ -z "$REMOTE_URL" ]; then
-    echo "❌ Binding $SOURCE_ID has no remoteUrl."
-    echo "   Edit .first-tree/bindings/$SOURCE_ID.json and add:"
-    echo '     "remoteUrl": "https://github.com/<owner>/<repo>"'
-    exit 1
-  fi
-  echo "✓ Binding: $SOURCE_ID → $REMOTE_URL"
-done
+```yaml
+target_repo: owner/app-repo          # source repo to review
+tree_repo: owner/tree-repo            # this tree repo (for attribution)
+modules:
+  comment:
+    enabled: true                     # set false to opt out entirely
+  respond:
+    enabled: true
 ```
 
-## 3. Verify prerequisites
+Missing or omitted `modules.<name>.enabled` leaves subcommands
+**enabled**. Explicit `enabled: false` is the only opt-out.
 
-```bash
-# gh CLI
-if ! gh auth status >/dev/null 2>&1; then
-  echo "❌ gh CLI not authenticated. Run: gh auth login"
-  exit 1
-fi
-echo "✓ gh CLI authenticated."
-
-# claude CLI (needed for sync classification)
-if ! claude --version >/dev/null 2>&1; then
-  echo "❌ claude CLI not found. Install it:"
-  echo "   npm install -g @anthropic-ai/claude-code"
-  echo "   claude login"
-  exit 1
-fi
-echo "✓ claude CLI found."
-```
-
-## 4. Install command files
-
-Fetch all gardener commands from the latest release.
-
-```bash
-GARDENER_VERSION=$(gh api /repos/agent-team-foundation/repo-gardener/releases/latest --jq .tag_name)
-if [ -z "$GARDENER_VERSION" ]; then
-  echo "❌ Could not resolve latest release."
-  exit 1
-fi
-echo "Installing gardener $GARDENER_VERSION"
-
-BASE="https://raw.githubusercontent.com/agent-team-foundation/repo-gardener/${GARDENER_VERSION}"
-mkdir -p .claude/commands
-for cmd in gardener-comment-manual gardener-comment-schedule gardener-comment-start \
-           gardener-comment-loop gardener-comment-stop gardener-comment-watch \
-           gardener-sync-manual gardener-sync-schedule gardener-sync-start \
-           gardener-sync-loop gardener-sync-stop gardener-sync-watch \
-           gardener-respond-manual gardener-respond-schedule gardener-respond-start \
-           gardener-respond-loop gardener-respond-stop gardener-respond-watch \
-           gardener-start gardener-stop \
-           gardener-onboarding gardener-upgrade; do
-  curl -fsSL -o ".claude/commands/${cmd}.md" "${BASE}/.claude/commands/${cmd}.md"
-done
-
-# Verify downloads
-for f in .claude/commands/gardener-*.md; do
-  if [ ! -s "$f" ]; then
-    echo "❌ Download failed: $f is empty."
-    exit 1
-  fi
-done
-echo "✓ All command files installed."
-```
-
-## 5. Write config
-
-Auto-generate `.claude/gardener-config.yaml` from the bindings.
+If the config is missing, create it from the tree-repo slug and the
+bound source repo:
 
 ```bash
 TREE_REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
+# target_repo is the source repo you want gardener to review.
+# Look it up from .first-tree/bindings/<source-id>.json if you don't
+# know it offhand.
 ```
 
-Build the config. For each binding, extract the target repo from remoteUrl:
+## 3. Install a deployment mode
+
+### Push mode (recommended if you control the source repo)
+
+From inside the **source repo** (not the tree repo), run:
 
 ```bash
-cat > .claude/gardener-config.yaml <<YAML_EOF
-# Auto-generated by /gardener-onboarding
-tree_repo: $TREE_REPO
-installed_version: $GARDENER_VERSION
-
-# Source repos to review (extracted from .first-tree/bindings/)
-target_repos:
-YAML_EOF
-
-for f in .first-tree/bindings/*.json; do
-  REMOTE_URL=$(cat "$f" | grep -o '"remoteUrl"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"remoteUrl"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-  # Extract owner/repo from URL
-  OWNER_REPO=$(echo "$REMOTE_URL" | sed 's|https://github.com/||' | sed 's|\.git$||')
-  echo "  - $OWNER_REPO" >> .claude/gardener-config.yaml
-done
-
-echo "✓ Config written to .claude/gardener-config.yaml"
-cat .claude/gardener-config.yaml
+npx -p first-tree first-tree gardener install-workflow \
+  --tree-repo <OWNER>/<TREE_REPO_NAME>
 ```
 
-## 6. Verify GitHub MCP connector
+This scaffolds `.github/workflows/first-tree-sync.yml`. Then set the
+`TREE_REPO_TOKEN` secret on the source repo — a PAT with `repo` scope
+on the tree repo. See `.agents/skills/first-tree/references/workflow-mode.md`
+for the `gh auth token` quick path vs. the scoped-PAT fallback.
 
-The cloud schedule needs a GitHub MCP connector. Check it now.
+Commit the workflow and open a PR. On every PR merge thereafter, the
+workflow files a tree-repo issue assigned to the NODE owners.
 
-Attempt `mcp__github__get_me` (or any `github*` tool ending in `get_me`).
+### Pull mode (breeze daemon)
 
-- Not found / 401 → warn (don't block):
-  "⚠️ GitHub MCP connector not detected. The cloud schedule won't work
-  until you connect one at https://claude.ai/settings/connectors with
-  Issues: write and Pull requests: write scopes on your tree repo and
-  all source repos. Local /gardener-comment-loop and /gardener-sync-loop
-  will still work via gh CLI."
-
-- Found → "✓ GitHub MCP connector detected."
-
-## 7. Commit and push
+Install breeze instead (the notification-driven dispatcher):
 
 ```bash
-git add .claude/commands/ .claude/gardener-config.yaml
-git commit -m "chore: install gardener $GARDENER_VERSION"
+npx -p first-tree first-tree breeze install
+npx -p first-tree first-tree breeze start
 ```
 
-Check if the current branch is the default branch:
+breeze polls GitHub notifications and invokes `first-tree gardener
+comment` / `respond` on matching items. See the `breeze` skill for
+setup, auth, and troubleshooting.
 
-```bash
-DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef --jq .defaultBranchRef.name)
-CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+## 4. Confirm
 
-if [ "$CURRENT_BRANCH" = "$DEFAULT_BRANCH" ]; then
-  git push
-else
-  echo "⚠️ You're on branch '$CURRENT_BRANCH', not '$DEFAULT_BRANCH'."
-  echo "   The cloud schedule reads from the default branch."
-  echo "   Push to current branch and merge, or push directly to $DEFAULT_BRANCH."
-fi
-```
-
-## 8. Confirm
-
-Output:
-"🌱 gardener installed ($GARDENER_VERSION).
-
-Modules:
-- Comment: reviews PRs on <list of target repos>
-- Sync: syncs this tree from <list of source repos>
-
-Next steps:
-1. Restart Claude Code (so slash commands appear)
-2. Run /gardener-start to begin automation
-   Or run /gardener-comment-manual or /gardener-sync-manual for a one-off test
-
-Commands:
-  /gardener-start              Start both modules
-  /gardener-stop               Stop both modules
-  /gardener-comment-manual     One-off PR review
-  /gardener-sync-manual        One-off tree sync
-  /gardener-comment-watch      Tail comment run logs live
-  /gardener-sync-watch         Tail sync run logs live
-  /gardener-upgrade            Update to latest version"
+Restart Claude Code so the slash commands appear. You can run
+`/gardener-comment` and `/gardener-respond` manually at any time for
+a one-off review; the two deployment modes above just automate that
+invocation.
