@@ -20,7 +20,7 @@ One Paperclip instance runs multiple **Companies**. Each Company has a **goal**,
 
 1. **Control plane, not execution plane.** Paperclip never runs agent code directly. Agents run wherever they run (local processes, cloud services, third-party platforms) and report into the control plane via adapters.
 
-2. **Company is the unit of organization.** Everything is company-scoped. Multi-tenancy is one operator running multiple companies, not multiple operators sharing a deployment.
+2. **Company is the unit of organization.** Everything is company-scoped. Multiple human operators can share a deployment (with real identities, invite flows, and company-scoped membership), but the deployment is still scoped to one organization — not shared across unrelated orgs.
 
 3. **Tasks are the communication channel.** No separate chat or messaging system. All agent communication flows through tasks and comments, keeping context attached to work and creating a natural audit trail.
 
@@ -32,13 +32,13 @@ One Paperclip instance runs multiple **Companies**. Each Company has a **goal**,
 
 7. **Progressive disclosure.** Top layer: human-readable summary. Middle layer: checklist/steps/artifacts. Bottom layer: raw logs/tool calls/transcript.
 
-8. **Local-first, cloud-ready.** The mental model should not change between local solo use and shared/cloud deployment. Two runtime modes: `local_trusted` (no login friction) and `authenticated` (session-based with private/public exposure).
+8. **Local-first, cloud-ready.** The mental model should not change between local solo use and shared/cloud deployment. Two runtime modes: `local_trusted` (no login friction, solo local use) and `authenticated` (session-based, supports multiple human operators with invite/membership flows and private/public hostname exposure).
 
 9. **Thin core, rich edges.** Knowledge bases, external revenue tracking, rich chat, and special surfaces go into plugins -- not the core control plane.
 
 ## V1 Scope Summary
 
-V1 demonstrates the full control-plane loop end-to-end: a human board creates a company, defines goals, hires agents into an org tree, agents receive and execute tasks via heartbeat invocations, costs are tracked with budget hard-stops, and the board can intervene anywhere. Success means one operator can run a small AI-native company with clear visibility and control.
+V1 demonstrates the full control-plane loop end-to-end: a human board creates a company, defines goals, hires agents into an org tree, agents receive and execute tasks via heartbeat invocations, costs are tracked with budget hard-stops, and the board can intervene anywhere. V1 also ships multi-operator access — multiple humans can share a deployment with real identities, invite flows, and company-scoped membership. Success means a small team of operators can run AI-native companies with clear visibility and control.
 
 **Explicitly deferred from V1:** plugin framework/SDK, knowledge base, revenue/expense accounting beyond tokens, public marketplace (ClipHub), multi-board governance, automatic self-healing orchestration.
 
