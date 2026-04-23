@@ -11,7 +11,7 @@ The board UI ships a Storybook for component review. Config, stories, and fixtur
 ## Layout
 
 - `ui/storybook/.storybook/` — Storybook config (`main.ts`, `preview.tsx`, Tailwind entry, styles). Uses `@storybook/react-vite` with `@storybook/addon-docs` and `@storybook/addon-a11y`.
-- `ui/storybook/stories/` — Story files grouped by surface (foundations, navigation-layout, forms-editors, dialogs-modals, chat-comments, budget-finance, agent-management, issue-management, projects-goals-workspaces, control-plane-surfaces, status-language, data-viz-misc, ux-labs, overview).
+- `ui/storybook/stories/` — Story files grouped by surface (foundations, navigation-layout, forms-editors, dialogs-modals, chat-comments, budget-finance, agent-management, issue-management, issue-thread-interactions, projects-goals-workspaces, control-plane-surfaces, status-language, data-viz-misc, ux-labs, overview).
 - `ui/storybook/fixtures/paperclipData.ts` — Canonical fixture data (companies, agents, issues, approvals, projects, live runs, dashboard summary, sidebar badges, auth session) used by stories.
 - `ui/storybook/.storybook/preview.tsx` installs a global fetch shim so stories render against fixtures instead of the real API, and wires up all app providers (Company, Theme, Sidebar, Toast, Dialog, Panel, Breadcrumb, EditorAutocomplete, QueryClient, MemoryRouter, Tooltip).
 
