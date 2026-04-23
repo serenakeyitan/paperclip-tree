@@ -22,13 +22,13 @@ Routine runs now carry a `dispatch_fingerprint` that distinguishes logically sep
 
 The `issues_open_routine_execution_uq` unique index keys on `(company_id, origin_kind, origin_id, origin_fingerprint)` for open routine-execution issues. Distinct fingerprints coexist as open issues; duplicates within a single fingerprint are still prevented.
 
-**Rationale:** The previous uniqueness key prevented any routine from having more than one open issue at a time, which blocked parallel dispatch patterns. Including `origin_fingerprint` in the key preserves the anti-duplication guarantee within a single logical dispatch while allowing routines that fan out across fingerprints to run concurrently.
+**Rationale:** The previous uniqueness key prevented any routine from having more than one open issue at a time, which blocked parallel dispatch patterns. Including `origin_fingerprint` in the key preserves the anti-duplication guarantee within a single logical dispatch while allowing routines that fan out across fingerprints to run concurrently. The dedup hot path itself runs through `findLiveExecutionIssue()` in `server/src/services/routines.ts`, which filters `issues.origin_fingerprint` (with a transitional `'default'` arm for pre-migration rows) — the unique index is the storage-level guarantee behind that query.
 
-### Index for Fingerprint Lookup
+### Fingerprint Column on `routine_runs`
 
-`routine_runs_dispatch_fingerprint_idx` on `(routine_id, dispatch_fingerprint)` supports fast lookup from routine + fingerprint to the corresponding run history.
+`routine_runs.dispatch_fingerprint` is recorded on every run and surfaced in run-history projections so a specific dispatch can be traced across its runs. A supporting `routine_runs_dispatch_fingerprint_idx` on `(routine_id, dispatch_fingerprint)` exists in `packages/db/src/schema/routines.ts`.
 
-**Rationale:** Fingerprint-keyed lookup is on the hot path for dedup checks and for operator queries that trace a specific dispatch across runs. A dedicated index keeps these lookups from scanning the full routine history.
+**Rationale:** The column itself is load-bearing — it stamps each run with its dispatch identity and is what `originFingerprint` is derived from when the run's issue is created. The index is included so future routine-plus-fingerprint history lookups (operator drill-downs, per-dispatch run timelines) do not have to scan full routine history; today's dedup path does **not** read it (dedup goes through `issues.origin_fingerprint`, not `routine_runs`).
 
 ## Relationships
 
