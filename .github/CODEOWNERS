@@ -31,6 +31,7 @@
 /engineering/backend/dev-runner/                   @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/dev-runner/worktree-dev-tooling/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/heartbeat-run-orchestration/  @bingran-you @cryppadotta @serenakeyitan
+/engineering/backend/heartbeat-scheduled-retry/    @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/static-asset-serving/         @bingran-you @cryppadotta @serenakeyitan @stubbi
 /engineering/backend/webhook-signing-modes/        @bingran-you @cryppadotta @serenakeyitan @antonio-mello-ai
 /engineering/cli/                                  @bingran-you @cryppadotta @serenakeyitan
