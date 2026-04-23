@@ -67,6 +67,7 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 ## Sub-domains
 
 - [dev-runner/](dev-runner/) — Local development runner and worktree dev tooling
+- [heartbeat-deferred-comment-promotion/](heartbeat-deferred-comment-promotion/) — Deferred comment wakes promoted after the active issue run releases execution
 - [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
 - [static-asset-serving/](static-asset-serving/) — Static asset cache headers and SPA fallback routing
 
