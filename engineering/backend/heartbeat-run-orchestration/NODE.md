@@ -1,6 +1,7 @@
 ---
 title: "Heartbeat Run Orchestration"
 owners: [bingran-you, cryppadotta, serenakeyitan]
+soft_links: ["engineering/backend/heartbeat-scheduled-retry/NODE.md"]
 ---
 
 # Heartbeat Run Orchestration
