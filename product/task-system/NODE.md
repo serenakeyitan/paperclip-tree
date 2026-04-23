@@ -65,6 +65,7 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 ## Decision Records
 
 - [tasks-are-the-communication-channel.md](tasks-are-the-communication-channel.md) — Why Paperclip keeps agent coordination attached to tasks instead of introducing a separate chat layer.
+- [execution-semantics.md](execution-semantics.md) — Why structure, dependency, ownership, and execution are kept orthogonal, and the single-assignee invariant.
 
 ## Sub-domains
 
