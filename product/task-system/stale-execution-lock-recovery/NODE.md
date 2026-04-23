@@ -1,3 +1,8 @@
+---
+title: "Stale Execution Lock Recovery"
+owners: [bingran-you, cryppadotta, serenakeyitan]
+---
+
 # Stale Execution Lock Recovery
 
 This recovery surface is paperclip-specific and scoped to a single `company_id` — like every other task-system entity, issues and their execution-run locks never cross company boundaries, and every recovery action (manual or automatic) operates within the owning company's governance context.
