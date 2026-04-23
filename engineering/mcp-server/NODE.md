@@ -37,6 +37,10 @@ The MCP server ships a broad initial surface covering the core Paperclip domain 
 
 **Escape hatch:** `paperclipApiRequest` — limited to paths under `/api` with JSON bodies, for endpoints without a dedicated MCP tool yet.
 
+## Sub-domains
+
+- **[issue-workspace-runtime-tools/](issue-workspace-runtime-tools/NODE.md)** — MCP tools for inspecting and controlling runtime services attached to an issue workspace (get runtime, wait for service, start/stop/restart).
+
 ## Relationships
 
 - Depends on backend service layer (`engineering/backend/`)
