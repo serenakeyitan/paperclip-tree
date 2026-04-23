@@ -34,7 +34,7 @@ External adapter plugins previously could not participate in local-adapter featu
 
 ## Compatibility Rules
 
-When an adapter does not set capability flags, the server keeps backward compatibility by falling back to legacy hardcoded maps and sets for built-in adapter types. External adapters that omit the flags default to `false` and therefore do not receive these local-only features until they opt in explicitly.
+When an adapter does not set the explicit capability flags, the server keeps backward compatibility by falling back to legacy hardcoded maps and sets for built-in adapter types. For external adapters, omitted explicit flags default to `false`, so features such as local JWT auth, instructions bundles, and runtime-skill materialization still require an explicit opt-in. `supportsSkills` is different: the server derives it from `listSkills` or `syncSkills`, so adapters can surface skill-management UI without adding a separate flag.
 
 Built-in adapters are expected to declare their flags directly so the contract becomes self-describing over time instead of depending on the fallback path.
 
