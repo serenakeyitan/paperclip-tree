@@ -45,6 +45,7 @@
 /engineering/frontend/inbox-list/                  @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-chat-composer-viewport/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-document-freshness/    @bingran-you @cryppadotta @serenakeyitan
+/engineering/frontend/issue-editor-reliability/    @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-list-nesting-and-server-search/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-list-ux/               @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-thread-ux/             @bingran-you @cryppadotta @serenakeyitan
@@ -63,6 +64,7 @@
 /infrastructure/discord-daily-digest/              @bingran-you @cryppadotta @serenakeyitan
 /infrastructure/testing/                           @bingran-you @cryppadotta @serenakeyitan
 /infrastructure/testing/no-llm-calls-in-default-ci.md @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/testing/test-command-tiers/        @bingran-you @cryppadotta @serenakeyitan
 /members/                                          @bingran-you @serenakeyitan
 /members/antonio-mello-ai/                         @antonio-mello-ai
 /members/aronprins/                                @aronprins
