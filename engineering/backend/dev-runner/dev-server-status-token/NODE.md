@@ -5,7 +5,7 @@ owners: [bingran-you, cryppadotta, serenakeyitan]
 
 # Dev Server Status Token
 
-The dev runner and backend share a per-process secret that gates access to supervisor-only dev-server metadata on `/api/health`. The runner mints a random UUID at startup (`scripts/dev-runner.ts` / `.mjs`) and injects it into the child server as `PAPERCLIP_DEV_SERVER_STATUS_TOKEN`; the backend exposes dirty-state, pending migrations, and last-restart-at only when the request carries the matching `x-paperclip-dev-server-status-token` header.
+The dev runner and backend share a per-process secret that lets the supervising dev runner read dev-server metadata on `/api/health` without needing a user session. The runner mints a random UUID at startup (`scripts/dev-runner.ts` / `.mjs`) and injects it into the child server as `PAPERCLIP_DEV_SERVER_STATUS_TOKEN`; the backend's health route returns the `devServer` block (dirty-state, pending migrations, last-restart-at) when the caller is already entitled to full details (e.g. board/agent actors) **or** when the request carries the matching `x-paperclip-dev-server-status-token` header. The token is an additional, actor-less path for the dev runner — not the exclusive gate.
 
 ## Key Decisions
 
