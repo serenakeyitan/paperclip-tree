@@ -52,11 +52,19 @@ Paperclip manages task-linked work artifacts: **issue documents** (rich-text pla
 
 **Rationale:** Agents need to produce visible outputs beyond status updates. Documents and attachments make work tangible without pulling Paperclip into build pipeline territory.
 
-### No Automatic Recovery
+### No Automatic Task Reassignment
 
-When an agent crashes mid-task, Paperclip does **not** auto-reassign or auto-release the task. Stale tasks (in `in_progress` with no recent activity) are surfaced through dashboards. Recovery is manual/explicit.
+When an agent crashes mid-task, Paperclip does **not** auto-reassign or auto-release the task itself. Stale tasks (in `in_progress` with no recent activity) are surfaced through dashboards, and reassignment is a manual/explicit decision.
 
-**Rationale:** Automatic recovery hides failures. Good visibility lets the right entity decide what to do. A project manager agent whose job is to monitor for stale work is the emergent pattern, not a built-in behavior.
+However, Paperclip *does* perform automatic cleanup of stale **execution locks** so that healthy runs can self-heal without stranding the issue. Specifically:
+
+- `clearExecutionRunIfTerminal` clears a stale `executionRunId` when the referenced run has reached a terminal state.
+- `adoptUnownedCheckoutRun` lets a live run adopt a checkout whose previous owner is gone.
+- Unrecoverable cases are resolved by a board-gated, fully audited `POST /issues/:issueId/admin/force-release`.
+
+See [stale-execution-lock-recovery/NODE.md](stale-execution-lock-recovery/NODE.md) for the full surface.
+
+**Rationale:** Automatic *task* recovery hides failures and removes the human/PM decision of what to do next, so we keep that manual. Automatic *lock* cleanup is a different problem: stale locks block otherwise-healthy runs with no useful signal for a human, so self-healing + an audited force-release escape hatch is the right trade-off. Task-level visibility stays intact; lock-level housekeeping doesn't need to.
 
 ### Priority Scale
 
