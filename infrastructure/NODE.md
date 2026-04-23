@@ -16,6 +16,7 @@ Deployment, Docker, CI/CD pipelines, testing strategy, and operational concerns 
 - **[ci-cd/](ci-cd/NODE.md)** -- GitHub Actions workflows, release pipeline, lockfile management.
 - **[testing/](testing/NODE.md)** -- Vitest unit tests, Playwright e2e, promptfoo evals, release smoke tests.
 - **[backups/](backups/NODE.md)** -- Automated database snapshots, compression, tiered retention, and backup configuration.
+- **[discord-daily-digest/](discord-daily-digest/NODE.md)** -- Daily merge digest posted from `master` to a Discord webhook by `scripts/discord-daily-digest.sh`.
 
 ---
 

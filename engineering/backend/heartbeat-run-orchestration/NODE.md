@@ -1,6 +1,7 @@
 ---
 title: "Heartbeat Run Orchestration"
 owners: [bingran-you, cryppadotta, serenakeyitan]
+soft_links: ["engineering/frontend/issue-chat-composer-viewport"]
 ---
 
 # Heartbeat Run Orchestration
@@ -39,3 +40,4 @@ Each state transition produces an immutable event in `heartbeat_run_events`, ena
 
 - The **heartbeat protocol** (when to fire, what context to include) is defined in `product/agent-model`. This node covers the **execution** of that protocol.
 - **Adapter execution mechanics** (process spawning, output parsing) are owned by `adapters/`. This node covers the **coordination** around adapter calls.
+- The **issue-chat stop-run control** that invokes heartbeat cancellation from the transcript UI is documented in `engineering/frontend/issue-chat-composer-viewport`.

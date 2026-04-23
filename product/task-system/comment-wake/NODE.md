@@ -1,6 +1,7 @@
 ---
 title: "Comment Wake"
 owners: [bingran-you, cryppadotta, serenakeyitan]
+soft_links: ["engineering/frontend/issue-chat-composer-viewport"]
 ---
 
 # Comment Wake
@@ -26,3 +27,4 @@ Comment wakes carry the issue scope, enabling downstream auto-checkout (see [Aut
 - The **heartbeat protocol** (scheduled periodic wakes) is defined in [Agent Model](../agent-model/NODE.md). Comment wake is an event-driven complement to scheduled heartbeats.
 - **Auto-checkout** behavior after wake is owned by [Auto-Checkout on Wake](auto-checkout/NODE.md).
 - **Worktree isolation** during the resulting execution is owned by [Execution Workspaces](../../engineering/execution-workspaces/NODE.md).
+- The **issue-chat stop-run control** complements comment wake by letting users interrupt an in-flight run from the transcript UI without changing the wake contract; that chat-surface UX is documented in `engineering/frontend/issue-chat-composer-viewport`.
