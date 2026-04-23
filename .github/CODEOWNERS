@@ -12,6 +12,7 @@
 /adapters/cursor-local/conservative-context-and-session-normalization.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/gemini-local/                            @bingran-you @cryppadotta @serenakeyitan
 /adapters/gemini-local/auth-expiry-and-turn-limit-awareness.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/hermes-local/                            @bingran-you @cryppadotta @serenakeyitan
 /adapters/openclaw-gateway/                        @bingran-you @cryppadotta @serenakeyitan
 /adapters/openclaw-gateway/websocket-gateway-and-device-pairing.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/opencode-local/                          @bingran-you @cryppadotta @serenakeyitan
