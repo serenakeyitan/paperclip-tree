@@ -8,7 +8,7 @@ soft_links: ["adapters", "engineering/backend", "engineering/frontend"]
 
 Adapter for **Hermes** (a local coding agent). Registered under adapter type key `hermes_local` and exposed in the UI as "Hermes Agent".
 
-**Source:** `packages/adapters/hermes-paperclip-adapter/` (referenced via `hermes-paperclip-adapter/ui`)
+**Source:** `server/src/adapters/registry.ts`, `ui/src/adapters/hermes-local/index.ts`, and `ui/src/components/AgentConfigForm.tsx`; Hermes-specific runtime helpers come from the external `hermes-paperclip-adapter` dependency referenced by `server/package.json` and `ui/package.json`.
 **UI module:** `ui/src/adapters/hermes-local/index.ts`
 **Server registry:** `server/src/adapters/registry.ts`
 
