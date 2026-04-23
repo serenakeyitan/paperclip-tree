@@ -21,13 +21,13 @@ An issue has at most one assignee. Either `assigneeAgentId` (agent ownership) or
 
 ### Status Is Not Just a Label
 
-Issue statuses (`backlog`, `todo`, `in_progress`, `in_review`, `done`, `blocked`, `cancelled`) imply expectations about ownership and execution — not just UI state. Status transitions drive heartbeat scheduling, wake-on-dependency-resolved behavior, and crash recovery. The canonical status semantics live in `doc/execution-semantics.md`; `doc/SPEC-implementation.md` is the V1 contract and points to execution-semantics for the detailed model.
+Issue statuses (`backlog`, `todo`, `in_progress`, `in_review`, `done`, `blocked`, `cancelled`) imply expectations about ownership and execution — not just UI state. For agent-owned issues, status transitions drive heartbeat scheduling, wake-on-dependency-resolved behavior, and crash recovery; user-owned issues are not managed by the heartbeat scheduler, so an `in_progress` user-owned issue is not execution-backed in the same sense. The canonical status semantics live in `doc/execution-semantics.md`; `doc/SPEC-implementation.md` is the V1 contract and points to execution-semantics for the detailed model.
 
 **Rationale:** If status were cosmetic, agents could not use it to coordinate. Making status load-bearing means the orchestrator can safely schedule, wake, and recover work based purely on status transitions, without a parallel execution-state field.
 
 ### Structure vs Dependency vs Ownership vs Execution
 
-Parent/sub-issue is purely **structural** — it does not imply a blocker relationship or shared ownership. Blockers are an explicit **dependency** edge (`blockedByIssueIds`) and drive automatic wakeups when resolved. **Ownership** is the assignee. **Execution** is whether there is a live run or scheduled heartbeat.
+Parent/sub-issue is **structural** — it does not imply a blocker relationship or shared ownership. It is not purely inert, though: `parentId` also participates in parent-wake behavior, where the parent's assignee is woken when all direct children reach a terminal state. That wake is the only runtime behavior structure carries; it does not collapse structure into dependency or ownership. Blockers are an explicit **dependency** edge (`blockedByIssueIds`) and drive automatic wakeups when resolved. **Ownership** is the assignee. **Execution** is whether there is a live run or scheduled heartbeat.
 
 A future change that conflates any two of these (for example, auto-blocking on parent status, or treating "has a run attached" as a dependency edge) should be treated as a model change, not a bug fix — it requires an explicit tree update here.
 
