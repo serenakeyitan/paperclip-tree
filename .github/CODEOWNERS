@@ -12,6 +12,7 @@
 /adapters/cursor-local/conservative-context-and-session-normalization.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/gemini-local/                            @bingran-you @cryppadotta @serenakeyitan
 /adapters/gemini-local/auth-expiry-and-turn-limit-awareness.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/hermes-local/                            @bingran-you @cryppadotta @serenakeyitan
 /adapters/openclaw-gateway/                        @bingran-you @cryppadotta @serenakeyitan
 /adapters/openclaw-gateway/websocket-gateway-and-device-pairing.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/opencode-local/                          @bingran-you @cryppadotta @serenakeyitan
@@ -31,6 +32,7 @@
 /engineering/backend/dev-runner/                   @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/dev-runner/worktree-dev-tooling/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/heartbeat-run-orchestration/  @bingran-you @cryppadotta @serenakeyitan
+/engineering/backend/hermes-adapter-auth/          @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/static-asset-serving/         @bingran-you @cryppadotta @serenakeyitan @stubbi
 /engineering/backend/webhook-signing-modes/        @bingran-you @cryppadotta @serenakeyitan @antonio-mello-ai
 /engineering/backend/worktree-live-work-quarantine/ @bingran-you @cryppadotta @serenakeyitan
@@ -45,6 +47,7 @@
 /engineering/frontend/inbox-list/                  @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-chat-composer-viewport/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-document-freshness/    @bingran-you @cryppadotta @serenakeyitan
+/engineering/frontend/issue-editor-reliability/    @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-list-nesting-and-server-search/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-list-ux/               @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-thread-ux/             @bingran-you @cryppadotta @serenakeyitan
@@ -95,6 +98,7 @@
 /product/task-system/                              @bingran-you @cryppadotta @serenakeyitan
 /product/task-system/tasks-are-the-communication-channel.md @bingran-you @cryppadotta @serenakeyitan
 /product/task-system/auto-checkout/                @bingran-you @cryppadotta @serenakeyitan
+/product/task-system/comment-cancellation/         @bingran-you @cryppadotta @serenakeyitan
 /product/task-system/comment-wake/                 @bingran-you @cryppadotta @serenakeyitan
 /product/task-system/dependency-blocked-interaction/ @bingran-you @cryppadotta @serenakeyitan
 /product/task-system/inbox-search/                 @bingran-you @cryppadotta @serenakeyitan
@@ -103,4 +107,5 @@
 /product/task-system/issue-thread-interactions/    @bingran-you @cryppadotta @serenakeyitan
 /product/task-system/issue-thread-ux/              @bingran-you @cryppadotta @serenakeyitan
 /product/task-system/vscode-task-interoperability/ @bingran-you @cryppadotta @serenakeyitan
+/product/workspace-commands/                       @bingran-you @cryppadotta @serenakeyitan
 /README.md                                         @bingran-you @serenakeyitan
