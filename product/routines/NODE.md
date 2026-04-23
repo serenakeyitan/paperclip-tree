@@ -30,3 +30,7 @@ Like all Paperclip entities, routines are scoped to a `company_id` and included 
 ## Relationships
 
 Routines interact with the task system (routine runs may create tasks), governance (budget and approval gates apply to routine-initiated work), and the agent model (routines can target specific agents or roles).
+
+## Sub-domains
+
+- **[dispatch-fingerprint/](dispatch-fingerprint/NODE.md)** — Per-dispatch identity (`routine_runs.dispatch_fingerprint`, `issues.origin_fingerprint`) that lets a single routine fan out parallel work streams without colliding on open-issue dedup.
