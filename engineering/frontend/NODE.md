@@ -58,3 +58,4 @@ Pages live in `/ui/src/pages/` and map to top-level routes:
 ## Decision Records
 
 - [api-layer-and-react-query-over-global-state.md](api-layer-and-react-query-over-global-state.md) — Why frontend data flow is organized around a shared API layer plus React Query instead of a global store.
+- [dynamic-adapter-parser-sandbox/](dynamic-adapter-parser-sandbox/NODE.md) — Web Worker sandbox that executes third-party adapter `ui-parser.js` with network/escape-hatch APIs shadowed, plus the async-to-sync cached-result protocol.
