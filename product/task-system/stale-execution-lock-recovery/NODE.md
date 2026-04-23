@@ -1,5 +1,7 @@
 # Stale Execution Lock Recovery
 
+This recovery surface is paperclip-specific and scoped to a single `company_id` — like every other task-system entity, issues and their execution-run locks never cross company boundaries, and every recovery action (manual or automatic) operates within the owning company's governance context.
+
 Issues carry execution-run lock fields (`checkoutRunId`, `executionRunId`, `executionLockedAt`) that pair an in-progress issue with the harness run currently working it. When a harness crashes or a run terminates abnormally, these locks can get stranded and block further progress on the issue. Stale execution lock recovery is the set of behaviors that detect and resolve these strandings.
 
 ## Key Decisions
