@@ -69,6 +69,7 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 ## Sub-domains
 
 - **[issue-blockers/](issue-blockers/NODE.md)** — First-class blocker relations and dependency wakeups between issues
+- **[issue-thread-interactions/](issue-thread-interactions/NODE.md)** — Structured interaction cards (suggest_tasks, ask_user_questions, request_confirmation) for soliciting explicit input inside issue threads
 
 ## Open Questions
 
