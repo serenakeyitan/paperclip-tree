@@ -66,6 +66,7 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 
 ## Sub-domains
 
+- [better-auth-cookie-scoping/](better-auth-cookie-scoping/) — Per-instance Better Auth cookie prefixes for local session isolation
 - [dev-runner/](dev-runner/) — Local development runner and worktree dev tooling
 - [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
 - [static-asset-serving/](static-asset-serving/) — Static asset cache headers and SPA fallback routing
