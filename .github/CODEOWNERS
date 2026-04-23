@@ -58,6 +58,7 @@
 /infrastructure/deployment/bind-presets/           @bingran-you @cryppadotta @serenakeyitan
 /infrastructure/testing/                           @bingran-you @cryppadotta @serenakeyitan
 /infrastructure/testing/no-llm-calls-in-default-ci.md @bingran-you @cryppadotta @serenakeyitan
+/infrastructure/testing/test-command-tiers.md      @bingran-you @cryppadotta @serenakeyitan
 /members/                                          @bingran-you @serenakeyitan
 /members/antonio-mello-ai/                         @antonio-mello-ai
 /members/aronprins/                                @aronprins
