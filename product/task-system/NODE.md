@@ -72,6 +72,7 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 - **[dependency-blocked-interaction/](dependency-blocked-interaction/NODE.md)** — How blocked issues stay idle on deliverable work while still supporting human comment triage
 - **[issue-references/](issue-references/NODE.md)** — First-class mentions of issues inside other issues (PAP-123 style references, related-work summary)
 - **[issue-thread-interactions/](issue-thread-interactions/NODE.md)** — Structured interaction cards (suggest_tasks, ask_user_questions, request_confirmation) for soliciting explicit input inside issue threads
+- **[stale-execution-lock-recovery/](stale-execution-lock-recovery/NODE.md)** — Board-gated force-release and self-healing paths for stranded execution-run locks
 
 ## Open Questions
 
