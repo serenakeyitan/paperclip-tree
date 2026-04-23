@@ -31,11 +31,13 @@ When an issue is blocked, the issue thread renders the unresolved blocker summar
 
 **Rationale:** The cost of a blocked contribution (a comment that ignores the blocker, a handoff to an agent who cannot make progress) is high. Surfacing blockers at the point of action is a small UX change with outsized coordination value.
 
-### Blocked Resumes to Todo on Agent Reassignment
+### Issue Thread Treats Blocked as Resumable on Agent Reassignment
 
-Reassigning an agent via a comment implicitly reopens issues whose status is `done`, `cancelled`, **or** `blocked`. Previously only terminal states (`done`, `cancelled`) triggered implicit reopen; `blocked` is now treated as a resumable state because a fresh agent assignment is a strong signal that the blocker condition should be retested rather than left dormant.
+In the issue chat thread, a comment that reassigns to an agent is treated as an implicit reopen when the issue status is `done`, `cancelled`, **or** `blocked`. Previously only the terminal states (`done`, `cancelled`) triggered implicit reopen in the composer; `blocked` is now treated as a resumable state in this flow because a fresh agent assignment is a strong signal that the blocker condition should be retested rather than left dormant.
 
-**Rationale:** A blocked issue can stay blocked long after its blocker is effectively resolved, either because the dependency wakeup was missed or because the blocker was resolved out-of-band (e.g., a workaround, a scope change). When an operator reassigns a new agent, they are asserting that the issue is worth pursuing again — the right default is to put it back in `todo` and let the new agent re-evaluate the block, not to leave it dormant.
+**Scope:** This is a UI / issue-thread decision, not a platform-level workflow invariant. The evidence in `paperclipai/paperclip#4224` is UI-side only — `ui/src/components/IssueChatThread.tsx` broadens `shouldImplicitlyReopenComment(...)`, and `ui/src/lib/optimistic-issue-comments.ts` broadens `applyOptimisticIssueCommentUpdate(...)` so the optimistic view reflects the same resume rule. The server-side task-system source of truth for whether reassignment of a blocked issue persistently reopens to `todo` is not established by that PR; if and when the server-side rule is added, this decision should be promoted and this node updated to cite that source.
+
+**Rationale:** A blocked issue can stay blocked long after its blocker is effectively resolved, either because the dependency wakeup was missed or because the blocker was resolved out-of-band (e.g., a workaround, a scope change). When an operator reassigns a new agent from the issue thread, they are asserting that the issue is worth pursuing again — the right composer default is to put it back in `todo` optimistically and let the new agent re-evaluate the block, not to leave it dormant in the thread.
 
 ## Relationship to Issue Links
 
