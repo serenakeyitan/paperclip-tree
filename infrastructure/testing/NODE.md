@@ -15,7 +15,7 @@ Testing strategy, frameworks, and test organization for Paperclip.
 ### Unit Tests (Vitest)
 
 - Framework: Vitest (`^3.0.5`)
-- Run: `pnpm test:run` (single run), `pnpm test` (watch mode)
+- Run: `pnpm test` (cheap default, single run — aliases `test:run`), `pnpm test:watch` (watch mode)
 - Scope: Package-level logic -- shared utilities, server business logic, adapter behavior
 - Location: Co-located with source or in package-level test directories
 - Runs in: PR pipeline `verify` job and release `verify_canary`/`verify_stable` jobs
@@ -72,6 +72,7 @@ Both e2e and release-smoke workflows upload Playwright HTML reports and test res
 ## Decision Records
 
 - [no-llm-calls-in-default-ci.md](no-llm-calls-in-default-ci.md) — Why standard CI avoids required live model-provider calls.
+- [test-command-tiers.md](test-command-tiers.md) — Why `pnpm test` is the cheap Vitest-only default and browser suites stay opt-in.
 
 ---
 
@@ -79,8 +80,9 @@ Both e2e and release-smoke workflows upload Playwright HTML reports and test res
 
 | Command | What it runs |
 |---|---|
-| `pnpm test` | Vitest watch mode |
-| `pnpm test:run` | Vitest single run |
+| `pnpm test` | Vitest single run (cheap default; aliases `test:run`) |
+| `pnpm test:run` | Vitest single run (explicit) |
+| `pnpm test:watch` | Vitest watch mode |
 | `pnpm test:e2e` | Playwright e2e (headless) |
 | `pnpm test:e2e:headed` | Playwright e2e (visible browser) |
 | `pnpm test:release-smoke` | Release smoke Playwright suite |
