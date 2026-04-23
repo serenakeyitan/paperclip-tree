@@ -69,6 +69,7 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 ## Sub-domains
 
 - **[issue-blockers/](issue-blockers/NODE.md)** — First-class blocker relations and dependency wakeups between issues
+- **[run-liveness-continuations/](run-liveness-continuations/NODE.md)** — Run outcome metadata and bounded continuation wakes for plan-only or empty-response runs
 
 ## Open Questions
 
