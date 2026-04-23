@@ -73,3 +73,4 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 ## Decision Records
 
 - [shared-api-and-actor-scoped-authorization.md](shared-api-and-actor-scoped-authorization.md) — Why board and agent traffic share one API surface, with authorization derived from a common request actor model.
+- [hermes-adapter-auth.md](hermes-adapter-auth.md) — Why the `hermes_local` adapter wraps execute to inject `PAPERCLIP_API_KEY` / `PAPERCLIP_RUN_ID` for agent identity attribution.
