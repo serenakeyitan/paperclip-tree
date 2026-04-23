@@ -6,7 +6,7 @@ soft_links: ["infrastructure/ci-cd/NODE.md"]
 
 # Discord Daily Merge Digest
 
-`scripts/discord-daily-digest.sh` posts a summary of the previous day's merges on `master` to a Discord channel via an incoming webhook. It is intended to be run from a scheduled job (cron or CI) once per day.
+`scripts/discord-daily-digest.sh` posts a summary of the day's merges on `master` to a Discord channel via an incoming webhook. The script defaults to today; a scheduled job (cron or CI) typically invokes it once per day and may pass the prior day's date explicitly.
 
 ## Configuration
 
