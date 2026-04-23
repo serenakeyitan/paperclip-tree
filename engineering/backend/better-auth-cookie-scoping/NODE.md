@@ -25,9 +25,9 @@ The instance-scoped prefix is always applied, including local HTTP development f
 
 ## Related
 
-- Worktree and local dev instance IDs are part of the dev environment tooling documented in `engineering/backend/dev-runner/worktree-dev-tooling/NODE.md`.
+- Worktree-local `PAPERCLIP_INSTANCE_ID` bootstrap is documented in `engineering/execution-workspaces/NODE.md`.
 
 ## Boundaries
 
 - This node covers auth-session isolation behavior in the backend auth layer.
-- General worktree provisioning and local dev tooling stay in `engineering/backend/dev-runner/`.
+- Worktree provisioning and runtime-state isolation stay in `engineering/execution-workspaces/NODE.md` and `engineering/backend/dev-runner/`.
