@@ -18,6 +18,7 @@
 /adapters/opencode-local/dynamic-model-discovery-from-runtime-config.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/pi-local/                                @bingran-you @cryppadotta @serenakeyitan
 /adapters/pi-local/minimal-session-state-and-cached-model-discovery.md @bingran-you @cryppadotta @serenakeyitan
+/doc/execution-semantics/                          @bingran-you @serenakeyitan
 /drift/                                            @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/                         @bingran-you @serenakeyitan
 /drift/paperclip-e392f6b1/infrastructure/          @bingran-you @serenakeyitan
@@ -45,6 +46,7 @@
 /engineering/frontend/inbox-list/                  @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-chat-composer-viewport/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-document-freshness/    @bingran-you @cryppadotta @serenakeyitan
+/engineering/frontend/issue-editor-reliability/    @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-list-nesting-and-server-search/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-list-ux/               @bingran-you @cryppadotta @serenakeyitan
 /engineering/frontend/issue-thread-ux/             @bingran-you @cryppadotta @serenakeyitan
