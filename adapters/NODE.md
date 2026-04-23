@@ -71,6 +71,7 @@ All sessioned adapters share a common `sessionCodec` pattern that normalizes fie
 - **[codex-local/](codex-local/NODE.md)** — Codex CLI (OpenAI) adapter
 - **[cursor-local/](cursor-local/NODE.md)** — Cursor editor agent adapter
 - **[gemini-local/](gemini-local/NODE.md)** — Gemini CLI (Google) adapter
+- **[hermes-local/](hermes-local/NODE.md)** — Hermes local adapter
 - **[openclaw-gateway/](openclaw-gateway/NODE.md)** — OpenClaw WebSocket gateway adapter
 - **[opencode-local/](opencode-local/NODE.md)** — OpenCode CLI adapter
 - **[pi-local/](pi-local/NODE.md)** — Pi CLI adapter
