@@ -29,6 +29,7 @@
 /engineering/backend/                              @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/shared-api-and-actor-scoped-authorization.md @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/dev-runner/                   @bingran-you @cryppadotta @serenakeyitan
+/engineering/backend/dev-runner/dev-server-status-token/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/dev-runner/worktree-dev-tooling/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/heartbeat-run-orchestration/  @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/static-asset-serving/         @bingran-you @cryppadotta @serenakeyitan @stubbi

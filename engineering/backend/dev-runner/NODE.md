@@ -18,3 +18,8 @@ Each execution workspace gets an isolated environment bootstrap — the dev runn
 When an agent resumes work on an existing branch, the dev runner reuses the linked worktree rather than creating a new one. This avoids worktree proliferation and preserves uncommitted workspace state across agent wake cycles.
 
 Source: `packages/server/` (execution workspace routes and dev runner modules).
+
+## Sub-domains
+
+- [dev-server-status-token/](dev-server-status-token/) — Per-process token that gates supervisor-only dev-server status on `/api/health`.
+- [worktree-dev-tooling/](worktree-dev-tooling/) — Dev-time asset routing, watch filtering, and workspace link repair.
