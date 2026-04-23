@@ -26,6 +26,7 @@ Every adapter implements the `ServerAdapterModule` interface from `@paperclipai/
 - **`detectModel`** — Read the agent's local config to discover the active model.
 - **`getConfigSchema`** — Declarative UI config schema so the frontend can render adapter-specific settings without custom React code.
 - **`onHireApproved`** — Lifecycle hook when an agent is approved/hired.
+- **Capability flags** — Optional fields on `ServerAdapterModule` declare support for managed instructions bundles, local JWT auth, and runtime-skill materialization so the server and UI can gate local-only features without hardcoded adapter-type lists.
 
 ### Three-Layer Package Structure
 
@@ -68,6 +69,7 @@ All sessioned adapters share a common `sessionCodec` pattern that normalizes fie
 ## Sub-domains
 
 - **[claude-local/](claude-local/NODE.md)** — Claude Code (Anthropic CLI) adapter
+- **[capability-flags/](capability-flags/NODE.md)** — Declarative adapter capability flags used by the server and UI
 - **[codex-local/](codex-local/NODE.md)** — Codex CLI (OpenAI) adapter
 - **[cursor-local/](cursor-local/NODE.md)** — Cursor editor agent adapter
 - **[gemini-local/](gemini-local/NODE.md)** — Gemini CLI (Google) adapter
