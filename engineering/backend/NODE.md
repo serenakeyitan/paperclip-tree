@@ -66,6 +66,7 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 
 ## Sub-domains
 
+- [authz-hardening/](authz-hardening/) — Cross-cutting conventions for hardening authenticated HTTP routes
 - [dev-runner/](dev-runner/) — Local development runner and worktree dev tooling
 - [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
 - [worktree-live-work-quarantine/](worktree-live-work-quarantine/) — Default quarantine of copied live execution state in seeded worktrees
