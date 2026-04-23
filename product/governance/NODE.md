@@ -89,6 +89,7 @@ Every mutation writes to `activity_log`. Every approval decision is logged. Agen
 
 ## Decision Records
 
+- [member-archival.md](member-archival.md) — Why human company members are archived through a dedicated governance flow instead of being deleted or generically status-edited.
 - [server-enforced-approvals-and-budget-stops.md](server-enforced-approvals-and-budget-stops.md) — Why approvals, budget hard stops, and their audit trail are enforced in the server rather than delegated to agents or adapters.
 
 ## Sub-domains
