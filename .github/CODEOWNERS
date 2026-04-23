@@ -3,6 +3,7 @@
 /*                                                 @bingran-you @serenakeyitan
 /adapters/                                         @bingran-you @cryppadotta @serenakeyitan
 /adapters/shared-server-adapter-contract.md        @bingran-you @cryppadotta @serenakeyitan
+/adapters/capability-flags/                        @bingran-you @cryppadotta @serenakeyitan
 /adapters/claude-local/                            @bingran-you @cryppadotta @serenakeyitan
 /adapters/claude-local/stream-json-and-headless-permissions.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/codex-local/                             @bingran-you @cryppadotta @serenakeyitan
