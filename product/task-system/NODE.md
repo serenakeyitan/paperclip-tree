@@ -69,6 +69,7 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 ## Sub-domains
 
 - **[issue-blockers/](issue-blockers/NODE.md)** — First-class blocker relations and dependency wakeups between issues
+- **[dependency-blocked-interaction/](dependency-blocked-interaction/NODE.md)** — How agents respond to interaction wakes (e.g. human comments) on blocked issues without treating deliverable work as unblocked
 
 ## Open Questions
 
