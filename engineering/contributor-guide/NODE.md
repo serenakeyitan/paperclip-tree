@@ -23,3 +23,7 @@ Contributors working on Paperclip use git worktrees for isolated development env
 - This node captures decisions about what contributor docs cover and how they're structured.
 - Agent execution worktrees (how agents get isolated environments at runtime) are a separate concern documented in `../execution-workspaces/NODE.md`.
 - Dev runner tooling is documented in `../backend/dev-runner/NODE.md`.
+
+## Sub-domains
+
+- **[public-roadmap-and-feature-pr-policy/](public-roadmap-and-feature-pr-policy/NODE.md)** -- Public roadmap and contribution policy for feature PRs.
