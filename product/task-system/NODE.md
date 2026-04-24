@@ -14,49 +14,39 @@ Task hierarchy, workflow, and the communication model between agents.
 
 All agent communication flows through the task system. Delegation = creating a task and assigning it. Coordination = commenting on tasks. Status updates = updating task fields. There is no separate messaging or chat system.
 
-**Rationale:** Keeping all context attached to the work it relates to creates a natural audit trail and prevents information from scattering across side channels. An agent's "inbox" is simply: tasks assigned to them + comments on tasks they're involved in.
+**Rationale:** Keeping all context attached to the work it relates to creates a natural audit trail and prevents information from scattering across side channels. An agent's "inbox" is simply: tasks assigned to them + comments on tasks they care about.
 
-### All Work Traces to the Goal
+### Hierarchical Tasks, Flat Visibility
 
-Every piece of work must trace back to the company's top-level initiative through a chain of parent tasks. If you can't explain why a task matters to the company goal, it shouldn't exist. The full hierarchy: **Initiative** (company goal) > Projects > Milestones > Issues > Sub-issues.
+Tasks form a tree via `parent_task_id`, but visibility is not constrained by that tree. Any agent can discover any task. The hierarchy is for organizing work, not permissioning.
 
-**Rationale:** This is what keeps autonomous agents aligned. At any point, any agent can answer "why am I doing this?" by walking up the task tree. This prevents drift and makes cost attribution meaningful.
+### Atomic Checkout
 
-### Single-Assignee Model
+A task can be actively worked by at most one agent at a time (`checked_out_by` + `checked_out_at`). This prevents two agents from racing to make conflicting changes while still allowing any number of observers/commenters.
 
-Each task has at most one assignee at a time. This is deliberate: clear ownership prevents diffusion of responsibility. For collaborative work involving multiple agents, use sub-issues with different assignees.
+### Workflow State Machine is Fixed in V1
 
-**Rationale:** Single ownership eliminates ambiguity about who is accountable. Combined with atomic checkout, it prevents conflicts at the design level rather than resolving them after the fact.
+V1 uses a small fixed set of workflow states for all teams: `backlog`, `todo`, `in_progress`, `in_review`, `done`, `blocked`, `cancelled`. Future versions may allow team-specific states, but not yet.
 
-### Atomic Task Checkout
+### A Blocked Task Still Has an Owner
 
-Claiming a task (`in_progress` transition) is an atomic database operation. If another agent already claimed it, the request fails with a 409 conflict identifying the current owner. No optimistic locking or CRDTs needed.
+`blocked` is a workflow state, not an unassigned limbo. The assignee remains responsible for surfacing what is blocked, by whom/what, and what action would unblock it.
 
-**Rationale:** The single-assignment model + atomic checkout prevents conflicts at the design level. This is simpler and more reliable than distributed coordination schemes.
+### Every Task Traces to Company Goal
 
-### Issue Status Workflow
+No orphan work. Every task either directly serves the company goal or is a descendant of a task that does. This preserves alignment and enables cost rollups from leaves to root.
 
-Fixed status set for V1: `backlog`, `todo`, `in_progress`, `in_review`, `done`, `blocked`, `cancelled`. Terminal states: `done`, `cancelled`.
+### Comments Are Part of the Task Record
 
-Side effects are automatic: entering `in_progress` sets `started_at`, entering `done` sets `completed_at`, entering `cancelled` sets `cancelled_at`.
+Comments are first-class entities on tasks, not ephemeral chat messages. They have authorship, timestamps, and full history. This is both the collaboration surface and the audit log.
 
-**Aspirational model (TASKS.md):** Team-specific workflow states within fixed categories (Triage, Backlog, Unstarted, Started, Completed, Cancelled). Custom states like "In QA" can be added within categories. This is the target model; V1 uses the simpler fixed enum.
+### Human and Agent Tasks Share the Same Model
 
-### Human-Readable Identifiers
+There is not a separate "agent job" vs "human task" type. Humans and agents operate on the same task objects. The difference is who is assigned and what tools they have.
 
-Issues use `{TEAM_KEY}-{NUMBER}` format (e.g., `ENG-123`) instead of UUIDs for human communication. If an issue moves between teams, it gets a new identifier and the old one is preserved.
+### Approval Gates Pause Flow, Not Ownership
 
-### Work Artifacts
-
-Paperclip manages task-linked work artifacts: **issue documents** (rich-text plans, specs, notes attached to issues with a stable workflow key like `plan`, `design`, `notes`) and **file attachments**. Full delivery infrastructure (repos, deployments) remains the agent's domain.
-
-**Rationale:** Agents need to produce visible outputs beyond status updates. Documents and attachments make work tangible without pulling Paperclip into build pipeline territory.
-
-### No Automatic Recovery
-
-When an agent crashes mid-task, Paperclip does **not** auto-reassign or auto-release the task. Stale tasks (in `in_progress` with no recent activity) are surfaced through dashboards. Recovery is manual/explicit.
-
-**Rationale:** Automatic recovery hides failures. Good visibility lets the right entity decide what to do. A project manager agent whose job is to monitor for stale work is the emergent pattern, not a built-in behavior.
+When a task hits an approval gate, it does not leave the task system or get reassigned. The task remains with its current owner, but progress pauses until the required human decision arrives.
 
 ### Priority Scale
 
@@ -72,6 +62,7 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 - **[dependency-blocked-interaction/](dependency-blocked-interaction/NODE.md)** — How blocked issues stay idle on deliverable work while still supporting human comment triage
 - **[issue-references/](issue-references/NODE.md)** — First-class mentions of issues inside other issues (PAP-123 style references, related-work summary)
 - **[issue-thread-interactions/](issue-thread-interactions/NODE.md)** — Structured interaction cards (suggest_tasks, ask_user_questions, request_confirmation) for soliciting explicit input inside issue threads
+- **[run-liveness-continuations/](run-liveness-continuations/NODE.md)** — Run outcome metadata and bounded continuation wakes for plan-only or empty-response runs
 
 ## Open Questions
 
