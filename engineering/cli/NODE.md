@@ -50,6 +50,10 @@ A set of subcommands that call the Paperclip HTTP API for programmatic control:
 - `/src/adapters/` — CLI-side adapter configuration and discovery
 - `/src/checks/` — health check definitions run by `doctor`
 
+## Sub-domains
+
+- **[worktree-repair/](worktree-repair/NODE.md)** — Repair or bootstrap linked worktree-local Paperclip metadata without mutating the primary checkout
+
 ## Key Decisions
 
 - **Commander.js, not oclif or yargs.** Keeps the CLI lightweight with minimal dependencies.
