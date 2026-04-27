@@ -1,13 +1,20 @@
 ---
 name: first-tree
-description: Read and update the Context Tree — the living source of truth for cross-domain decisions, constraints, and ownership in this organization. Use whenever a task touches strategic choices, cross-domain relationships, workspace-wide context, or Context Tree onboarding.
+description: Entry point for the first-tree toolkit — Context Tree methodology, the `first-tree` CLI, and routing into the `tree`, `breeze`, and `gardener` product skills. Use whenever a task touches strategic choices, cross-domain relationships, workspace-wide context, Context Tree onboarding, or any `first-tree` CLI command.
 ---
 
 # First Tree
 
-This skill teaches you how to work with a repo's Context Tree and how to use
-the `first-tree` CLI for inspect, bind, init, verify, publish, and upgrade
-flows.
+This is the entry-point skill for the `first-tree` toolkit. It teaches:
+
+1. **What a Context Tree is** — the methodology shared across the toolkit
+2. **Which product skill to load** for the specific task in front of you
+3. **How to get the `first-tree` CLI** installed and up to date
+4. **How skills are managed** on the machine you are working on
+
+If your task needs product-specific operational detail (running commands,
+inspecting state, fixing things), follow the routing below to the right
+product skill and load that in addition to this one.
 
 ## What Is Context Tree
 
@@ -17,7 +24,7 @@ Each domain is a directory containing a `NODE.md`. Each leaf decision is a
 markdown file with frontmatter declaring `title`, `owners`, and optional
 `soft_links` to related nodes.
 
-Read `references/about.md` for the product framing and
+Read `references/whitepaper.md` for the product vision and methodology, and
 `references/principles.md` for the four core principles you must follow when
 reading or writing nodes.
 
@@ -25,15 +32,40 @@ reading or writing nodes.
 
 Trigger this skill when you are asked to:
 
-- Read or update any `NODE.md` or leaf node in the tree
+- Read or update any `NODE.md` or leaf node
 - Make a decision that affects multiple domains or repos
 - Check ownership before editing a node
 - Onboard a new repo, shared tree, or workspace root
-- Run `first-tree` CLI commands
+- Run any `first-tree` CLI command
 - Investigate why a particular decision was made
+- Install, update, or inspect the `first-tree` skills on this machine
 
 Do **not** use this skill for routine code edits that do not touch decisions,
 constraints, ownership, or cross-domain relationships.
+
+## Three Products Under One CLI
+
+`first-tree` is an umbrella CLI over three products. Each product has its own
+operational skill — load the one that matches your task:
+
+| Product | Skill to load | Use when you need to… |
+|---|---|---|
+| **tree** | `tree` | Onboard (`init`) / inspect / publish / verify / upgrade a Context Tree repo, or reach for the lower-level primitives (`bind`, `bootstrap`, `integrate`, `workspace sync`) |
+| **breeze** | `breeze` | Run or inspect the breeze daemon: install, start/stop/status, watch, one-shot poll, diagnose |
+| **gardener** | `gardener` | Install the push-mode workflow, run the pull-mode daemon, or invoke the agent primitives (`sync`, `comment`, `respond`) from CI or breeze |
+
+Each product's `--help` splits its commands into **Primary** (start here) and
+**Advanced / Agent** (primitives invoked by the daemon, breeze dispatch, or CI).
+Humans should normally only need the primary set — load the product skill for
+the full map.
+
+If you do not know which product you need, start here, skim the table above,
+and load whichever skill looks like the closest match. Loading more than one
+is fine.
+
+The CLI also exposes one maintenance namespace: `first-tree skill ...`. That
+namespace is not a fourth product — it is the toolkit surface for inspecting
+and repairing the four shipped skills.
 
 ## Before Every Task
 
@@ -58,61 +90,59 @@ Always ask: **does the tree need updating?**
 - Did you discover something the tree failed to capture?
 - Did you find outdated tree content?
 
-## CLI Workflow
-
-The CLI now centers on three concepts:
-
-- `source/workspace root`
-- `tree repo`
-- `binding`
-
-Default onboarding workflow:
-
-1. Run `first-tree inspect --json`.
-2. Ask whether the user already has a Context Tree.
-3. If they do, use `first-tree bind`.
-4. If they do not, use `first-tree init`.
-5. If the current root is a workspace, run `first-tree workspace sync` so all
-   child repos bind to the same shared tree.
-
-During `bind` / `init`, the CLI also ensures the tree repo has the bundled
-`first-tree` skill installed and refreshes binding metadata in both locations.
-
-## CLI Commands
-
-| Command | Purpose |
-|---|---|
-| `first-tree inspect` | Classify the current folder and report bindings / child repos |
-| `first-tree init` | High-level onboarding wrapper for single repos, shared trees, and workspace roots |
-| `first-tree init tree` | Low-level tree bootstrap for an explicit tree checkout |
-| `first-tree bind` | Bind the current repo/workspace root to an existing tree repo |
-| `first-tree workspace sync` | Bind child repos to the same shared tree |
-| `first-tree verify` | Validate a tree repo: frontmatter, owners, soft_links, members, progress |
-| `first-tree upgrade` | Refresh the installed skill or tree metadata from the bundled package |
-| `first-tree publish` | Publish a tree repo to GitHub and refresh locally bound source/workspace repos |
-| `first-tree review` | CI helper: run Claude Code PR review against tree changes |
-| `first-tree generate-codeowners` | Regenerate `.github/CODEOWNERS` from tree ownership |
-| `first-tree inject-context` | Output a Claude Code SessionStart hook payload from `NODE.md` |
-| `first-tree help onboarding` | Show the onboarding narrative |
-
-For full options, run `first-tree <command> --help`.
-
 ## Installing And Updating The CLI
 
-Recommended invocation:
+Recommended invocation — no install step needed, always runs the latest
+published version:
 
 ```bash
-npx -p first-tree first-tree <command>
+npx first-tree <namespace> <command>
 ```
 
-This always runs the latest published version. The CLI auto-checks for
-updates on every invocation; pass `--skip-version-check` to suppress the
-check for latency-sensitive callers like SessionStart hooks.
-
-To refresh the bundled skill payload when a new minor version is released:
+For automation, hooks, and CI templates, prefer the more explicit form:
 
 ```bash
-npx -p first-tree first-tree upgrade
+npx -p first-tree first-tree <namespace> <command>
+```
+
+The CLI auto-checks for updates on every invocation. Pass
+`--skip-version-check` to suppress the check for latency-sensitive callers
+like SessionStart hooks.
+
+## Managing Skills On This Machine
+
+The `first-tree` toolkit ships four skills: this one (`first-tree`) plus one
+per product (`tree`, `breeze`, `gardener`). They live at:
+
+```
+.agents/skills/first-tree/
+.agents/skills/tree/
+.agents/skills/breeze/
+.agents/skills/gardener/
+```
+
+Each is also mirrored at `.claude/skills/<name>/` via a symlink so both
+Claude Code and other agent runtimes discover them.
+
+To install or refresh the shipped skill payloads in the current repo:
+
+```bash
+npx first-tree skill install
+npx first-tree skill upgrade
+```
+
+These commands rewrite the installed skill copies to match the skills bundled
+inside the package. Safe to re-run; idempotent.
+
+Use `npx first-tree tree upgrade` when you want the broader
+source/workspace integration or tree metadata refreshed too.
+
+To inspect or repair the installed skills directly:
+
+```bash
+npx first-tree skill list     # show all four skills + versions
+npx first-tree skill doctor   # diagnose install health; exits non-zero on problems
+npx first-tree skill link     # repair .claude/skills/* symlinks
 ```
 
 ## Ownership And Editing
@@ -128,12 +158,13 @@ See `references/ownership-and-naming.md`.
 
 - `SKILL.md` — this file
 - `VERSION` — installed skill payload version
-- `references/about.md` — what Context Tree is, who it is for, why it exists
+- `references/whitepaper.md` — First Tree white paper: Agent Team methodology, principles, and vision
 - `references/principles.md` — four core principles with examples
 - `references/ownership-and-naming.md` — node naming and ownership model
 - `references/onboarding.md` — onboarding narrative for repos, shared trees, and workspaces
 - `references/source-workspace-installation.md` — source/workspace binding contract
 - `references/upgrade-contract.md` — installed layout and upgrade semantics
+- `references/workflow-mode.md` — agent-driven install guide for the gardener push-mode sync workflow (replaces the gardener service with a `.github/workflows/first-tree-sync.yml` in the codebase)
 
 Everything else lives in the `first-tree` npm package and is invoked via the
 CLI.

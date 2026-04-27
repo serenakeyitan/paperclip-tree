@@ -11,6 +11,12 @@ The living source of truth for **Paperclip** — an open-source orchestration an
 
 ---
 
+<!-- BEGIN FIRST-TREE-SOURCE-REPO-INDEX -->
+## Source Repos
+
+- **[Source Repos](source-repos.md)** — Generated index of bound source/workspace repos and their GitHub URLs.
+<!-- END FIRST-TREE-SOURCE-REPO-INDEX -->
+
 ## Domains
 
 - **[engineering/](engineering/NODE.md)** — Backend server, frontend UI, database, shared packages, and developer tooling.

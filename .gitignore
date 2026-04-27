@@ -1,1 +1,4 @@
 .gardener-tree-cache/
+.first-tree/classification-cache/
+.first-tree/proposals/
+.claude/scheduled_tasks.lock

@@ -49,6 +49,14 @@ Ask yourself: **Does the tree need updating?**
 For ownership rules, tree structure, and key files, see [NODE.md](NODE.md) and `.agents/skills/first-tree/references/ownership-and-naming.md`.
 <!-- END CONTEXT-TREE FRAMEWORK -->
 
+<!-- BEGIN FIRST-TREE-REPO-INDEX-GUIDE -->
+## Source Repo Index
+
+- If `source-repos.md` exists in the tree root, use it as the quickest index of bound source/workspace repos and their GitHub URLs.
+- The canonical machine-readable source of truth remains `.first-tree/bindings/`.
+- When you need current code, use that repo index to open the relevant source repo as an additional working directory and refresh it locally.
+<!-- END FIRST-TREE-REPO-INDEX-GUIDE -->
+
 # Project-Specific Instructions
 
 <!-- Add your project-specific agent instructions below this line. -->

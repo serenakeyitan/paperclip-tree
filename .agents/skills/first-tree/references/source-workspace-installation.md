@@ -12,17 +12,16 @@ workspace repo, or non-git workspace folder.
 
 - The current source/workspace root is **not** the Context Tree.
 - The current source/workspace root carries only:
-  - `.agents/skills/first-tree/` and `.claude/skills/first-tree/`
-  - `FIRST_TREE.md`
+  - the four installed skills under `.agents/skills/<name>/` and
+    `.claude/skills/<name>/` (`first-tree`, `tree`, `breeze`, `gardener`)
+  - `WHITEPAPER.md`
   - a managed `FIRST-TREE-SOURCE-INTEGRATION:` block in `AGENTS.md` and `CLAUDE.md`
-  - `.first-tree/local-tree.json`
-  - `.first-tree/source.json`
-  - `.first-tree/workspace.json` when the root is a workspace
+  - `.first-tree/source.json` (includes workspace members for workspace roots)
 - `NODE.md`, `members/`, and tree-scoped `AGENTS.md` / `CLAUDE.md` belong only
   in the tree repo.
-- The tree repo keeps its own installed skill under `.agents/skills/first-tree/`
-  and `.claude/skills/first-tree`, plus tree metadata under `.first-tree/tree.json`
-  and `.first-tree/bindings/`.
+- The tree repo keeps the same four installed skills, plus tree metadata under
+  `.first-tree/tree.json` and `.first-tree/bindings/`, plus a generated
+  `source-repos.md` index at the tree root.
 
 ## Binding Modes
 
@@ -37,19 +36,17 @@ workspace repo, or non-git workspace folder.
 
 ```text
 <source-or-workspace-root>/
-  .agents/skills/first-tree/
-  .claude/skills/first-tree
-  FIRST_TREE.md
+  .agents/skills/{first-tree,tree,breeze,gardener}/
+  .claude/skills/{first-tree,tree,breeze,gardener}
+  WHITEPAPER.md
   AGENTS.md
   CLAUDE.md
   .first-tree/
-    local-tree.json
-    source.json
-    workspace.json          # workspace roots only
+    source.json             # includes workspace members for workspace roots
 
 <tree-repo>/
-  .agents/skills/first-tree/
-  .claude/skills/first-tree
+  .agents/skills/{first-tree,tree,breeze,gardener}/
+  .claude/skills/{first-tree,tree,breeze,gardener}
   .first-tree/
     VERSION
     progress.md
@@ -57,6 +54,7 @@ workspace repo, or non-git workspace folder.
     bindings/
       <source-id>.json
     bootstrap.json          # legacy compatibility
+  source-repos.md
   NODE.md
   AGENTS.md
   CLAUDE.md
@@ -68,18 +66,27 @@ workspace repo, or non-git workspace folder.
 
 When an agent is asked to install `first-tree`:
 
-1. Run `first-tree inspect --json`.
+1. Run `first-tree tree inspect --json`.
 2. Ask whether an existing Context Tree already exists.
-3. If yes, prefer `first-tree bind`.
-4. If no, use `first-tree init`.
-5. If the current root is a workspace, follow with `first-tree workspace sync`.
+3. Run `first-tree tree init` — it handles both cases:
+   - no existing tree -> creates a sibling tree and binds it
+   - existing tree -> pass `--tree-path <path>` or `--tree-url <url>` and it binds
+4. If the current root is a workspace, pass `--scope workspace`.
+   `init` syncs currently discovered child repos by default.
+5. Use `first-tree tree bind` directly only when you need explicit `--mode`
+   control (for example `workspace-member` binds).
+6. Use `first-tree tree workspace sync` later after adding new child repos, or
+   when you want to rerun workspace-member binding manually.
 
 Do not recreate a new sibling tree repo when the user already has a shared tree
 they want to keep using.
 
 Whenever a git-backed source/workspace root is bound, keep the binding metadata
-pointing at the tree checkout and published tree URL. Do not create hidden
-codebase mirrors in the tree repo by default.
+pointing at the tree checkout and published tree URL. The tree repo may also
+refresh `source-repos.md` plus lightweight root guidance derived from those
+bindings, but `.first-tree/bindings/` remains the canonical machine-readable
+source of truth. Do not create hidden codebase mirrors in the tree repo by
+default.
 
 ## Workspace Rule
 
@@ -89,20 +96,24 @@ If the current root contains many child repos or submodules:
 - all child repos should bind to the same shared tree
 - child repos should not each create their own separate tree repos
 
-Only real child git repos / submodules should be synced automatically. Plain
-package folders that are not repos do not get repo-level binding metadata.
+`first-tree tree init --scope workspace` syncs all currently discovered child
+git repos / submodules by default. Plain package folders that are not repos do
+not get repo-level binding metadata. When new child repos appear later, rerun
+`first-tree tree workspace sync`.
 
 ## Verification And Upgrade
 
-- Verify the tree repo with `first-tree verify`.
-- Use `first-tree upgrade` in a source/workspace root to refresh local
+- Verify the tree repo with `first-tree tree verify`.
+- Use `first-tree skill upgrade` when you only need the four local skill
+  payloads refreshed under `.agents/skills/*` and `.claude/skills/*`.
+- Use `first-tree tree upgrade` in a source/workspace root to refresh local
   integration.
-- Use `first-tree upgrade --tree-path ...` to refresh the tree repo metadata
+- Use `first-tree tree upgrade --tree-path ...` to refresh the tree repo metadata
   plus its installed tree-repo skill.
 
 ## Publish Rule
 
-`first-tree publish` is tree-centric:
+`first-tree tree publish` is tree-centric:
 
 - it publishes the tree repo
 - it refreshes locally bound source/workspace repos with the published tree URL
