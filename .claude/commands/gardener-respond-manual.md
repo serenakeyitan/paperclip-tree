@@ -7,8 +7,12 @@ comments to reviewers, and learnings logged for gardener-sync to read.
 
 ## Hard rules
 
-- Only act on PRs with branch prefix `first-tree/sync-` or label
-  `first-tree:sync`.
+- **Fix path** (Step 2): only act on PRs with branch prefix
+  `first-tree/sync-` or label `first-tree:sync`. Gardener can only
+  reason about its own sync output.
+- **Merge path** (Step 1b): merge any APPROVED, MERGEABLE PR on the
+  tree repo, regardless of branch prefix or author. Approval from a
+  non-gardener reviewer is the authorization.
 - Never force-push. Always add new commits on top.
 - Never create new PRs — only fix existing ones.
 - Read feedback from ALL reviewers (human maintainers, gardener-comment,
@@ -96,7 +100,7 @@ gh api repos/$TREE_REPO/issues/$NUMBER/comments \
 ```
 
 Classify each PR:
-- **APPROVED** → log and skip (the reviewer agent merges after approving)
+- **APPROVED** → merge (Step 1b)
 - **CHANGES_REQUESTED** → queue for fix (Step 2)
 - **Has `@gardener fix` comment** → queue for fix (Step 2), even if no formal review
 - **No review / REVIEW_REQUIRED** → skip
@@ -104,15 +108,45 @@ Classify each PR:
 
 Priority: `@gardener fix` PRs are processed first (explicit request from reviewer).
 
-**Note on merging:** gardener-respond does NOT merge PRs. The reviewer
-agent (e.g., bingran's githuber) is responsible for merging after
-approving. This separation ensures the PR author (gardener-sync) never
-merges its own PRs — the reviewer who validated the content does.
+### Step 1b: Merge APPROVED PRs
 
-If APPROVED PRs are sitting unmerged for >24h, log a warning:
+For each APPROVED, MERGEABLE PR on the tree repo (any branch, any
+author), gardener merges it (squash). The reviewer is responsible
+for approval; gardener executes the merge so approvals don't sit
+indefinitely. Step 1's sync-only filter does NOT apply here — list
+all open PRs for the merge scan.
+
+Pre-merge sanity gate (skip the PR and log if any check fails):
+1. (No branch-prefix check — see Hard rules.)
+2. At least one approving review exists from a user other than
+   `$gardener_user`:
+   ```bash
+   APPROVERS=$(gh api repos/$TREE_REPO/pulls/$NUMBER/reviews \
+     --jq '[.[] | select(.state=="APPROVED") | .user.login] | unique')
+   ```
+   Reject if every approver equals `$gardener_user`.
+3. PR is open and mergeable:
+   ```bash
+   STATE=$(gh pr view $NUMBER --repo $TREE_REPO --json state,mergeable \
+     --jq '"\(.state) \(.mergeable)"')
+   ```
+   Require `OPEN MERGEABLE`. If `CONFLICTING`, log and skip — the
+   PR needs a rebase first (handled by Step 2's normal fix path on
+   next run if reviewer requests changes).
+
+Merge:
+```bash
+gh pr merge $NUMBER --repo $TREE_REPO --squash --delete-branch
+gh pr comment $NUMBER --repo $TREE_REPO \
+  --body "🌱 Merged by gardener-respond after approval from @$APPROVER."
 ```
-⚠ #$NUMBER: APPROVED but not merged for >24h. Reviewer may need to enable auto-merge.
+
+Log:
 ```
+✓ Merged #$NUMBER (approved by @$APPROVER)
+```
+
+`log_event '"kind":"merge","pr_number":'$NUMBER',"approver":"'$APPROVER'"'`
 
 ## Step 2: Fix CHANGES_REQUESTED PRs
 
