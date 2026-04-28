@@ -32,6 +32,7 @@
 /engineering/backend/shared-api-and-actor-scoped-authorization.md @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/dev-runner/                   @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/dev-runner/worktree-dev-tooling/ @bingran-you @cryppadotta @serenakeyitan
+/engineering/backend/heartbeat-recovery-blocking/  @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/heartbeat-run-orchestration/  @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/hermes-adapter-auth/          @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/issue-routine-execution-filter/ @bingran-you @cryppadotta @serenakeyitan
