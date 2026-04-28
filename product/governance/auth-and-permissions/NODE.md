@@ -10,4 +10,4 @@ The deliberate boundary: fine-grained enterprise governance (org-wide policy eng
 
 This matters for design decisions in adjacent domains: hire approvals, issue approvals, and budget enforcement all assume an identity model that can attribute actions to a real user or agent. Anything that mutates company state should route through the auth/permissions surface rather than reintroducing an implicit-board shortcut.
 
-See `doc/SPEC-implementation.md` §V1 Decisions and the schema additions for `pause_reason`, `paused_at`, `issue_prefix`, `budget_monthly_cents`, etc.
+See `doc/SPEC-implementation.md` §7.0 Auth Tables (human auth via the selected auth library, referenced by `users.id`), §9 Auth and Permissions (board session auth, agent bearer-key scope, and the V1 Permission Matrix), and §3 V1 Product Decisions for the authenticated-mode posture.
