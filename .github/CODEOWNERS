@@ -86,6 +86,7 @@
 /plugins/examples/examples-live-in-tree-as-sdk-contract-tests.md @bingran-you @cryppadotta @serenakeyitan
 /plugins/runtime/                                  @bingran-you @cryppadotta @serenakeyitan
 /plugins/runtime/worker-isolation-and-capability-gates.md @bingran-you @cryppadotta @serenakeyitan
+/plugins/sandbox-providers/                        @bingran-you @cryppadotta @serenakeyitan @devinfoley
 /plugins/sdk/                                      @bingran-you @cryppadotta @serenakeyitan
 /plugins/sdk/single-sdk-dependency-and-zod-reexports.md @bingran-you @cryppadotta @serenakeyitan
 /product/                                          @bingran-you @cryppadotta @serenakeyitan
