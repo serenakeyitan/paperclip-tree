@@ -36,6 +36,7 @@
 /engineering/backend/dev-runner/worktree-dev-tooling/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/heartbeat-recovery-blocking/  @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/heartbeat-run-orchestration/  @bingran-you @cryppadotta @serenakeyitan
+/engineering/backend/heartbeat-runtime-cleanup/    @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/hermes-adapter-auth/          @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/issue-routine-execution-filter/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/static-asset-serving/         @bingran-you @cryppadotta @serenakeyitan @stubbi
