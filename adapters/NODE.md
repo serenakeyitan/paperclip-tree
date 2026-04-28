@@ -72,6 +72,7 @@ All sessioned adapters share a common `sessionCodec` pattern that normalizes fie
 - **[capability-flags/](capability-flags/NODE.md)** — Declarative adapter capability flags used by the server and UI
 - **[codex-local/](codex-local/NODE.md)** — Codex CLI (OpenAI) adapter
 - **[cursor-local/](cursor-local/NODE.md)** — Cursor editor agent adapter
+- **[external-adapter-registration/](external-adapter-registration/NODE.md)** — Shared resolver keeping init-time and hot-install registration paths at parity
 - **[gemini-local/](gemini-local/NODE.md)** — Gemini CLI (Google) adapter
 - **[openclaw-gateway/](openclaw-gateway/NODE.md)** — OpenClaw WebSocket gateway adapter
 - **[opencode-local/](opencode-local/NODE.md)** — OpenCode CLI adapter
