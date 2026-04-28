@@ -63,6 +63,7 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 - **[issue-references/](issue-references/NODE.md)** — First-class mentions of issues inside other issues (PAP-123 style references, related-work summary)
 - **[issue-thread-interactions/](issue-thread-interactions/NODE.md)** — Structured interaction cards (suggest_tasks, ask_user_questions, request_confirmation) for soliciting explicit input inside issue threads
 - **[run-liveness-continuations/](run-liveness-continuations/NODE.md)** — Run outcome metadata and bounded continuation wakes for plan-only or empty-response runs
+- **[issue-tree-control/](issue-tree-control/NODE.md)** — Pause / cancel / resume / restore an entire issue subtree as a single governance action via persisted holds
 
 ## Open Questions
 

@@ -16,11 +16,11 @@ Holds live in two tables: `issue_tree_holds` (one row per hold, with mode, statu
 
 ### Four Modes: pause, resume, cancel, restore
 
-The control modes (`ISSUE_TREE_CONTROL_MODES`) are: `pause` (suppress normal wakeups across the subtree while keeping issue state), `resume` (release an active pause), `cancel` (mark subtree issues as cancelled and tear down active runs / unclaimed wakeups), and `restore` (reverse a prior cancel by restoring issue statuses captured in the hold member rows). Cancel and restore are paired operations that rely on member-row snapshots to recover prior status.
+The control modes (`ISSUE_TREE_CONTROL_MODES`) are: `pause` (suppress normal wakeups across the subtree while keeping issue state — and today also interrupts active runs and cancels queued/deferred wakeups immediately when the hold is created, regardless of release strategy), `resume` (release an active pause), `cancel` (mark subtree issues as cancelled and tear down active runs / unclaimed wakeups), and `restore` (reverse a prior cancel by restoring issue statuses captured in the hold member rows). Cancel and restore are paired operations that rely on member-row snapshots to recover prior status.
 
 ### Preview Before Apply
 
-Every control action is preview-able via `POST /issues/:issueId/tree-control` before it is applied. Previews enumerate the affected issues, their depth, currently active runs, per-agent counts, totals, and warnings (e.g. issues already held). This lets the UI show a confirmation surface and lets agents make an informed decision before committing.
+Every control action is preview-able via `POST /issues/:id/tree-control/preview` before it is applied. Previews enumerate the affected issues, their depth, currently active runs, per-agent counts, totals, and warnings (e.g. issues already held). This lets the UI show a confirmation surface and lets agents make an informed decision before committing.
 
 ### Wake Semantics Under a Hold
 
@@ -28,11 +28,17 @@ The heartbeat service is hold-aware. While a `pause` hold is active on an issue,
 
 ### Release Policies
 
-Holds carry an optional `release_policy` with strategy `manual` or `after_active_runs_finish`. Manual is the default — a hold persists until a release call arrives. The deferred strategy lets a pause/cancel wait for in-flight runs to drain rather than aborting them, which matters for governance actions that should not destroy work-in-progress.
+Holds carry an optional `release_policy` with strategy `manual` or `after_active_runs_finish`. Manual is the default — a hold persists until a release call arrives. The `after_active_runs_finish` strategy is recorded on the hold but, today, `pause` and `cancel` still interrupt active runs and cancel queued/deferred wakeups immediately when the hold is created (`server/src/routes/issue-tree-control.ts` lines 94-139). The strategy currently determines how the hold is released, not whether in-flight execution is preserved on creation. Treat behavioral preservation of in-flight runs under the deferred strategy as forward-looking, not yet implemented.
 
 ## Surfaces
 
-- API: `POST /issues/:issueId/tree-control` (preview), `POST /issues/:issueId/tree-holds` (create), `DELETE /issues/:issueId/tree-holds/:holdId` (release).
+- API:
+  - `POST /issues/:id/tree-control/preview` — preview a control action.
+  - `POST /issues/:id/tree-holds` — create a hold (apply pause/cancel/resume/restore).
+  - `GET /issues/:id/tree-control/state` — current control state for an issue.
+  - `GET /issues/:id/tree-holds` — list holds for an issue.
+  - `GET /issues/:id/tree-holds/:holdId` — fetch a single hold.
+  - `POST /issues/:id/tree-holds/:holdId/release` — release a hold.
 - Validators: `previewIssueTreeControlSchema`, `createIssueTreeHoldSchema`, `releaseIssueTreeHoldSchema`.
 - Service: `server/src/services/issue-tree-control.ts`.
 - UI: tree-control affordances in `IssueDetail` and `IssuesList`, with hold awareness in `IssueChatThread`.
