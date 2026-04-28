@@ -42,3 +42,9 @@ Adapter for **Pi** (an AI coding CLI). Spawns `pi` as a local child process.
 
 - No quota reporting.
 - Model config is read-only. The adapter discovers but does not write Pi configuration.
+
+---
+
+## Sub-domains
+
+- [skill-bin-path/](skill-bin-path/NODE.md) — pi_local prepends each injected skill's `bin/` directory to the spawned Pi child process's `PATH` so the agent's bash tool can invoke skill binaries by name.
