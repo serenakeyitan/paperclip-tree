@@ -11,6 +11,7 @@
 /adapters/codex-local/fast-mode/                   @bingran-you @cryppadotta @serenakeyitan
 /adapters/cursor-local/                            @bingran-you @cryppadotta @serenakeyitan
 /adapters/cursor-local/conservative-context-and-session-normalization.md @bingran-you @cryppadotta @serenakeyitan
+/adapters/external-adapter-registration/           @bingran-you @cryppadotta @serenakeyitan @superbiche
 /adapters/gemini-local/                            @bingran-you @cryppadotta @serenakeyitan
 /adapters/gemini-local/auth-expiry-and-turn-limit-awareness.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/hermes-local/                            @bingran-you @cryppadotta @serenakeyitan
