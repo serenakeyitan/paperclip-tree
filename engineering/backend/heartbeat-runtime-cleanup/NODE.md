@@ -12,7 +12,7 @@ Hardening rules for how the heartbeat path tears down adapter child processes an
 
 ### Terminal-Result Cleanup Does Not Wait For Child Exit
 
-`runChildProcess` in `packages/adapter-utils/src/server-utils.ts` arms its terminal-result cleanup timer as soon as a terminal result has been observed in the adapter's output, regardless of whether the child process has already exited. Previously cleanup also required `childExited`, which meant a child that emitted a final `{"type":"result"}` and then kept running (e.g. a stray `setInterval`) would never be reaped within the grace window. The `child.on("exit")` handler still calls `maybeArmTerminalResultCleanup` so exit alone can trigger cleanup, but the gate on terminal output no longer blocks on exit. Tests in `server-utils.test.ts` cover both the still-running-after-terminal-output case (expects `SIGTERM`) and the noisy-no-terminal-output case (no cleanup).
+`runChildProcess` in `packages/adapter-utils/src/server-utils.ts` arms its terminal-result cleanup timer as soon as a terminal result has been observed in the adapter's output, regardless of whether the child process has already exited. Previously cleanup also required `childExited`, which meant a child that emitted a final `{"type":"result"}` and then kept running (e.g. a stray `setInterval`) would never be reaped within the grace window. The `child.on("exit")` handler still calls `maybeArmTerminalResultCleanup`, but cleanup remains gated on `terminalResultSeen` (it returns early otherwise) — so child exit alone does not arm cleanup; a terminal result in adapter output is required. Tests in `server-utils.test.ts` cover both the still-running-after-terminal-output case (expects `SIGTERM`) and the noisy-no-terminal-output case (no cleanup).
 
 ### Preserve All Terminal Run Statuses As Outcomes
 
@@ -20,4 +20,4 @@ When the heartbeat loop finishes invoking an adapter, it now consults `isHeartbe
 
 ## How To Apply
 
-When changing adapter child-process lifecycle or heartbeat outcome derivation, preserve both invariants: terminal-result cleanup must be armable from either terminal output or child exit independently, and any new terminal run status must be added to `HEARTBEAT_RUN_TERMINAL_STATUSES` so the heartbeat respects it as the authoritative outcome.
+When changing adapter child-process lifecycle or heartbeat outcome derivation, preserve both invariants: terminal-result cleanup must be armable once a terminal result has been observed in adapter output (without additionally requiring `childExited`), and any new terminal run status must be added to `HEARTBEAT_RUN_TERMINAL_STATUSES` so the heartbeat respects it as the authoritative outcome.
