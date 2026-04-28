@@ -14,6 +14,7 @@
 /adapters/gemini-local/                            @bingran-you @cryppadotta @serenakeyitan
 /adapters/gemini-local/auth-expiry-and-turn-limit-awareness.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/hermes-local/                            @bingran-you @cryppadotta @serenakeyitan
+/adapters/model-discovery-refresh/                 @bingran-you @cryppadotta @serenakeyitan
 /adapters/openclaw-gateway/                        @bingran-you @cryppadotta @serenakeyitan
 /adapters/openclaw-gateway/websocket-gateway-and-device-pairing.md @bingran-you @cryppadotta @serenakeyitan
 /adapters/opencode-local/                          @bingran-you @cryppadotta @serenakeyitan
@@ -36,6 +37,7 @@
 /engineering/backend/hermes-adapter-auth/          @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/issue-routine-execution-filter/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/static-asset-serving/         @bingran-you @cryppadotta @serenakeyitan @stubbi
+/engineering/backend/transient-upstream-recovery/  @bingran-you @cryppadotta @serenakeyitan
 /engineering/backend/webhook-signing-modes/        @bingran-you @cryppadotta @serenakeyitan @antonio-mello-ai
 /engineering/backend/worktree-live-work-quarantine/ @bingran-you @cryppadotta @serenakeyitan
 /engineering/cli/                                  @bingran-you @cryppadotta @serenakeyitan
