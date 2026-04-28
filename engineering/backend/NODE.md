@@ -66,10 +66,12 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 
 ## Sub-domains
 
+- [comment-wake-defer-during-run/](comment-wake-defer-during-run/) — Defer comment-triggered wakes while a run is active
 - [dev-runner/](dev-runner/) — Local development runner and worktree dev tooling
+- [heartbeat-event-payload-bounding/](heartbeat-event-payload-bounding/) — Bound payload size on heartbeat run events
 - [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
-- [worktree-live-work-quarantine/](worktree-live-work-quarantine/) — Default quarantine of copied live execution state in seeded worktrees
 - [static-asset-serving/](static-asset-serving/) — Static asset cache headers and SPA fallback routing
+- [worktree-live-work-quarantine/](worktree-live-work-quarantine/) — Default quarantine of copied live execution state in seeded worktrees
 
 ## Decision Records
 
