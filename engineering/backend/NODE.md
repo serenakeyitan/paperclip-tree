@@ -66,10 +66,11 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 
 ## Sub-domains
 
+- [agent-execution-contract/](agent-execution-contract/) — Shared default prompt template (`DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE`) injected by in-repo local adapters
 - [dev-runner/](dev-runner/) — Local development runner and worktree dev tooling
 - [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
-- [worktree-live-work-quarantine/](worktree-live-work-quarantine/) — Default quarantine of copied live execution state in seeded worktrees
 - [static-asset-serving/](static-asset-serving/) — Static asset cache headers and SPA fallback routing
+- [worktree-live-work-quarantine/](worktree-live-work-quarantine/) — Default quarantine of copied live execution state in seeded worktrees
 
 ## Decision Records
 

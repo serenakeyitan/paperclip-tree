@@ -6,7 +6,7 @@ soft_links: [adapters/NODE.md, adapters/claude-local/NODE.md, adapters/codex-loc
 
 # Agent Execution Contract
 
-Paperclip ships a shared execution contract that every local agent adapter injects into its default prompt template. The contract is exported as `DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE` from `@paperclipai/adapter-utils/server-utils` and is consumed by the claude-local, codex-local, cursor-local, gemini-local, opencode-local, and pi-local adapters as the fallback when an agent config does not override `promptTemplate`. The openclaw-gateway adapter inlines the same rules into its wake-text builder.
+Paperclip ships a shared execution contract that the in-repo local agent adapters inject into their default prompt template. The contract is exported as `DEFAULT_PAPERCLIP_AGENT_PROMPT_TEMPLATE` from `@paperclipai/adapter-utils/server-utils` and is consumed by the claude-local, codex-local, cursor-local, gemini-local, opencode-local, and pi-local adapters as the fallback when an agent config does not override `promptTemplate`. The openclaw-gateway adapter inlines the same rules into its wake-text builder. The hermes-local adapter is documented in `docs/agents-runtime.md` but does not import the shared template — it predates this consolidation and is not currently covered by this contract.
 
 ## Key Decisions
 
