@@ -18,7 +18,7 @@ A Company is the top-level organizational boundary. One Paperclip instance runs 
 
 ### No Standalone Goal Field
 
-A Company's direction is defined by its set of **Initiatives** (the highest-level planning construct), not a single "goal" string field. The company goal from PRODUCT.md becomes the first/primary Initiative.
+A Company's direction is defined by its set of **Initiatives** (the highest-level planning construct), not a single "goal" string field. The company direction from PRODUCT.md becomes the first/primary Initiative.
 
 **Rationale:** Real companies pursue multiple strategic objectives simultaneously. A single goal field would be too rigid; initiatives provide the needed flexibility while still anchoring all work to company direction.
 
@@ -47,7 +47,7 @@ V1 supports import/export using a portable package contract:
 
 ## Decision Records
 
-- [company-is-the-top-level-boundary.md](company-is-the-top-level-boundary.md) — Why Company is the primary isolation, governance, and work boundary in Paperclip.
+- [company-is-the-top-level-boundary.md](company-is-the-top-level-boundary.md) -- Why Company is the primary isolation, governance, and work boundary in Paperclip.
 
 ## Open Questions
 
