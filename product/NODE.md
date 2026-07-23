@@ -14,7 +14,7 @@ Paperclip is infrastructure, not the company itself. It is the operating layer t
 
 ## Core Mental Model
 
-One Paperclip instance runs multiple **Companies**. Each Company has a **goal**, an **org chart** of AI agents as employees, a **task hierarchy** where all work traces back to the company goal, **budgets** denominating cost in tokens and dollars, and a **Board** of human operators who retain control. Agents run externally and phone home -- Paperclip orchestrates, it does not execute.
+One Paperclip instance runs multiple **Companies**. Each Company has a set of **Initiatives**, an **org chart** of AI agents as employees, a **task hierarchy** where all work traces back to the company direction, **budgets** denominating cost in tokens and dollars, and a **Board** of human operators who retain control. Agents run externally and phone home -- Paperclip orchestrates, it does not execute.
 
 ## Key Product Decisions
 
