@@ -32,9 +32,9 @@ V1 uses a small fixed set of workflow states for all teams: `backlog`, `todo`, `
 
 `blocked` is a workflow state, not an unassigned limbo. The assignee remains responsible for surfacing what is blocked, by whom/what, and what action would unblock it.
 
-### Every Task Traces to Company Goal
+### Every Task Traces to Company Direction
 
-No orphan work. Every task either directly serves the company goal or is a descendant of a task that does. This preserves alignment and enables cost rollups from leaves to root.
+No orphan work. Every task either directly serves the company's top-level initiative or is a descendant of a task that does. This preserves alignment and enables cost rollups from leaves to root.
 
 ### Comments Are Part of the Task Record
 
@@ -54,15 +54,15 @@ Fixed, non-customizable: No priority (0), Urgent (1), High (2), Medium (3), Low 
 
 ## Decision Records
 
-- [tasks-are-the-communication-channel.md](tasks-are-the-communication-channel.md) — Why Paperclip keeps agent coordination attached to tasks instead of introducing a separate chat layer.
+- [tasks-are-the-communication-channel.md](tasks-are-the-communication-channel.md) -- Why Paperclip keeps agent coordination attached to tasks instead of introducing a separate chat layer.
 
 ## Sub-domains
 
-- **[issue-blockers/](issue-blockers/NODE.md)** — First-class blocker relations and dependency wakeups between issues
-- **[dependency-blocked-interaction/](dependency-blocked-interaction/NODE.md)** — How blocked issues stay idle on deliverable work while still supporting human comment triage
-- **[issue-references/](issue-references/NODE.md)** — First-class mentions of issues inside other issues (PAP-123 style references, related-work summary)
-- **[issue-thread-interactions/](issue-thread-interactions/NODE.md)** — Structured interaction cards (suggest_tasks, ask_user_questions, request_confirmation) for soliciting explicit input inside issue threads
-- **[run-liveness-continuations/](run-liveness-continuations/NODE.md)** — Run outcome metadata and bounded continuation wakes for plan-only or empty-response runs
+- **[issue-blockers/](issue-blockers/NODE.md)** -- First-class blocker relations and dependency wakeups between issues
+- **[dependency-blocked-interaction/](dependency-blocked-interaction/NODE.md)** -- How blocked issues stay idle on deliverable work while still supporting human comment triage
+- **[issue-references/](issue-references/NODE.md)** -- First-class mentions of issues inside other issues (PAP-123 style references, related-work summary)
+- **[issue-thread-interactions/](issue-thread-interactions/NODE.md)** -- Structured interaction cards (suggest_tasks, ask_user_questions, request_confirmation) for soliciting explicit input inside issue threads
+- **[run-liveness-continuations/](run-liveness-continuations/NODE.md)** -- Run outcome metadata and bounded continuation wakes for plan-only or empty-response runs
 
 ## Open Questions
 
