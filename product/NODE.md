@@ -38,7 +38,7 @@ One Paperclip instance runs multiple **Companies**. Each Company has a set of **
 
 ## V1 Scope Summary
 
-V1 demonstrates the full control-plane loop end-to-end: a human board creates a company, defines goals, hires agents into an org tree, agents receive and execute tasks via heartbeat invocations, costs are tracked with budget hard-stops, and the board can intervene anywhere. Success means one operator can run a small AI-native company with clear visibility and control.
+V1 demonstrates the full control-plane loop end-to-end: a human board creates a company, defines its top-level initiatives, hires agents into an org tree, agents receive and execute tasks via heartbeat invocations, costs are tracked with budget hard-stops, and the board can intervene anywhere. Success means one operator can run a small AI-native company with clear visibility and control.
 
 **Explicitly deferred from V1:** plugin framework/SDK, knowledge base, revenue/expense accounting beyond tokens, public marketplace (ClipHub), multi-board governance, automatic self-healing orchestration.
 
