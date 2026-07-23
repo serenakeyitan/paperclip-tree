@@ -12,7 +12,7 @@ How companies are represented, scoped, and made portable in Paperclip.
 
 ### Company as First-Order Object
 
-A Company is the top-level organizational boundary. One Paperclip instance runs multiple Companies. Every business entity (agent, task, goal, project, cost event) belongs to exactly one company. Company-scoping is enforced at every entity fetch and mutation.
+A Company is the top-level organizational boundary. One Paperclip instance runs multiple Companies. Every business entity (agent, task, initiative, project, cost event) belongs to exactly one company. Company-scoping is enforced at every entity fetch and mutation.
 
 **Rationale:** The "company" abstraction maps directly to the real-world concept of an autonomous business. It provides natural isolation boundaries for data, budgets, and governance without needing complex multi-tenant permission schemes.
 
