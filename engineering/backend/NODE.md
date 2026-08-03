@@ -70,6 +70,12 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 - [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
 - [worktree-live-work-quarantine/](worktree-live-work-quarantine/) — Default quarantine of copied live execution state in seeded worktrees
 - [static-asset-serving/](static-asset-serving/) — Static asset cache headers and SPA fallback routing
+- [company-skill-detail-loading/](company-skill-detail-loading/) — Why operator-facing skill detail returns `actualState: null` instead of probing adapters at request time
+- [bundled-skills-optional-flag/](bundled-skills-optional-flag/) — Optional bundled-skill flag for the paperclip-dev skill
+- [heartbeat-recovery-blocking/](heartbeat-recovery-blocking/) — Heartbeat loop blocks `stranded_issue_recovery`-origin issues instead of recursive recovery
+- [hermes-adapter-auth/](hermes-adapter-auth/) — Hermes local adapter agent JWT injection for identity attribution
+- [issue-routine-execution-filter/](issue-routine-execution-filter/) — Issue list filters for `routine_execution` origin issues
+- [transient-upstream-recovery/](transient-upstream-recovery/) — Distinguishing transient upstream failures from deterministic adapter errors for retry policy
 
 ## Decision Records
 
