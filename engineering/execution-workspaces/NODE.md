@@ -53,6 +53,10 @@ By default, reseed refuses to operate on a target worktree whose Paperclip serve
 
 **Rationale:** Reseed operates on runtime state (config, secrets, instance data) — an ambiguous source could silently copy the wrong instance into a worktree, causing agents to run with mismatched identity. Explicit selectors, the live-target guard, and fail-fast on missing env prevent this class of misconfiguration.
 
+## Sub-domains
+
+- [runtime-services/](runtime-services/) — Typed workspace-command contract (service + job kinds) and runtime service lifecycle
+
 ## Boundaries
 
 - Worktree creation and git operations are the server's responsibility, not the adapter's.
