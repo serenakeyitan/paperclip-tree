@@ -70,6 +70,9 @@ Config is loaded from environment variables, `.env` files, and a YAML config fil
 - [heartbeat-run-orchestration/](heartbeat-run-orchestration/) — Run lifecycle state machine and process recovery
 - [worktree-live-work-quarantine/](worktree-live-work-quarantine/) — Default quarantine of copied live execution state in seeded worktrees
 - [static-asset-serving/](static-asset-serving/) — Static asset cache headers and SPA fallback routing
+- [authenticated-route-hardening/](authenticated-route-hardening/) — Authenticated route reliability hardening (auth middleware, rate limits, error handling)
+- [environment-variables/](environment-variables/) — Backend environment variable precedence and self-URL derivation
+- [route-authorization/](route-authorization/) — Per-route authorization modules and cross-tenant isolation
 
 ## Decision Records
 
